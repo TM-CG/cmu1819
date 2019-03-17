@@ -11,3 +11,6 @@ Android/.idea/assetWizardSettings.xml
 Android/build
 Android/captures
 Android/.externalNativeBuild
+*.class
+P2PhotoServer/.idea/
+P2PhotoServer/target/

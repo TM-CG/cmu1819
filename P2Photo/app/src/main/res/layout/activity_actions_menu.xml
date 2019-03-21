@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActionsMenu">
+
+    <Button
+        android:id="@+id/createAlbum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create albums"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="200dp" />
+
+    <Button
+        android:id="@+id/yourAlbums"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your albums"
+        app:layout_constraintTop_toTopOf="@id/createAlbum"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="50dp" />
+
+    <Button
+        android:id="@+id/addPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add photo"
+        android:drawableStart="@android:drawable/ic_menu_camera"
+        app:layout_constraintTop_toTopOf="@id/yourAlbums"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="50dp" />
+
+    <Button
+        android:id="@+id/addUsers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add users to album"
+        app:layout_constraintTop_toTopOf="@id/addPhoto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="50dp" />
+
+</android.support.constraint.ConstraintLayout>

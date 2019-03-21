@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Server {
@@ -66,6 +67,17 @@ public class Server {
         } catch(IOException e) {
             System.err.println("IOException!");
         }
+    }
+
+
+    private List<String> parseInstruction(String instruction) {
+        List<String> args = null;
+        if (instruction.startsWith("LOGIN")) {
+            args = Arrays.asList(instruction.split(" "));
+
+        }
+
+        return args;
     }
 
 

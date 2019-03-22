@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Album {
+
+    public static int CounterID = 0;
+
     private int ID;
 
     private String title;

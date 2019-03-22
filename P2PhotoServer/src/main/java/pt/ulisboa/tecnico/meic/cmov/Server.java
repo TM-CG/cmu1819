@@ -2,10 +2,7 @@ package pt.ulisboa.tecnico.meic.cmov;
 
 import javafx.util.Pair;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -23,8 +20,9 @@ public class Server {
     /** Socket related **/
     private ServerSocket serverSocket;
     private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
+
+    private DataInputStream dis;
+    private DataOutputStream dos;
 
     private static final int SERVER_PORT = 10000;
 
@@ -32,6 +30,18 @@ public class Server {
         this.users = new ArrayList<>();
         this.loggedInUsers = new ArrayList<>();
         this.albums = new ArrayList<>();
+    }
+
+    public Socket getClientSocket() {
+        return clientSocket;
+    }
+
+    public DataInputStream getDis() {
+        return dis;
+    }
+
+    public DataOutputStream getDos() {
+        return dos;
     }
 
     /**
@@ -147,26 +157,24 @@ public class Server {
      * Function to start receiving request from the clients.
      */
     public void initSocket() {
+
         try {
             this.serverSocket = new ServerSocket(SERVER_PORT);
-            this.clientSocket = serverSocket.accept();
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-            String message;
-            List<String> args;
+            while (true) {
+                //When receiving a connection from a user starts processing in a new thread!
+                this.clientSocket = serverSocket.accept();
 
-            while(true) {
-                message = in.readLine();
+                dis = new DataInputStream(this.clientSocket.getInputStream());
+                dos = new DataOutputStream(this.clientSocket.getOutputStream());
 
-                args = parseInstruction(message);
-
-                out.println(processInstruction(args));
+                Thread thread = new Worker(this);
+                thread.start();
 
             }
 
-        } catch(IOException e) {
-            System.err.println("IOException!");
+        }catch (IOException e) {
+            System.err.println("** SERVER: InitSocket IOException!");
         }
     }
 
@@ -175,8 +183,8 @@ public class Server {
      */
     public void stopSocket() {
         try {
-            in.close();
-            out.close();
+            dis.close();
+            dos.close();
             clientSocket.close();
             serverSocket.close();
         } catch(IOException e) {
@@ -184,161 +192,28 @@ public class Server {
         }
     }
 
-    /**
-     * Given an instruction (String) parses it according to the several criteria.
-     * @param instruction
-     * @return A list of string with the arguments
-     */
-    private List<String> parseInstruction(String instruction) {
-        List<String> args = null;
-        if (instruction.startsWith("LOGIN") || instruction.startsWith("SIGNUP") || (instruction.startsWith("LOGOUT")) || (instruction.startsWith("ALB-AUP") || (instruction.startsWith("USR-FND")))) {
-            args = Arrays.asList(instruction.split(" "));
-        } else if (instruction.startsWith("ALB")) {
-            //Split by space ignoring spaces inside quotes
-            Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(instruction);
-
-            args = new ArrayList<>();
-            while (m.find())
-                args.add(m.group(1).replace("\"", ""));
+    public void addLoggedUser(String username, String sessionID) {
+        synchronized (this) {
+            this.loggedInUsers.add(new Pair<>(username, sessionID));
         }
-        return args;
     }
 
-    /**
-     * Given a list of arguments and a function execute it
-     * @param args list of arguments
-     * @return the output of the execution
-     */
-    private String processInstruction(List<String> args) {
-
-        try {
-            String instruction = args.get(0);
-            String username;
-            String password;
-            String sessionId;
-            String albumTitle;
-            String pattern;
-            User user;
-
-            switch (instruction) {
-                case "LOGIN":
-                    username = args.get(1);
-                    password = args.get(2);
-
-                    if (!usernameExists(username)) {
-                        System.out.println("** LOGIN: User " + username + " does not exists");
-                        return "NOK 1";
-                    } else {
-                        user = getUserByUsername(username);
-                        if (!user.getPassword().equals(password)) {
-                            System.out.println("** LOGIN: User " + username + " failed!");
-                            return "NOK 2";
-                        } else {
-
-                            sessionId = usernameIsLoggedOn(username);
-
-                            if (sessionId == null) {
-                                sessionId = Long.toHexString(Double.doubleToLongBits(Math.random()));
-                                this.loggedInUsers.add(new Pair<>(username, sessionId));
-                            }
-                            return "OK " + sessionId;
-
-
-                        }
-
-                    }
-
-                case "SIGNUP":
-                    username = args.get(1);
-                    password = args.get(2);
-
-
-                    //Check if user exists
-                    if (usernameExists(username)) {
-                        System.out.println("** SIGNUP: User " + username + " already exists");
-                        return "NOK 3";
-                    } else {
-                        //Adds user
-                        users.add(new User(username, password));
-                        System.out.println("** SIGNUP: Successfully added user " + username);
-                        return "OK";
-                    }
-
-                case "LOGOUT":
-                    username = args.get(1);
-                    sessionId = usernameIsLoggedOn(username);
-
-                    if (!usernameExists(username)) {
-                        System.out.println("** LOGIN: User " + username + " does not exists");
-                        return "NOK 1";
-                    } else if (sessionId == null) {
-                        System.out.println("** LOGOFF: User " + username + " is not currently logged in!");
-                        return "NOK 4";
-                    } else {
-                        loggedInUsers.remove(new Pair<>(username, sessionId));
-                        return "OK";
-                    }
-
-                // === ALBUM RELATED OPERATIONS ===
-                case "ALB-CR8":
-                    sessionId = args.get(1);
-                    albumTitle = args.get(2);
-                    User owner = getUserByUsername(getUserNameBySessionID(sessionId));
-
-                    if (owner == null) {
-                        System.out.println("** ALB-CR8: Invalid sessionID!");
-                        return "NOK 4";
-                    }
-                    else {
-
-                        this.albums.add(new Album(Album.CounterID, albumTitle, owner));
-
-                        System.out.println("** ALB-CR8: User " + owner.getUsername() + " just created one album with title: '" + albumTitle + "'");
-                        return "OK " + Album.CounterID++;
-                    }
-
-                    // === FIND USERS ===
-                case "USR-FND":
-                    sessionId = args.get(1);
-                    pattern = args.get(2);
-                    List<String> matches;
-
-                    if (getUserNameBySessionID(sessionId) == null) {
-                        System.out.println("** USR-FND: Invalid sessionID!");
-                        return "NOK 4";
-                    }
-                    else {
-
-                        if (pattern.contains("*")) {
-                            matches = findUserNameByPattern("\\b(\\w*" + pattern.replace("*", "") + "\\w*)\\b");
-                        } else matches = findUserNameByPattern("\\b(\\w*" + pattern + "\\w*)\\b");
-
-                        return "OK " + representList(matches);
-                    }
-
-                case "ALB-LST":
-                    sessionId = args.get(1);
-
-                    if (getUserNameBySessionID(sessionId) == null) {
-                        System.out.println("** ALB-LST: Invalid sessionID!");
-                        return "NOK 4";
-                    } else {
-                        username = getUserNameBySessionID(sessionId);
-                        List<String> albums = getAlbunsOfGivenUser(username);
-
-                        return "OK " + representList(albums);
-
-                    }
-
-
-
-            }
-        } catch(Exception e) {
-            return "ERR";
+    public void removeLoggedUser(String username, String sessionID) {
+        synchronized (this) {
+            this.loggedInUsers.remove(new Pair<>(username, sessionID));
         }
-
-        return null;
     }
 
+    public void addUser(User user) {
+        synchronized (this) {
+            this.users.add(user);
+        }
+    }
+
+    public void addAlbum(Album album) {
+        synchronized (this) {
+            this.albums.add(album);
+        }
+    }
 
 }

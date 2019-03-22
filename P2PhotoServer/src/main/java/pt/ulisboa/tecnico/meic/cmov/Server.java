@@ -103,16 +103,16 @@ public class Server {
     }
 
     /**
-     * Given a list of usernames represent all items as a string of type <user1, user2 , ... , userN>
-     * @param matches the list to be represented
+     * Given a list of something represent all items as a string of type <user1, user2 , ... , userN>
+     * @param list the list to be represented
      * @return a string with matches representation
      */
-    public String representListOfUserNames(List<String> matches) {
+    public String representList(List<String> list) {
         String rep = "<";
-        int len = matches.size();
+        int len = list.size();
 
         for (int i = 0; i < len; i++) {
-            rep += matches.get(i);
+            rep += list.get(i);
 
             if (i != (len - 1))
                 rep += " , ";
@@ -120,6 +120,24 @@ public class Server {
 
         rep += ">";
         return rep;
+    }
+
+    /**
+     * Given a username returns a list with all albums ID where the user participates or owns
+     * @param username of the user to search
+     * @return a list of all albums ID
+     */
+    public List<String> getAlbunsOfGivenUser(String username) {
+        List<String> albums = new ArrayList<>();
+
+        for (Album album : this.albums) {
+            //User is the owner OR user participates on the album
+            if ((album.getOwner().getUsername().equals(username)) || (album.getIndexOfUser(username) != null))
+                //vitor: bah!!
+                albums.add(new Integer(album.getID()).toString());
+        }
+
+        return albums;
     }
 
 
@@ -295,8 +313,24 @@ public class Server {
                             matches = findUserNameByPattern("\\b(\\w*" + pattern.replace("*", "") + "\\w*)\\b");
                         } else matches = findUserNameByPattern("\\b(\\w*" + pattern + "\\w*)\\b");
 
-                        return "OK " + representListOfUserNames(matches);
+                        return "OK " + representList(matches);
                     }
+
+                case "ALB-LST":
+                    sessionId = args.get(1);
+
+                    if (getUserNameBySessionID(sessionId) == null) {
+                        System.out.println("** ALB-LST: Invalid sessionID!");
+                        return "NOK 4";
+                    } else {
+                        username = getUserNameBySessionID(sessionId);
+                        List<String> albums = getAlbunsOfGivenUser(username);
+
+                        return "OK " + representList(albums);
+
+                    }
+
+
 
             }
         } catch(Exception e) {

@@ -11,10 +11,13 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Server {
 
     private List<User> users;
+    private List<Album> albums;
     private List<Pair<String, String>> loggedInUsers;
 
     /** Socket related **/
@@ -28,11 +31,9 @@ public class Server {
     public Server() {
         this.users = new ArrayList<>();
         this.loggedInUsers = new ArrayList<>();
+        this.albums = new ArrayList<>();
     }
 
-    public void addUser(User user) {
-        this.users.add(user);
-    }
 
     public boolean usernameExists(String username) {
         for (User user: users) {
@@ -46,6 +47,14 @@ public class Server {
         for (Pair<String, String> user: this.loggedInUsers) {
             if (user.getKey().equals(username))
                 return user.getValue();
+        }
+        return null;
+    }
+
+    public String getUserNameBySessionID(String sessionID) {
+        for (Pair<String, String> user: this.loggedInUsers) {
+            if (user.getValue().equals(sessionID))
+                return user.getKey();
         }
         return null;
     }
@@ -100,6 +109,13 @@ public class Server {
         List<String> args = null;
         if (instruction.startsWith("LOGIN") || instruction.startsWith("SIGNUP") || (instruction.startsWith("LOGOUT")) || (instruction.startsWith("ALB-AUP"))) {
             args = Arrays.asList(instruction.split(" "));
+        } else if (instruction.startsWith("ALB")) {
+            //Split by space ignoring spaces inside quotes
+            Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(instruction);
+
+            args = new ArrayList<>();
+            while (m.find())
+                args.add(m.group(1)); // Add .replace("\"", "") to remove surrounding quotes.
         }
         return args;
     }
@@ -111,6 +127,7 @@ public class Server {
             String username;
             String password;
             String sessionId;
+            String albumTitle;
             User user;
 
             switch (instruction) {
@@ -158,6 +175,37 @@ public class Server {
                     }
 
                 case "LOGOUT":
+                    username = args.get(1);
+                    sessionId = usernameIsLoggedOn(username);
+
+                    if (!usernameExists(username)) {
+                        System.out.println("** LOGIN: User " + username + " does not exists");
+                        return "NOK 1";
+                    } else if (sessionId == null) {
+                        System.out.println("** LOGOFF: User " + username + " is not currently logged in!");
+                        return "NOK 4";
+                    } else {
+                        loggedInUsers.remove(new Pair<>(username, sessionId));
+                        return "OK";
+                    }
+
+                // === ALBUM RELATED OPERATIONS ===
+                case "ALB-CR8":
+                    sessionId = args.get(1);
+                    albumTitle = args.get(2);
+                    User owner = getUserByUsername(getUserNameBySessionID(sessionId));
+
+                    if (owner == null) {
+                        System.out.println("** ALB-CR8: Invalid sessionID!");
+                        return "NOK 4";
+                    }
+                    else {
+
+                        this.albums.add(new Album(Album.CounterID, albumTitle, owner));
+
+                        System.out.println("** ALB-CR8: User " + owner.getUsername() + " just created one album with title: " + albumTitle);
+                        return "OK " + Album.CounterID++;
+                    }
 
             }
         } catch(Exception e) {

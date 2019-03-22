@@ -125,6 +125,7 @@ public class Server {
         return matches;
     }
 
+
     /**
      * Given a list of something represent all items as a string of type <user1, user2 , ... , userN>
      * @param list the list to be represented

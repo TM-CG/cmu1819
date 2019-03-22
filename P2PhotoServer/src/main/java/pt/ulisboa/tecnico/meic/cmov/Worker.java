@@ -249,6 +249,28 @@ public class Worker extends Thread {
 
                     }
 
+                case "ALB-UAS":
+                    sessionId = args.get(1);
+                    albumId = args.get(2);
+
+                    username = server.getUserNameBySessionID(sessionId);
+
+                    if (username == null) {
+                        System.out.println("** ALB-UAS: Invalid sessionID!");
+                        return "NOK 4";
+                    } else {
+                        album = server.getAlbumById(new Integer(albumId));
+                        //Checks if album ID exists
+                        if (album == null) {
+                            System.out.println("** ALB-UAS: Invalid albumID!");
+                            return "NOK 5";
+                        }
+
+                        album = server.getAlbumById(new Integer(albumId));
+                        return "OK " + server.representList(album.getAlbumSlicesURLs());
+                    }
+
+
 
                 case "SHUT":
                     return "SHUT OK";

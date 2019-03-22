@@ -34,7 +34,7 @@ public class Worker extends Thread {
 
     @Override
     public void run() {
-        String message;
+        String message, response;
         List<String> args;
 
         while(true) {
@@ -45,7 +45,17 @@ public class Worker extends Thread {
                 args = parseInstruction(message);
 
                 //sends response back to client
-                out.println(processInstruction(args));
+                response = processInstruction(args);
+                out.println(response);
+
+                //User request shut of channel
+                if (response.equals("SHUT OK"))
+                {
+                    this.out.close();
+                    this.in.close();
+                    this.s.close();
+                    return;
+                }
 
             } catch (IOException e) {
                 System.err.println("** WORKER: IOException when Worker is running!");
@@ -61,15 +71,16 @@ public class Worker extends Thread {
      */
     private List<String> parseInstruction(String instruction) {
         List<String> args = null;
-        if (instruction.startsWith("LOGIN") || instruction.startsWith("SIGNUP") || (instruction.startsWith("LOGOUT")) || (instruction.startsWith("ALB-AUP") || (instruction.startsWith("USR-FND")))) {
-            args = Arrays.asList(instruction.split(" "));
-        } else if (instruction.startsWith("ALB")) {
+        if (instruction.startsWith("ALB")) {
             //Split by space ignoring spaces inside quotes
             Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(instruction);
 
             args = new ArrayList<>();
             while (m.find())
                 args.add(m.group(1).replace("\"", ""));
+        }
+        else {
+            args = Arrays.asList(instruction.split(" "));
         }
         return args;
     }
@@ -88,7 +99,11 @@ public class Worker extends Thread {
             String sessionId;
             String albumTitle;
             String pattern;
+            String albumId;
+            String url;
+            String ownerUserName;
             User user;
+            Album album;
 
             switch (instruction) {
                 case "LOGIN":
@@ -185,18 +200,58 @@ public class Worker extends Thread {
 
                 case "ALB-LST":
                     sessionId = args.get(1);
+                    username = server.getUserNameBySessionID(sessionId);
 
-                    if (server.getUserNameBySessionID(sessionId) == null) {
+                    if (username == null) {
                         System.out.println("** ALB-LST: Invalid sessionID!");
                         return "NOK 4";
                     } else {
-                        username = server.getUserNameBySessionID(sessionId);
-                        List<String> albums = server.getAlbunsOfGivenUser(username);
+                        List<Pair<String,String>> albums = server.getAlbunsOfGivenUser(username);
 
-                        return "OK " + server.representList(albums);
+                        return "OK " + server.representAlbum(albums);
 
                     }
 
+                case "ALB-AUP":
+                    sessionId = args.get(1);
+                    albumId = args.get(2);
+                    username = args.get(3);
+                    url = args.get(4);
+
+                    ownerUserName = server.getUserNameBySessionID(sessionId);
+
+                    if (ownerUserName == null) {
+                        System.out.println("** ALB-AUP: Invalid sessionID!");
+                        return "NOK 4";
+                    } else {
+                        album = server.getAlbumById(new Integer(albumId));
+                        //Checks if album ID exists
+                        if (album == null) {
+                            System.out.println("** ALB-AUP: Invalid albumID!");
+                            return "NOK 5";
+                        }
+
+                        //Checks if username exists
+                        if ((!server.usernameExists(username)) || (username.equals(ownerUserName))) {
+                            System.out.println("** ALB-AUP: User " + username + " does not exists or it is the owner when trying to add to album.");
+                            return "NOK 6";
+                        }
+
+                        //URL validation
+                        if(!url.matches("\\b((http|https):\\/\\/?)[^\\s()<>]+(?:\\([\\w\\d]+\\)|([^[:punct:]\\s]|\\/?))")) {
+                            System.out.println("** ALB-AUP: URL: " + url + " is invalid");
+                            return "NOK 7";
+                        }
+
+                        album.addUserPermission(username, url);
+                        System.out.println("** ALB-AUP: User " + ownerUserName + " added " + username + " to album " + albumId + " - '" + album.getTitle() + "'");
+                        return "OK";
+
+                    }
+
+
+                case "SHUT":
+                    return "SHUT OK";
 
 
             }

@@ -135,14 +135,11 @@ public class Worker extends Thread {
                     }
 
                 case "LOGOUT":
-                    username = args.get(1);
-                    sessionId = server.usernameIsLoggedOn(username);
+                    sessionId = args.get(1);
+                    username = server.getUserNameBySessionID(sessionId);
 
-                    if (!server.usernameExists(username)) {
-                        System.out.println("** LOGIN: User " + username + " does not exists");
-                        return "NOK 1";
-                    } else if (sessionId == null) {
-                        System.out.println("** LOGOFF: User " + username + " is not currently logged in!");
+                    if (username == null) {
+                        System.out.println("** LOGOUT: Invalid sessionID!");
                         return "NOK 4";
                     } else {
                         server.removeLoggedUser(username, sessionId);

@@ -34,7 +34,11 @@ public class Server {
         this.albums = new ArrayList<>();
     }
 
-
+    /**
+     * Checks if a given username exists
+     * @param username to be checked
+     * @return true if username exists false otherwise
+     */
     public boolean usernameExists(String username) {
         for (User user: users) {
             if (user.getUsername().equals(username))
@@ -43,6 +47,11 @@ public class Server {
         return false;
     }
 
+    /**
+     * Check if a given user (by username) is currently logged in the system.
+     * @param username to check
+     * @return the sessionID if the user is logged in and null otherwise
+     */
     public String usernameIsLoggedOn(String username) {
         for (Pair<String, String> user: this.loggedInUsers) {
             if (user.getKey().equals(username))
@@ -51,6 +60,11 @@ public class Server {
         return null;
     }
 
+    /**
+     * Given a sessionID returns the corresponding username
+     * @param sessionID to be checked
+     * @return the username if was a match and null otherwise
+     */
     public String getUserNameBySessionID(String sessionID) {
         for (Pair<String, String> user: this.loggedInUsers) {
             if (user.getValue().equals(sessionID))
@@ -59,6 +73,11 @@ public class Server {
         return null;
     }
 
+    /**
+     * Given a username returns the correspondent User
+     * @param username
+     * @return the User instance that matches the username
+     */
     public User getUserByUsername(String username) {
         for (User user: users) {
             if (user.getUsername().equals(username))
@@ -67,8 +86,48 @@ public class Server {
         return null;
     }
 
-    /** === SOCKET RELATED === **/
+    /**
+     * Given a pattern return all usernames that matches it
+     * @param pattern to look for
+     * @return a list of all usernames that matches that pattern
+     */
+    public List<String> findUserNameByPattern(String pattern) {
+        List<String> matches = new ArrayList<>();
 
+        for (User user: users) {
+            if (user.getUsername().matches(pattern))
+                matches.add(user.getUsername());
+        }
+
+        return matches;
+    }
+
+    /**
+     * Given a list of usernames represent all items as a string of type <user1, user2 , ... , userN>
+     * @param matches the list to be represented
+     * @return a string with matches representation
+     */
+    public String representListOfUserNames(List<String> matches) {
+        String rep = "<";
+        int len = matches.size();
+
+        for (int i = 0; i < len; i++) {
+            rep += matches.get(i);
+
+            if (i != (len - 1))
+                rep += " , ";
+        }
+
+        rep += ">";
+        return rep;
+    }
+
+
+    /** ======================================= SOCKET RELATED ======================================= **/
+
+    /**
+     * Function to start receiving request from the clients.
+     */
     public void initSocket() {
         try {
             this.serverSocket = new ServerSocket(SERVER_PORT);
@@ -93,6 +152,9 @@ public class Server {
         }
     }
 
+    /**
+     * Stop any listen on the channel for client's requests.
+     */
     public void stopSocket() {
         try {
             in.close();
@@ -104,10 +166,14 @@ public class Server {
         }
     }
 
-
+    /**
+     * Given an instruction (String) parses it according to the several criteria.
+     * @param instruction
+     * @return A list of string with the arguments
+     */
     private List<String> parseInstruction(String instruction) {
         List<String> args = null;
-        if (instruction.startsWith("LOGIN") || instruction.startsWith("SIGNUP") || (instruction.startsWith("LOGOUT")) || (instruction.startsWith("ALB-AUP"))) {
+        if (instruction.startsWith("LOGIN") || instruction.startsWith("SIGNUP") || (instruction.startsWith("LOGOUT")) || (instruction.startsWith("ALB-AUP") || (instruction.startsWith("USR-FND")))) {
             args = Arrays.asList(instruction.split(" "));
         } else if (instruction.startsWith("ALB")) {
             //Split by space ignoring spaces inside quotes
@@ -115,11 +181,16 @@ public class Server {
 
             args = new ArrayList<>();
             while (m.find())
-                args.add(m.group(1)); // Add .replace("\"", "") to remove surrounding quotes.
+                args.add(m.group(1).replace("\"", ""));
         }
         return args;
     }
 
+    /**
+     * Given a list of arguments and a function execute it
+     * @param args list of arguments
+     * @return the output of the execution
+     */
     private String processInstruction(List<String> args) {
 
         try {
@@ -128,6 +199,7 @@ public class Server {
             String password;
             String sessionId;
             String albumTitle;
+            String pattern;
             User user;
 
             switch (instruction) {
@@ -203,8 +275,27 @@ public class Server {
 
                         this.albums.add(new Album(Album.CounterID, albumTitle, owner));
 
-                        System.out.println("** ALB-CR8: User " + owner.getUsername() + " just created one album with title: " + albumTitle);
+                        System.out.println("** ALB-CR8: User " + owner.getUsername() + " just created one album with title: '" + albumTitle + "'");
                         return "OK " + Album.CounterID++;
+                    }
+
+                    // === FIND USERS ===
+                case "USR-FND":
+                    sessionId = args.get(1);
+                    pattern = args.get(2);
+                    List<String> matches;
+
+                    if (getUserNameBySessionID(sessionId) == null) {
+                        System.out.println("** USR-FND: Invalid sessionID!");
+                        return "NOK 4";
+                    }
+                    else {
+
+                        if (pattern.contains("*")) {
+                            matches = findUserNameByPattern("\\b(\\w*" + pattern.replace("*", "") + "\\w*)\\b");
+                        } else matches = findUserNameByPattern("\\b(\\w*" + pattern + "\\w*)\\b");
+
+                        return "OK " + representListOfUserNames(matches);
                     }
 
             }

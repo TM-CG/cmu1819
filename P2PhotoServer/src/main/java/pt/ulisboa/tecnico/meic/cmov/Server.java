@@ -6,10 +6,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Server {
 
@@ -97,6 +94,19 @@ public class Server {
     }
 
     /**
+     * Given an identifier return the album
+     * @param id of the album
+     * @return an album object if album exists or null otherwise
+     */
+    public Album getAlbumById(int id) {
+        for (Album album: albums) {
+            if (album.getID() == id)
+                return album;
+        }
+        return null;
+    }
+
+    /**
      * Given a pattern return all usernames that matches it
      * @param pattern to look for
      * @return a list of all usernames that matches that pattern
@@ -111,6 +121,7 @@ public class Server {
 
         return matches;
     }
+
 
     /**
      * Given a list of something represent all items as a string of type <user1, user2 , ... , userN>
@@ -133,18 +144,38 @@ public class Server {
     }
 
     /**
+     * Given a list of albums transform it to a String
+     * @param list of albums, i.e, pairs of strings <albumID, Title>
+     * @return a string with all albums to send to client
+     */
+    public String representAlbum(List<Pair<String, String>> list) {
+        String rep = "<";
+        int len = list.size();
+
+        for (int i = 0; i < len; i++) {
+            rep += list.get(i).getKey() + " \"" + list.get(i).getValue() + "\"";
+
+            if (i != (len - 1))
+                rep += " , ";
+        }
+
+        rep += ">";
+        return rep;
+    }
+
+    /**
      * Given a username returns a list with all albums ID where the user participates or owns
      * @param username of the user to search
      * @return a list of all albums ID
      */
-    public List<String> getAlbunsOfGivenUser(String username) {
-        List<String> albums = new ArrayList<>();
+    public List<Pair<String, String>> getAlbunsOfGivenUser(String username) {
+        List<Pair<String, String>> albums = new ArrayList<>();
 
         for (Album album : this.albums) {
             //User is the owner OR user participates on the album
             if ((album.getOwner().getUsername().equals(username)) || (album.getIndexOfUser(username) != null))
                 //vitor: bah!!
-                albums.add(new Integer(album.getID()).toString());
+                albums.add(new Pair<>(new Integer(album.getID()).toString(), album.getTitle()));
         }
 
         return albums;

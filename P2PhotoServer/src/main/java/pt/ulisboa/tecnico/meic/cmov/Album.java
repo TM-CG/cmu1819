@@ -78,4 +78,16 @@ public class Album {
 
         return null;
     }
+
+    /**
+     * Displays a list of all users' album slice urls.
+     * @return the list of all user's album slice urls
+     */
+    public List<String> getAlbumSlicesURLs() {
+        List<String> urls = new ArrayList<>();
+        for (Pair<String, String> albumSlices: indexes) {
+            urls.add(albumSlices.getValue());
+        }
+        return urls;
+    }
 }

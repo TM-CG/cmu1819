@@ -14,3 +14,4 @@ Android/.externalNativeBuild
 *.class
 P2PhotoServer/.idea/
 P2PhotoServer/target/
+P2Photo/.idea/

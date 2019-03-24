@@ -14,6 +14,8 @@
     <string name="createAlbum">Create Album</string>
     <string name="nameString">Name:</string>
     <string name="authUsersString">Authorized Users:</string>
-
+    <string name="findUsersString">Find Users:</string>
+    <string name="cancelString">  Cancel</string>
+    <string name="confirmString">Confirm</string>
 
 </resources>

@@ -3,7 +3,7 @@ package pt.ulisboa.tecnico.meic.cmov;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Instruction implements RemoteInstruction{
+public abstract class Instruction {
 
     /** Debug verbose messages **/
     public static final String NOK1 = "User %s does not exist!";

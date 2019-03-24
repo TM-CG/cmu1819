@@ -11,6 +11,9 @@
     <string name="menu4">Add Users to Album</string>
     <string name="settingsButtonString">Settings</string>
     <string name="logOutButtonString">Log Out</string>
+    <string name="createAlbum">Create Album</string>
+    <string name="nameString">Name:</string>
+    <string name="authUsersString">Authorized Users:</string>
 
 
 </resources>

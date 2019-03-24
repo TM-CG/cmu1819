@@ -9,6 +9,12 @@
     <string name="menu2">Your Albums</string>
     <string name="menu3">Add Photo</string>
     <string name="menu4"> Add Users to Album</string>
+    <string name="preview"> Preview photo</string>
+    <string name="AlbumName"> Album name:</string>
+    <string name="cancel"> Cancel</string>
+    <string name="add"> Add</string>
+
+
 
 
 </resources>

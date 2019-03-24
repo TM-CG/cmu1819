@@ -52,8 +52,28 @@
         android:layout_marginTop="75dp" />
 
     <Button
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/settingsButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="@string/settingsButtonString"
+        android:drawableStart="@drawable/baseline_settings_black_36"
+        app:layout_constraintTop_toBottomOf="@+id/addUsers"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="30dp"/>
+
+    <Button
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:id="@+id/logoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/logOutButtonString"
+        android:drawableStart="@drawable/baseline_exit_to_app_black_36"
+        app:layout_constraintTop_toBottomOf="@+id/addUsers"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="50dp"
+        />
 
 </android.support.constraint.ConstraintLayout>

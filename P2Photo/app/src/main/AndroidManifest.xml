@@ -9,9 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-
-        <activity android:name=".CreateAlbum"></activity>
+        <activity android:name=".AddUser"></activity>
+        <activity android:name=".CreateAlbum" />
         <activity android:name=".ActionsMenu" />
+        <activity android:name=".addPhotoActivity" />
+        <activity android:name=".YourAlbums" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

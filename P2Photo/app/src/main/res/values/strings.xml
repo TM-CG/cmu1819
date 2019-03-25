@@ -21,6 +21,8 @@
     <string name="findUsersString">Find Users:</string>
     <string name="cancelString">  Cancel</string>
     <string name="confirmString">Confirm</string>
-
+    <string name="addUserString">Add Users</string>
+    <string name="findUser">Find User</string>
+    <string name="usersAdded">Users being added:</string>
 
 </resources>

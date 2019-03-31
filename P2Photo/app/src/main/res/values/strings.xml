@@ -25,5 +25,17 @@
     <string name="findUser">Find User</string>
     <string name="usersAdded">Users being added:</string>
     <string name="albumName">Album Name</string>
+    <string name="chooseLocalCloud">You can choose between
+        using a cloud-based
+        storage or local storage
+        to store your photos.
+    </string>
+    <string name="chooseOne">Choose one:</string>
+    <string name="local">Local</string>
+    <string name="cloud">Cloud</string>
+    <string name="back">Back</string>
+
+
+
 
 </resources>

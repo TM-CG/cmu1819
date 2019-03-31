@@ -9,13 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".AddUser"></activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".AddUser" />
         <activity android:name=".CreateAlbum" />
         <activity android:name=".ActionsMenu" />
         <activity android:name=".addPhotoActivity" />
         <activity android:name=".YourAlbums" />
-        <activity android:name=".ListPhoto"/>
-        <activity android:name=".MainActivity">
+        <activity android:name=".ListPhoto" />
+        <activity android:name=".chooseCloudLocalActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

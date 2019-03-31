@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".settingsActivity">
+
+    <Button
+        android:id="@+id/backButtonSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back"
+        android:drawableStart="@drawable/ic_arrow_back_black_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="20dp"/>
+
+    <TextView
+        style="@style/TextView.Big"
+        android:id="@+id/storageLimitSettings"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="@string/StorageLimit"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="200dp" />
+
+    <SeekBar
+        android:id="@+id/seekBarStorageSettings"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:max="10"
+        app:layout_constraintTop_toBottomOf="@id/storageLimitSettings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/storageSettings"
+        android:layout_marginTop="8dp"
+        />
+
+    <TextView
+        style="@style/TextView.Big"
+        android:id="@+id/storageSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        app:layout_constraintTop_toBottomOf="@id/storageLimitSettings"
+        app:layout_constraintEnd_toStartOf="@id/seekBarStorageSettings"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <TextView
+        style="@style/TextView.Big"
+        android:id="@+id/cacheLimitSettings"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="@string/CacheLimit"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/seekBarStorageSettings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="80dp" />
+
+    <SeekBar
+        android:id="@+id/seekBarCacheSettings"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:max="10"
+        app:layout_constraintTop_toBottomOf="@id/cacheLimitSettings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cacheSettings"
+        android:layout_marginTop="8dp"
+        />
+
+    <TextView
+        style="@style/TextView.Big"
+        android:id="@+id/cacheSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        app:layout_constraintTop_toBottomOf="@id/cacheLimitSettings"
+        app:layout_constraintEnd_toStartOf="@id/seekBarCacheSettings"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <Button
+        android:id="@+id/saveSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cacheSettings"
+        android:layout_margin="70dp"/>
+
+    <Button
+        android:id="@+id/Log"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Log"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveSettings"
+        android:layout_margin="20dp"/>
+
+
+
+</android.support.constraint.ConstraintLayout>

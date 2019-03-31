@@ -37,7 +37,8 @@
     <string name="Continue">Continue</string>
     <string name="StorageLimit">Storage Limit (GB)</string>
     <string name="CacheLimit">Cache Limit (GB)</string>
-
+    <string name="Save">Save Settings</string>
+    <string name="Log">Log</string>
 
 
 

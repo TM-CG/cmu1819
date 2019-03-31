@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".signuplocalstorageactivity">
+
+    <TextView
+        style="@style/TextView.Big"
+        android:id="@+id/storageLimit"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="@string/StorageLimit"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="200dp" />
+
+    <SeekBar
+        android:id="@+id/seekBarStorage"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:max="10"
+        app:layout_constraintTop_toBottomOf="@id/storageLimit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/storage"
+        android:layout_marginTop="8dp"
+        />
+
+    <TextView
+        style="@style/TextView.Big"
+        android:id="@+id/storage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        app:layout_constraintTop_toBottomOf="@id/storageLimit"
+        app:layout_constraintEnd_toStartOf="@id/seekBarStorage"
+        app:layout_constraintStart_toStartOf="parent"
+       />
+
+    <TextView
+        style="@style/TextView.Big"
+        android:id="@+id/cacheLimit"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="@string/CacheLimit"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/seekBarStorage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="80dp" />
+
+    <SeekBar
+        android:id="@+id/seekBarCache"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:max="10"
+        app:layout_constraintTop_toBottomOf="@id/cacheLimit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cache"
+        android:layout_marginTop="8dp"
+        />
+
+    <TextView
+        style="@style/TextView.Big"
+        android:id="@+id/cache"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        app:layout_constraintTop_toBottomOf="@id/cacheLimit"
+        app:layout_constraintEnd_toStartOf="@id/seekBarCache"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back"
+        android:drawableStart="@drawable/ic_arrow_back_black_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="20dp"/>
+
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Continue"
+        android:drawableEnd="@drawable/ic_arrow_forward_black_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="20dp"/>
+
+</android.support.constraint.ConstraintLayout>

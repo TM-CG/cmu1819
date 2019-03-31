@@ -34,6 +34,9 @@
     <string name="local">Local</string>
     <string name="cloud">Cloud</string>
     <string name="back">Back</string>
+    <string name="Continue">Continue</string>
+    <string name="StorageLimit">Storage Limit (GB)</string>
+    <string name="CacheLimit">Cache Limit (GB)</string>
 
 
 

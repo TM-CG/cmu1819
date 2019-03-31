@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".chooseCloudLocalActivity"></activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".AddUser" />
         <activity android:name=".CreateAlbum" />
@@ -16,7 +17,7 @@
         <activity android:name=".addPhotoActivity" />
         <activity android:name=".YourAlbums" />
         <activity android:name=".ListPhoto" />
-        <activity android:name=".chooseCloudLocalActivity">
+        <activity android:name=".signuplocalstorageactivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

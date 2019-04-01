@@ -17,6 +17,8 @@
         <activity android:name=".YourAlbums" />
         <activity android:name=".ListPhoto" />
         <activity android:name=".settingsActivity"/>
+        <activity android:name="addPhotoActivityFromMenu"/>
+        <activity android:name=".selectPhotoActivity"/>
         <activity android:name=".ConfirmPromptActivity"
             android:theme="@android:style/Theme.Dialog">
         </activity>

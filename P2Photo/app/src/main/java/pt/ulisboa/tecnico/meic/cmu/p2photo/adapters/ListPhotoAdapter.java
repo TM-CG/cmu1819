@@ -26,7 +26,7 @@ public class ListPhotoAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         //vitor: to be replace with the total number of photos in this album
-        return 30;
+        return 100;
     }
 
     @Override

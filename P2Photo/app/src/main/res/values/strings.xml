@@ -40,8 +40,6 @@
     <string name="Save">Save Settings</string>
     <string name="Log">Log</string>
     <string name="choosePhoto">Choose Photo</string>
-
-
     <string-array name="test_arrays">
         <item>zé</item>
         <item>zée</item>
@@ -51,6 +49,10 @@
         <item>zéeeeee</item>
         <item>zéeeeeee</item>
     </string-array>
-
+    <string name="dialog_text">Simple Dialog</string>
+    <string name="btn_start_dialog_label">Dialog</string>
+    <string name="btn_confirm_OK">Confirm</string>
+    <string name="btn_confirm_cancel">Cancel</string>
+    <string name="lbl_log_description">Log: For debug proposes</string>
 
 </resources>

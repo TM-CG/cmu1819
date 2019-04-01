@@ -1,9 +1,13 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class settingsActivity extends AppCompatActivity {
 
@@ -60,5 +64,39 @@ public class settingsActivity extends AppCompatActivity {
                 textViewCache.setText(progress + "/" + seekBar.getMax());
             }
         });
+    }
+
+    public void goBack(View view){
+        Intent intent = getIntent();
+        setResult(RESULT_OK,intent);
+        finish();
+    }
+
+    public void saveSettings(View view){
+        /*TODO save settings here*/
+        Toast.makeText(getApplicationContext(), "Settings saved successfully",
+                Toast.LENGTH_LONG).show();
+    }
+
+    public void showLog(View view){
+        Intent intent = new Intent(this, LogActivity.class);
+        startActivityForResult(intent, 5);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+            /*Show log option*/
+            case 5:
+                if(resultCode==RESULT_OK){
+
+                }
+                else if(resultCode==RESULT_CANCELED){
+
+                }
+                break;
+        }
     }
 }

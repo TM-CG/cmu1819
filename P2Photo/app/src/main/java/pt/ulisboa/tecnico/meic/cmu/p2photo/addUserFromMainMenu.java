@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,8 @@ public class addUserFromMainMenu extends AppCompatActivity {
     private ArrayList<String> items2;
     private ArrayAdapter<String> itemsAdapter2;
     private ListView lvItems2;
+    private static final int CONFIRMATION_REQUEST = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,4 +96,24 @@ public class addUserFromMainMenu extends AppCompatActivity {
             // Return true consumes the long click event (marks it handled)
         }
     }
+
+    /*public void confirmAddUsers(View view) {
+        Intent intent = new Intent(addUserFromMainMenu.this, ConfirmPromptActivity.class);
+        intent.putExtra("message", "Are you sure?");
+        startActivityForResult(intent, CONFIRMATION_REQUEST);
+    }*/
+
+    public void cancel(View view){
+        Intent intent = getIntent();
+        setResult(RESULT_CANCELED,intent);
+        finish();
+    }
+
+    public void create(View view){
+        Intent intent = getIntent();
+        setResult(RESULT_OK,intent);
+        finish();
+    }
+
+
 }

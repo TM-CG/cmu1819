@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void signIn(View view) {
+        intent = new Intent(this, ActionsMenu.class);
         if(checkArguments()){
             /*TODO server request*/
             startActivityForResult(intent, 1);
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void signUp(View view) {
+        intent = new Intent(this, chooseCloudLocalActivity.class);
         if(checkArguments()){
             /*TODO server request*/
             startActivityForResult(intent, 2);
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode){
             /*Sign In*/
             case 1:
+                /*Sign Up*/
             case 2:
                 if(resultCode==RESULT_OK){
                     Toast.makeText(getApplicationContext(), "User "
@@ -58,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean checkArguments(){
-        intent = new Intent(this, chooseCloudLocalActivity.class);
         user = (EditText) findViewById(R.id.textUser);
         pass = (EditText) findViewById(R.id.textPass);
         intent.putExtra("name", user.getText().toString());

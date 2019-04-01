@@ -10,70 +10,79 @@
         android:id="@+id/createAlbum"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:text="@string/menu1"
+        android:layout_marginTop="150dp"
         android:drawableStart="@drawable/baseline_add_to_photos_black_48"
-        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="createAlbum"
+        android:text="@string/menu1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="150dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/yourAlbums"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:text="@string/menu2"
+        android:layout_marginTop="75dp"
         android:drawableStart="@drawable/baseline_photo_album_black_48"
-        app:layout_constraintTop_toTopOf="@id/createAlbum"
+        android:onClick="showAlbums"
+        android:text="@string/menu2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="75dp" />
+        app:layout_constraintTop_toTopOf="@id/createAlbum" />
 
     <Button
         android:id="@+id/addPhoto"
         android:layout_width="match_parent"
         android:layout_height="75dp"
+        android:layout_marginTop="75dp"
+        android:drawableStart="@drawable/baseline_add_a_photo_black_48"
+        android:onClick="addPhoto"
         android:text="@string/menu3"
         android:textAlignment="center"
-        android:drawableStart="@drawable/baseline_add_a_photo_black_48"
-        app:layout_constraintTop_toTopOf="@id/yourAlbums"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="75dp" />
+        app:layout_constraintTop_toTopOf="@id/yourAlbums" />
 
     <Button
         android:id="@+id/addUsers"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:text="@string/menu4"
+        android:layout_marginTop="75dp"
         android:drawableStart="@drawable/baseline_group_add_black_48"
-        app:layout_constraintTop_toTopOf="@id/addPhoto"
+        android:onClick="addUsersToAlbum"
+        android:text="@string/menu4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="75dp" />
+        app:layout_constraintTop_toTopOf="@id/addPhoto" />
 
     <Button
-        style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/settingsButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/settingsButtonString"
-        android:drawableStart="@drawable/baseline_settings_black_36"
-        app:layout_constraintTop_toBottomOf="@+id/addUsers"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
-        android:layout_marginStart="30dp"/>
+        android:layout_marginBottom="8dp"
+        android:drawableStart="@drawable/baseline_settings_black_36"
+        android:onClick="selectSettings"
+        android:text="@string/settingsButtonString"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addUsers" />
 
     <Button
-        style="@style/Widget.AppCompat.Button.Borderless"
         android:id="@+id/logoutButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/logOutButtonString"
-        android:drawableStart="@drawable/baseline_exit_to_app_black_36"
-        app:layout_constraintTop_toBottomOf="@+id/addUsers"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="50dp"
-        />
+        android:layout_marginBottom="8dp"
+        android:drawableStart="@drawable/baseline_exit_to_app_black_36"
+        android:onClick="goBack"
+        android:text="@string/logOutButtonString"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addUsers" />
 
 </android.support.constraint.ConstraintLayout>

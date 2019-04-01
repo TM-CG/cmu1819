@@ -9,6 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".selectPhotoActivity"></activity>
+        <activity android:name=".settingsActivity" />
         <activity android:name=".chooseCloudLocalActivity" />
         <activity android:name=".AddUser" />
         <activity android:name=".CreateAlbum" />
@@ -16,9 +18,8 @@
         <activity android:name=".addPhotoActivity" />
         <activity android:name=".YourAlbums" />
         <activity android:name=".ListPhoto" />
-        <activity android:name=".settingsActivity"/>
+        <activity android:name=".addUserFromMainMenu" />
         <activity android:name="addPhotoActivityFromMenu"/>
-        <activity android:name=".selectPhotoActivity"/>
         <activity android:name=".LogActivity"/>
         <activity android:name=".ConfirmPromptActivity"
             android:theme="@android:style/Theme.Dialog">

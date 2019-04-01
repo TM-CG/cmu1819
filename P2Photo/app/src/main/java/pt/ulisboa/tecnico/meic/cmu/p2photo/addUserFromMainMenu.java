@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,8 +9,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-
-public class AddUser extends AppCompatActivity {
+public class addUserFromMainMenu extends AppCompatActivity {
     private ArrayList<String> items;
     private ArrayAdapter<String> itemsAdapter;
     private ListView lvItems;
@@ -19,12 +17,11 @@ public class AddUser extends AppCompatActivity {
     private ArrayList<String> items2;
     private ArrayAdapter<String> itemsAdapter2;
     private ListView lvItems2;
-    private static final int CONFIRMATION_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_user);
+        setContentView(R.layout.activity_add_user_from_main_menu);
 
         items = new ArrayList<String>();
 
@@ -46,7 +43,6 @@ public class AddUser extends AppCompatActivity {
 
         setupListViewListener();
         createUsersTest();
-
     }
 
     private void setupListViewListener() {
@@ -95,25 +91,6 @@ public class AddUser extends AppCompatActivity {
             // Refresh the adapter
             itemsAdapter2.notifyDataSetChanged();
             // Return true consumes the long click event (marks it handled)
-        }
-    }
-
-    public void confirmAddUsers(View view) {
-        Intent intent = new Intent(AddUser.this, ConfirmPromptActivity.class);
-        intent.putExtra("message", "Are you sure?");
-        startActivityForResult(intent, CONFIRMATION_REQUEST);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CONFIRMATION_REQUEST) {
-            if (resultCode == RESULT_OK){
-                //the user confirmed
-
-            }
-            else if (resultCode == RESULT_CANCELED) {
-                //the user cancelled
-            }
         }
     }
 }

@@ -10,20 +10,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".chooseCloudLocalActivity" />
-        <activity android:name=".MainActivity" />
         <activity android:name=".AddUser" />
         <activity android:name=".CreateAlbum" />
         <activity android:name=".ActionsMenu" />
         <activity android:name=".addPhotoActivity" />
         <activity android:name=".YourAlbums" />
         <activity android:name=".ListPhoto" />
-        <activity android:name=".settingsActivity">
+        <activity android:name=".settingsActivity"/>
+        <activity android:name=".ConfirmPromptActivity"
+            android:theme="@android:style/Theme.Dialog">
+        </activity>
+        <activity android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

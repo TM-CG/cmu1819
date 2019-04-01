@@ -45,5 +45,6 @@
     <string name="btn_start_dialog_label">Dialog</string>
     <string name="btn_confirm_OK">Confirm</string>
     <string name="btn_confirm_cancel">Cancel</string>
+    <string name="lbl_log_description">Log: For debug proposes</string>
 
 </resources>

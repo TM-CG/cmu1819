@@ -12,9 +12,9 @@ import static pt.ulisboa.tecnico.meic.cmov.Instruction.*;
 
 public class FindUserTest {
 
-    public static final String TEST_USER_3 = "test_user3";
-    public static final String TEST_USER_2 = "test_user2";
-    public static final String TEST_USER_1 = "test_user1";
+    private static final String TEST_USER_3 = "test_user3";
+    private static final String TEST_USER_2 = "test_user2";
+    private static final String TEST_USER_1 = "test_user1";
 
     private Server dummyServer;
 
@@ -30,6 +30,7 @@ public class FindUserTest {
         this.args.add("SIGNUP");
         this.args.add(username);
         this.args.add("passdefault");
+        this.args.add("https://user.p2photocloud.com/user");
         new SignUp(args, dummyServer).execute();
     }
 

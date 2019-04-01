@@ -24,12 +24,20 @@ public class LogOutTest {
         this.args.add("SIGNUP");
         this.args.add("test_user1");
         this.args.add("testpass1");
+        this.args.add("https://user.p2photocloud.com/user");
+
+        new SignUp(args, dummyServer).execute();
+
+        //prepare for logins
+        this.args = new ArrayList<>();
+        this.args.add("SIGNUP");
+        this.args.add("test_user1");
+        this.args.add("testpass1");
 
     }
 
     @Test
     public void simpleLogOut() {
-        new SignUp(args, dummyServer).execute();
 
         assertEquals(1, dummyServer.numberOfRegisteredUsers());
         assertEquals(0, dummyServer.numberOfLoggedInUsers());
@@ -56,8 +64,6 @@ public class LogOutTest {
 
     @Test
     public void LogOutWithInvalidSessionId() {
-        new SignUp(args, dummyServer).execute();
-
         new LogIn(args, dummyServer).execute();
 
         this.args = new ArrayList<>();
@@ -78,8 +84,6 @@ public class LogOutTest {
 
     @Test
     public void LogOutWithInvalidSessionId2() {
-        new SignUp(args, dummyServer).execute();
-
         new LogIn(args, dummyServer).execute();
 
         this.args = new ArrayList<>();
@@ -99,12 +103,7 @@ public class LogOutTest {
 
     @Test
     public void LogOutWithNullArgs() {
-        new SignUp(args, dummyServer).execute();
-
         new LogIn(args, dummyServer).execute();
-
-        this.args = new ArrayList<>();
-        this.args.add("LOGOUT");
 
         LogOut logout = new LogOut(null, dummyServer);
         String response = logout.execute();

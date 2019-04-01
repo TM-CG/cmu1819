@@ -44,7 +44,7 @@ public class UpdateAlbum extends Instruction {
                 }
 
                 String url = server.getUserByUsername(username).getCloudURL() + "/" +
-                        server.getAlbumById(Integer.parseInt(albumId)).getTitle().toLowerCase() + "_" + albumId + ".alb";
+                        server.getAlbumById(Integer.parseInt(albumId)).getTitle().toLowerCase().replace(" ", "_") + "_" + albumId + ".alb";
 
                 album.addUserPermission(username, url);
                 displayDebug("** ALB-AUP: User " + ownerUserName + " added " + username + " to album " + albumId + " - '" + album.getTitle() + "'");

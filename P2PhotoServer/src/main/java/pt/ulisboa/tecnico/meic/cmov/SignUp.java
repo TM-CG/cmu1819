@@ -12,8 +12,12 @@ public class SignUp extends Instruction {
     public String execute() {
         try {
 
+            if (args.size() != 4)
+                return "ERR";
+
             String username = args.get(1);
             String password = args.get(2);
+            String url = args.get(3);
 
             if (username == null || password == null || username.contains(" ") || password.contains(" ") || username.contains("\"") || password.contains("\""))
                 return ERR;
@@ -24,7 +28,7 @@ public class SignUp extends Instruction {
                 return NOK_3;
             } else {
                 //Adds user
-                server.addUser(new User(username, password));
+                server.addUser(new User(username, password, url));
                 displayDebug("Successfully added user " + username);
                 return OK;
             }

@@ -27,7 +27,7 @@ public class CreateAlbum extends Instruction {
                 return NOK_4;
             } else {
 
-                String ownerURL = owner.getCloudURL() + "/" + albumTitle.toLowerCase() + "_" + Album.CounterID + ".alb";
+                String ownerURL = owner.getCloudURL() + "/" + albumTitle.toLowerCase().replace(" ", "_") + "_" + Album.CounterID + ".alb";
                 server.addAlbum(new Album(Album.CounterID, albumTitle, owner, ownerURL));
 
                 displayDebug("User " + owner.getUsername() + " just created one album with title: '" + albumTitle + "'");

@@ -23,6 +23,7 @@ public class SignUpTest {
         this.args.add("SIGNUP");
         this.args.add("test_user1");
         this.args.add("testpass1");
+        this.args.add("https://user.p2photocloud.com/user");
 
 
     }
@@ -42,12 +43,26 @@ public class SignUpTest {
     }
 
     @Test
+    public void SignUpWithNullArgs() {
+        SignUp signUp = new SignUp(null, dummyServer);
+
+        String response = signUp.execute();
+        assertNotNull(response);
+
+        assertEquals(ERR, response);
+
+        assertEquals(0, dummyServer.numberOfRegisteredUsers());
+
+    }
+
+    @Test
     public void simpleSignUpTwoUsers() {
         simpleSignUp();
         this.args = new ArrayList<>();
         this.args.add("SIGNUP");
         this.args.add("test_user2");
         this.args.add("testpass2");
+        this.args.add("https://user.p2photocloud.com/user");
 
         SignUp signUp = new SignUp(args, dummyServer);
 
@@ -83,6 +98,7 @@ public class SignUpTest {
         this.args.add("SIGNUP");
         this.args.add("invalid username");
         this.args.add("testpass");
+        this.args.add("https://user.p2photocloud.com/user");
 
         SignUp signUp = new SignUp(args, dummyServer);
 
@@ -102,6 +118,7 @@ public class SignUpTest {
         this.args.add("SIGNUP");
         this.args.add("invalid\"username\"");
         this.args.add("testpass");
+        this.args.add("https://user.p2photocloud.com/user");
 
         SignUp signUp = new SignUp(args, dummyServer);
 

@@ -12,17 +12,25 @@ public class ListAlbum extends Instruction {
 
     @Override
     public String execute() {
-        String sessionId = args.get(1);
-        String username = server.getUserNameBySessionID(sessionId);
+        try {
 
-        if (username == null) {
-            displayDebug(VERBOSE_NOK4);
-            return NOK_4;
-        } else {
-            List<Pair<String,String>> albums = server.getAlbunsOfGivenUser(username);
+            if (args.size() != 2)
+                return "ERR";
 
-            return OK_PLUS + server.representAlbum(albums);
+            String sessionId = args.get(1);
+            String username = server.getUserNameBySessionID(sessionId);
 
+            if (username == null) {
+                displayDebug(VERBOSE_NOK4);
+                return NOK_4;
+            } else {
+                List<Pair<String, String>> albums = server.getAlbunsOfGivenUser(username);
+
+                return OK_PLUS + server.representAlbum(albums);
+
+            }
+        } catch(NullPointerException | IndexOutOfBoundsException e) {
+            return ERR;
         }
     }
 }

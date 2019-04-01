@@ -24,21 +24,22 @@ public class LogInTest {
         this.args.add("SIGNUP");
         this.args.add("test_user1");
         this.args.add("testpass1");
+        this.args.add("https://user.p2photocloud.com/user");
+        new SignUp(args, dummyServer).execute();
+
+        //prepare args for login
+        this.args = new ArrayList<>();
+        this.args.add("LOGIN");
+        this.args.add("test_user1");
+        this.args.add("testpass1");
 
     }
 
     @Test
     public void simpleLogIn() {
-        SignUp signUp = new SignUp(args, dummyServer);
-
-        String response = signUp.execute();
-        assertNotNull(response);
-
-        assertEquals(OK, response);
-
         LogIn login = new LogIn(args, dummyServer);
 
-        response = null;
+        String response;
 
         response = login.execute();
 
@@ -51,6 +52,12 @@ public class LogInTest {
 
     @Test
     public void loginWithNonExistentUser() {
+
+        this.args = new ArrayList<>();
+        this.args.add("LOGIN");
+        this.args.add("ze_naoexiste");
+        this.args.add("pass_do_ze");
+
         LogIn login = new LogIn(args, dummyServer);
 
         String response = login.execute();
@@ -64,8 +71,6 @@ public class LogInTest {
 
     @Test
     public void LoginSameUserTwice() {
-        new SignUp(args, dummyServer).execute();
-
         LogIn login = new LogIn(args, dummyServer);
 
         String response = login.execute();
@@ -92,7 +97,6 @@ public class LogInTest {
 
     @Test
     public void wrongPasswordLogin() {
-        new SignUp(args, dummyServer).execute();
 
         this.args = new ArrayList<>();
 
@@ -111,7 +115,6 @@ public class LogInTest {
 
     @Test
     public void InvalidUserNameLogin() {
-        new SignUp(args, dummyServer).execute();
 
         this.args = new ArrayList<>();
 

@@ -11,12 +11,12 @@ import static org.junit.Assert.*;
 import static pt.ulisboa.tecnico.meic.cmov.Instruction.*;
 
 public class UpdateAlbumTest {
-    public static final String TEST_USER_3 = "test_user3";
-    public static final String TEST_USER_2 = "test_user2";
-    public static final String TEST_USER_1 = "test_user1";
-    public static final String TESTPASS_3 = "testpass3";
-    public static final String TESTPASS_2 = "testpass2";
-    public static final String TESTPASS_1 = "testpass1";
+    private static final String TEST_USER_3 = "test_user3";
+    private static final String TEST_USER_2 = "test_user2";
+    private static final String TEST_USER_1 = "test_user1";
+    private static final String TESTPASS_3 = "testpass3";
+    private static final String TESTPASS_2 = "testpass2";
+    private static final String TESTPASS_1 = "testpass1";
 
     private Server dummyServer;
 
@@ -36,6 +36,7 @@ public class UpdateAlbumTest {
         this.args.add("SIGNUP");
         this.args.add(TEST_USER_3);
         this.args.add(TESTPASS_3);
+        this.args.add("https://user.p2photocloud.com/user");
 
         new SignUp(args, dummyServer).execute();
 
@@ -44,6 +45,7 @@ public class UpdateAlbumTest {
         this.args.add("SIGNUP");
         this.args.add(TEST_USER_2);
         this.args.add(TESTPASS_2);
+        this.args.add("https://user.p2photocloud.com/user");
 
         new SignUp(args, dummyServer).execute();
 
@@ -52,8 +54,15 @@ public class UpdateAlbumTest {
         this.args.add("SIGNUP");
         this.args.add(TEST_USER_1);
         this.args.add(TESTPASS_1);
+        this.args.add("https://user.p2photocloud.com/user");
 
         new SignUp(args, dummyServer).execute();
+
+        //User1
+        this.args = new ArrayList<>();
+        this.args.add("SIGNUP");
+        this.args.add(TEST_USER_1);
+        this.args.add(TESTPASS_1);
 
         sessionId = new LogIn(args, dummyServer).execute().split(" ")[1];
 

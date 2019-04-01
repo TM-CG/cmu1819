@@ -13,6 +13,9 @@ public class LogIn extends Instruction {
 
         try {
 
+            if (args.size() != 3)
+                return "ERR";
+
             String username = args.get(1);
             String password = args.get(2);
             User user;

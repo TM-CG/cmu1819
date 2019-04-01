@@ -21,22 +21,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void signIn(View view) {
-        intent = new Intent(this, chooseCloudLocalActivity.class);
-        user = (EditText) findViewById(R.id.textUser);
-        pass = (EditText) findViewById(R.id.textPass);
-        intent.putExtra("name", user.getText().toString());
-        intent.putExtra("pass", pass.getText().toString());
-
-        setResult(RESULT_OK, intent);
-
-        if((user.getText().toString().matches("")) || pass.getText().toString().matches("")) {
-            Toast.makeText(getApplicationContext(), "Name or password invalid",
-                    Toast.LENGTH_LONG).show();
-        }
-        else{
+        if(checkArguments()){
+            /*TODO server request*/
             startActivityForResult(intent, 1);
         }
+    }
 
+    public void signUp(View view) {
+        if(checkArguments()){
+            /*TODO server request*/
+            startActivityForResult(intent, 2);
+        }
     }
 
     @Override
@@ -46,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode){
             /*Sign In*/
             case 1:
+            case 2:
                 if(resultCode==RESULT_OK){
                     Toast.makeText(getApplicationContext(), "User "
                                     + data.getStringExtra("name") + " logged out",
@@ -59,5 +55,22 @@ public class MainActivity extends AppCompatActivity {
                 pass.setText("");
                 break;
         }
+    }
+
+    public boolean checkArguments(){
+        intent = new Intent(this, chooseCloudLocalActivity.class);
+        user = (EditText) findViewById(R.id.textUser);
+        pass = (EditText) findViewById(R.id.textPass);
+        intent.putExtra("name", user.getText().toString());
+        intent.putExtra("pass", pass.getText().toString());
+
+        setResult(RESULT_OK, intent);
+
+        if((user.getText().toString().matches("")) || pass.getText().toString().matches("")) {
+            Toast.makeText(getApplicationContext(), "Name or password invalid",
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
 }

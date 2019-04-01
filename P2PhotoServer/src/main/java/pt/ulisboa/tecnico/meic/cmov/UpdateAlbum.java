@@ -14,7 +14,7 @@ public class UpdateAlbum extends Instruction {
         try {
 
             if (args.size() != 4)
-                return "ERR";
+                return ERR;
 
             String sessionId = args.get(1);
             String albumId = args.get(2);
@@ -24,23 +24,23 @@ public class UpdateAlbum extends Instruction {
             Album album;
 
             if (ownerUserName == null) {
-                displayDebug(NOK4);
-                return "NOK 4";
+                displayDebug(VERBOSE_NOK4);
+                return NOK_4;
             } else {
 
                 album = server.getAlbumById(new Integer(albumId));
                 //Checks if album ID exists
                 if (album == null) {
-                    displayDebug(NOK5);
-                    return "NOK 5";
+                    displayDebug(VERBOSE_NOK5);
+                    return NOK_5;
                 }
 
                 //Checks if username exists, if the user is not adding himself to the album in which is owner
                 //or changing another album which is not the owner
                 if ((!server.usernameExists(username)) || (username.equals(ownerUserName)) ||
                         (!ownerUserName.equals(album.getOwner()))) {
-                    displayDebug(NOK6, username);
-                    return "NOK 6";
+                    displayDebug(VERBOSE_NOK6, username);
+                    return NOK_6;
                 }
 
                 String url = server.getUserByUsername(username).getCloudURL() + "/" +
@@ -48,11 +48,11 @@ public class UpdateAlbum extends Instruction {
 
                 album.addUserPermission(username, url);
                 displayDebug("** ALB-AUP: User " + ownerUserName + " added " + username + " to album " + albumId + " - '" + album.getTitle() + "'");
-                return "OK " + albumId;
+                return OK_PLUS + albumId;
 
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {
-            return "ERR";
+            return ERR;
         }
     }
 }

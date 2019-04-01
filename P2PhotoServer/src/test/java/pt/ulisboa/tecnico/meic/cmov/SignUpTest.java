@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static pt.ulisboa.tecnico.meic.cmov.Instruction.*;
 
 public class SignUpTest {
 
@@ -33,7 +34,7 @@ public class SignUpTest {
         String response = signUp.execute();
         assertNotNull(response);
 
-        assertEquals("OK", response);
+        assertEquals(OK, response);
 
         assertEquals(1, dummyServer.numberOfRegisteredUsers());
 
@@ -53,7 +54,7 @@ public class SignUpTest {
         String response = signUp.execute();
         assertNotNull(response);
 
-        assertEquals("OK", response);
+        assertEquals(OK, response);
 
         assertEquals(2, dummyServer.numberOfRegisteredUsers());
 
@@ -68,7 +69,7 @@ public class SignUpTest {
         String response = signUp.execute();
         assertNotNull(response);
 
-        assertEquals("NOK 3", response);
+        assertEquals(NOK_3, response);
 
         assertEquals(1, dummyServer.numberOfRegisteredUsers());
 
@@ -88,7 +89,7 @@ public class SignUpTest {
         String response = signUp.execute();
         assertNotNull(response);
 
-        assertEquals("ERR", response);
+        assertEquals(ERR, response);
 
         assertEquals(0, dummyServer.numberOfRegisteredUsers());
 
@@ -107,7 +108,7 @@ public class SignUpTest {
         String response = signUp.execute();
         assertNotNull(response);
 
-        assertEquals("ERR", response);
+        assertEquals(ERR, response);
 
         assertEquals(0, dummyServer.numberOfRegisteredUsers());
 

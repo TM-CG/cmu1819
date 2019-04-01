@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static pt.ulisboa.tecnico.meic.cmov.Instruction.*;
 
 public class LogOutTest {
 
@@ -46,7 +47,7 @@ public class LogOutTest {
 
         assertNotNull(response);
 
-        assertEquals("OK", response);
+        assertEquals(OK, response);
 
         assertEquals(1, dummyServer.numberOfRegisteredUsers());
         assertEquals(0, dummyServer.numberOfLoggedInUsers());
@@ -68,7 +69,7 @@ public class LogOutTest {
 
         assertNotNull(response);
 
-        assertEquals("NOK 4", response);
+        assertEquals(NOK_4, response);
 
         assertEquals(1, dummyServer.numberOfRegisteredUsers());
         assertEquals(1, dummyServer.numberOfLoggedInUsers());
@@ -89,7 +90,7 @@ public class LogOutTest {
 
         assertNotNull(response);
 
-        assertEquals("ERR", response);
+        assertEquals(ERR, response);
 
         assertEquals(1, dummyServer.numberOfRegisteredUsers());
         assertEquals(1, dummyServer.numberOfLoggedInUsers());
@@ -110,7 +111,7 @@ public class LogOutTest {
 
         assertNotNull(response);
 
-        assertEquals("ERR", response);
+        assertEquals(ERR, response);
 
         assertEquals(1, dummyServer.numberOfRegisteredUsers());
         assertEquals(1, dummyServer.numberOfLoggedInUsers());

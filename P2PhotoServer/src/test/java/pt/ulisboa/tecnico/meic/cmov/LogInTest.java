@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static pt.ulisboa.tecnico.meic.cmov.Instruction.*;
 
 public class LogInTest {
 
@@ -33,7 +34,7 @@ public class LogInTest {
         String response = signUp.execute();
         assertNotNull(response);
 
-        assertEquals("OK", response);
+        assertEquals(OK, response);
 
         LogIn login = new LogIn(args, dummyServer);
 
@@ -43,7 +44,7 @@ public class LogInTest {
 
         assertNotNull(response);
 
-        if (!response.startsWith("OK"))
+        if (!response.startsWith(OK))
             fail();
 
     }
@@ -56,7 +57,7 @@ public class LogInTest {
 
         assertNotNull(response);
 
-        if (response.startsWith("OK"))
+        if (response.startsWith(OK))
             fail();
 
     }
@@ -71,7 +72,7 @@ public class LogInTest {
 
         assertNotNull(response);
 
-        if (!response.startsWith("OK"))
+        if (!response.startsWith(OK))
             fail();
 
         String sessionId = response.split(" ")[1];
@@ -82,7 +83,7 @@ public class LogInTest {
 
         assertNotNull(response2);
 
-        if (!response2.startsWith("OK"))
+        if (!response2.startsWith(OK))
             fail();
 
         if (!response2.split(" ")[1].equals(sessionId))
@@ -105,7 +106,7 @@ public class LogInTest {
 
         assertNotNull(response);
 
-        assertEquals("NOK 2", response);
+        assertEquals(NOK_2, response);
     }
 
     @Test
@@ -124,7 +125,7 @@ public class LogInTest {
 
         assertNotNull(response);
 
-        assertEquals("ERR", response);
+        assertEquals(ERR, response);
 
         assertEquals(1, dummyServer.numberOfRegisteredUsers());
     }

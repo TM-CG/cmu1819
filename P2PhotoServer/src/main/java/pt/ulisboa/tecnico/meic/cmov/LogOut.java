@@ -17,17 +17,17 @@ public class LogOut extends Instruction {
             String username = server.getUserNameBySessionID(sessionId);
 
             if (sessionId == null)
-                return "ERR";
+                return ERR;
 
             if (username == null) {
-                displayDebug(NOK4);
-                return "NOK 4";
+                displayDebug(VERBOSE_NOK4);
+                return NOK_4;
             } else {
                 server.removeLoggedUser(username, sessionId);
-                return "OK";
+                return OK;
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {
-            return "ERR";
+            return ERR;
         }
     }
 }

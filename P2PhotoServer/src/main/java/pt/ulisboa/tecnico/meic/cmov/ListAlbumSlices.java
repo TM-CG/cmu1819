@@ -17,18 +17,18 @@ public class ListAlbumSlices extends Instruction {
         Album album;
 
         if (username == null) {
-            displayDebug(NOK4);
-            return "NOK 4";
+            displayDebug(VERBOSE_NOK4);
+            return NOK_4;
         } else {
             album = server.getAlbumById(new Integer(albumId));
             //Checks if album ID exists
             if (album == null) {
-                displayDebug(NOK5);
-                return "NOK 5";
+                displayDebug(VERBOSE_NOK5);
+                return NOK_5;
             }
 
             album = server.getAlbumById(new Integer(albumId));
-            return "OK " + server.representList(album.getAlbumSlicesURLs());
+            return OK_PLUS + server.representList(album.getAlbumSlicesURLs());
         }
     }
 }

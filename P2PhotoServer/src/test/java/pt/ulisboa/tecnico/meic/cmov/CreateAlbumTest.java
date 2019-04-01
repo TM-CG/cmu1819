@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static pt.ulisboa.tecnico.meic.cmov.Instruction.*;
 
 public class CreateAlbumTest {
     private Server dummyServer;
@@ -45,7 +46,7 @@ public class CreateAlbumTest {
         String response = cr8Album.execute();
 
         assertNotNull(response);
-        assertEquals("OK 1", response);
+        assertEquals(OK_PLUS + "1", response);
 
         assertEquals(1, dummyServer.numberOfRegisteredAlbums());
 
@@ -66,7 +67,7 @@ public class CreateAlbumTest {
         String response = cr8Album.execute();
 
         assertNotNull(response);
-        assertEquals("OK 1", response);
+        assertEquals(OK_PLUS + "1", response);
 
         assertEquals(1, dummyServer.numberOfRegisteredAlbums());
 
@@ -74,7 +75,7 @@ public class CreateAlbumTest {
         response = cr8Album.execute();
 
         assertNotNull(response);
-        assertEquals("OK 2", response);
+        assertEquals(OK_PLUS + "2", response);
 
         assertEquals(2, dummyServer.numberOfRegisteredAlbums());
 
@@ -95,7 +96,7 @@ public class CreateAlbumTest {
         String response = cr8Album.execute();
 
         assertNotNull(response);
-        assertEquals("NOK 4", response);
+        assertEquals(NOK_4, response);
 
         assertEquals(0, dummyServer.numberOfRegisteredAlbums());
 
@@ -116,7 +117,7 @@ public class CreateAlbumTest {
         String response = cr8Album.execute();
 
         assertNotNull(response);
-        assertEquals("ERR", response);
+        assertEquals(ERR, response);
 
         assertEquals(0, dummyServer.numberOfRegisteredAlbums());
 
@@ -137,7 +138,7 @@ public class CreateAlbumTest {
         String response = cr8Album.execute();
 
         assertNotNull(response);
-        assertEquals("ERR", response);
+        assertEquals(ERR, response);
 
         assertEquals(0, dummyServer.numberOfRegisteredAlbums());
 
@@ -157,7 +158,7 @@ public class CreateAlbumTest {
         String response = cr8Album.execute();
 
         assertNotNull(response);
-        assertEquals("ERR", response);
+        assertEquals(ERR, response);
 
         assertEquals(0, dummyServer.numberOfRegisteredAlbums());
 
@@ -172,7 +173,7 @@ public class CreateAlbumTest {
         String response = cr8Album.execute();
 
         assertNotNull(response);
-        assertEquals("ERR", response);
+        assertEquals(ERR, response);
 
         assertEquals(0, dummyServer.numberOfRegisteredAlbums());
 

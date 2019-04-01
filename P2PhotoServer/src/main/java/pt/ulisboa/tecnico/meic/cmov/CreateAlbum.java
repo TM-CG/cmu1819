@@ -13,28 +13,28 @@ public class CreateAlbum extends Instruction {
         try {
 
             if (args.size() != 3)
-                return "ERR";
+                return ERR;
 
             String sessionId = args.get(1);
             String albumTitle = args.get(2);
             User owner = server.getUserByUsername(server.getUserNameBySessionID(sessionId));
 
             if (sessionId == null || albumTitle == null || albumTitle.contains("\""))
-                return "ERR";
+                return ERR;
 
             if (owner == null) {
-                displayDebug(NOK4);
-                return "NOK 4";
+                displayDebug(VERBOSE_NOK4);
+                return NOK_4;
             } else {
 
                 String ownerURL = owner.getCloudURL() + "/" + albumTitle.toLowerCase() + "_" + Album.CounterID + ".alb";
                 server.addAlbum(new Album(Album.CounterID, albumTitle, owner, ownerURL));
 
                 displayDebug("User " + owner.getUsername() + " just created one album with title: '" + albumTitle + "'");
-                return "OK " + Album.CounterID++;
+                return OK_PLUS + Album.CounterID++;
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {
-            return "ERR";
+            return ERR;
         }
     }
 }

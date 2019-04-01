@@ -16,20 +16,20 @@ public class SignUp extends Instruction {
             String password = args.get(2);
 
             if (username == null || password == null || username.contains(" ") || password.contains(" ") || username.contains("\"") || password.contains("\""))
-                return "ERR";
+                return ERR;
 
             //Check if user exists
             if (server.usernameExists(username)) {
-                displayDebug(NOK3, username);
-                return "NOK 3";
+                displayDebug(VERBOSE_NOK3, username);
+                return NOK_3;
             } else {
                 //Adds user
                 server.addUser(new User(username, password));
                 displayDebug("Successfully added user " + username);
-                return "OK";
+                return OK;
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {
-            return "ERR";
+            return ERR;
         }
     }
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static pt.ulisboa.tecnico.meic.cmov.Instruction.*;
 
 public class UpdateAlbumTest {
     public static final String TEST_USER_3 = "test_user3";
@@ -99,7 +100,7 @@ public class UpdateAlbumTest {
         UpdateAlbum upd8Album = new UpdateAlbum(args, dummyServer);
         String response = upd8Album.execute();
 
-        assertEquals("OK " + albumId, response);
+        assertEquals(OK_PLUS + albumId, response);
 
         assertEquals(2, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
     }
@@ -119,7 +120,7 @@ public class UpdateAlbumTest {
         UpdateAlbum upd8Album = new UpdateAlbum(args, dummyServer);
         String response = upd8Album.execute();
 
-        assertEquals("NOK 5", response);
+        assertEquals(NOK_5, response);
 
         assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
     }
@@ -139,7 +140,7 @@ public class UpdateAlbumTest {
         UpdateAlbum upd8Album = new UpdateAlbum(args, dummyServer);
         String response = upd8Album.execute();
 
-        assertEquals("NOK 6", response);
+        assertEquals(NOK_6, response);
 
         assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
     }
@@ -159,7 +160,7 @@ public class UpdateAlbumTest {
         UpdateAlbum upd8Album = new UpdateAlbum(args, dummyServer);
         String response = upd8Album.execute();
 
-        assertEquals("NOK 6", response);
+        assertEquals(NOK_6, response);
 
         assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
     }
@@ -179,7 +180,7 @@ public class UpdateAlbumTest {
         UpdateAlbum upd8Album = new UpdateAlbum(args, dummyServer);
         String response = upd8Album.execute();
 
-        assertEquals("NOK 4", response);
+        assertEquals(NOK_4, response);
 
         assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
 
@@ -200,7 +201,7 @@ public class UpdateAlbumTest {
         UpdateAlbum upd8Album = new UpdateAlbum(args, dummyServer);
         String response = upd8Album.execute();
 
-        assertEquals("NOK 4", response);
+        assertEquals(NOK_4, response);
 
         assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
 
@@ -220,7 +221,7 @@ public class UpdateAlbumTest {
         UpdateAlbum upd8Album = new UpdateAlbum(args, dummyServer);
         String response = upd8Album.execute();
 
-        assertEquals("ERR", response);
+        assertEquals(ERR, response);
 
         assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
 
@@ -241,7 +242,7 @@ public class UpdateAlbumTest {
         UpdateAlbum upd8Album = new UpdateAlbum(args, dummyServer);
         String response = upd8Album.execute();
 
-        assertEquals("NOK 5", response);
+        assertEquals(NOK_5, response);
 
         assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
 
@@ -256,7 +257,7 @@ public class UpdateAlbumTest {
         UpdateAlbum upd8Album = new UpdateAlbum(null, dummyServer);
         String response = upd8Album.execute();
 
-        assertEquals("ERR", response);
+        assertEquals(ERR, response);
 
         assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
 

@@ -18,10 +18,8 @@
         <activity android:name=".addPhotoActivity" />
         <activity android:name=".YourAlbums" />
         <activity android:name=".ListPhoto" />
-        <activity android:name=".addUserFromMainMenu">
-        <activity android:name=".settingsActivity"/>
+        <activity android:name=".addUserFromMainMenu" />
         <activity android:name="addPhotoActivityFromMenu"/>
-        <activity android:name=".selectPhotoActivity"/>
         <activity android:name=".LogActivity"/>
         <activity android:name=".ConfirmPromptActivity"
             android:theme="@android:style/Theme.Dialog">

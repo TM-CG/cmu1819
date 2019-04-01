@@ -173,7 +173,7 @@ public class Server {
 
         for (Album album : this.albums) {
             //User is the owner OR user participates on the album
-            if ((album.getOwner().getUsername().equals(username)) || (album.getIndexOfUser(username) != null))
+            if ((album.getOwner().equals(username)) || (album.getIndexOfUser(username) != null))
                 //vitor: bah!!
                 albums.add(new Pair<>(new Integer(album.getID()).toString(), album.getTitle()));
         }
@@ -245,6 +245,28 @@ public class Server {
         synchronized (this) {
             this.albums.add(album);
         }
+    }
+
+    public int numberOfRegisteredUsers() {
+        return this.users.size();
+    }
+
+    public int numberOfRegisteredAlbums() {
+        return this.albums.size();
+    }
+
+    public int numberOfLoggedInUsers() {
+        return this.loggedInUsers.size();
+    }
+
+    /**
+     * Clears all users and albums: for testing proposes
+     */
+    public void reset() {
+        this.albums.clear();
+        this.loggedInUsers.clear();
+        this.users.clear();
+        Album.CounterID = 1;
     }
 
 }

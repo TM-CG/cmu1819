@@ -7,21 +7,25 @@ import java.util.List;
 
 public class Album {
 
-    public static int CounterID = 0;
+    public static int CounterID = 1;
 
     private int ID;
 
     private String title;
-
-    private User owner;
 
     private List<Pair<String, String>> indexes;
 
     public Album(int ID, String title, User owner) {
         this.ID = ID;
         this.title = title;
-        this.owner = owner;
         this.indexes = new ArrayList<>();
+    }
+
+    public Album(int ID, String title, User owner, String ownerURL) {
+        this.ID = ID;
+        this.title = title;
+        this.indexes = new ArrayList<>();
+        this.indexes.add(new Pair(owner.getUsername(), ownerURL));
     }
 
     public int getID() {
@@ -40,12 +44,18 @@ public class Album {
         this.title = title;
     }
 
-    public User getOwner() {
-        return owner;
+    public String getOwner() {
+        return this.indexes.get(0).getKey();
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public String getOwnerURL() {return this.indexes.get(0).getValue();}
+
+    public void setOwner(String owner) {
+        this.indexes.set(0, new Pair<>(owner, getOwnerURL()));
+    }
+
+    public void setOwnerURL(String ownerURL) {
+        this.indexes.set(0, new Pair<>(getOwner(), ownerURL));
     }
 
     public List<Pair<String, String>> getIndexes() {
@@ -89,5 +99,13 @@ public class Album {
             urls.add(albumSlices.getValue());
         }
         return urls;
+    }
+
+    /**
+     * Returns the number of users that contributes to this album
+     * @return the number of users belonging to this album
+     */
+    public int getNumberOfParticipants() {
+        return this.indexes.size();
     }
 }

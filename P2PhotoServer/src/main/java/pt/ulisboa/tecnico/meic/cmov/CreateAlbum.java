@@ -10,20 +10,31 @@ public class CreateAlbum extends Instruction {
 
     @Override
     public String execute() {
-        String sessionId = args.get(1);
-        String albumTitle = args.get(2);
-        User owner = server.getUserByUsername(server.getUserNameBySessionID(sessionId));
+        try {
 
-        if (owner == null) {
-            displayDebug(NOK4);
-            return "NOK 4";
-        }
-        else {
+            if (args.size() != 3)
+                return "ERR";
 
-            server.addAlbum(new Album(Album.CounterID, albumTitle, owner));
+            String sessionId = args.get(1);
+            String albumTitle = args.get(2);
+            User owner = server.getUserByUsername(server.getUserNameBySessionID(sessionId));
 
-            displayDebug("User " + owner.getUsername() + " just created one album with title: '" + albumTitle + "'");
-            return "OK " + Album.CounterID++;
+            if (sessionId == null || albumTitle == null || albumTitle.contains("\""))
+                return "ERR";
+
+            if (owner == null) {
+                displayDebug(NOK4);
+                return "NOK 4";
+            } else {
+
+                String ownerURL = owner.getCloudURL() + "/" + albumTitle.toLowerCase() + "_" + Album.CounterID + ".alb";
+                server.addAlbum(new Album(Album.CounterID, albumTitle, owner, ownerURL));
+
+                displayDebug("User " + owner.getUsername() + " just created one album with title: '" + albumTitle + "'");
+                return "OK " + Album.CounterID++;
+            }
+        } catch(NullPointerException | IndexOutOfBoundsException e) {
+            return "ERR";
         }
     }
 }

@@ -10,21 +10,29 @@ public class FindUser extends Instruction {
 
     @Override
     public String execute() {
-        String sessionId = args.get(1);
-        String pattern = args.get(2);
-        List<String> matches;
 
-        if (server.getUserNameBySessionID(sessionId) == null) {
-            displayDebug(NOK4);
-            return "NOK 4";
-        }
-        else {
+        try {
 
-            if (pattern.contains("*")) {
-                matches = server.findUserNameByPattern("\\b(\\w*" + pattern.replace("*", "") + "\\w*)\\b");
-            } else matches = server.findUserNameByPattern("\\b(\\w*" + pattern + "\\w*)\\b");
+            if (args.size() != 3)
+                return ERR;
 
-            return "OK " + server.representList(matches);
+            String sessionId = args.get(1);
+            String pattern = args.get(2);
+            List<String> matches;
+
+            if (server.getUserNameBySessionID(sessionId) == null) {
+                displayDebug(VERBOSE_NOK4);
+                return NOK_4;
+            } else {
+
+                if (pattern.contains("*")) {
+                    matches = server.findUserNameByPattern("\\b(\\w*" + pattern.replace("*", "") + "\\w*)\\b");
+                } else matches = server.findUserNameByPattern("\\b(\\w*" + pattern + "\\w*)\\b");
+
+                return OK_PLUS + server.representList(matches);
+            }
+        } catch(NullPointerException | IndexOutOfBoundsException e) {
+            return ERR;
         }
     }
 }

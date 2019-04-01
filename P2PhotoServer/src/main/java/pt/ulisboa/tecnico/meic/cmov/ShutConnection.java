@@ -8,6 +8,6 @@ public class ShutConnection extends Instruction {
 
     @Override
     public String execute() {
-        return "SHUT OK";
+        return SHUT_OK;
     }
 }

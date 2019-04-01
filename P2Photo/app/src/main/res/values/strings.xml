@@ -42,5 +42,15 @@
     <string name="choosePhoto">Choose Photo</string>
 
 
+    <string-array name="test_arrays">
+        <item>zé</item>
+        <item>zée</item>
+        <item>zéee</item>
+        <item>zéeee</item>
+        <item>zéeeee</item>
+        <item>zéeeeee</item>
+        <item>zéeeeeee</item>
+    </string-array>
+
 
 </resources>

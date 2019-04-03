@@ -25,7 +25,8 @@ public class Worker extends Thread {
             this.in = new BufferedReader(new InputStreamReader(this.s.getInputStream()));
         } catch (IOException e) {
             System.err.println("** WORKER: Constructor Streams error");
-        }
+	    return;
+	}
         this.server = server;
     }
 
@@ -44,11 +45,12 @@ public class Worker extends Thread {
 
                 //parse to instruction
                 instruction = parseInstruction(args);
-
-                //execute instruction
+                
+		//execute instruction
                 response = instruction.execute();
 
                 out.println(response);
+		out.flush();
 
                 //User request shut of channel
                 if (response.equals("SHUT OK"))
@@ -61,7 +63,12 @@ public class Worker extends Thread {
 
             } catch (IOException e) {
                 System.err.println("** WORKER: IOException when Worker is running!");
-            }
+            	return;
+	    } catch (NullPointerException e) {
+		System.out.println();
+		System.out.flush();
+		return; //unexpected close connection
+	    }
         }
 
     }
@@ -107,6 +114,10 @@ public class Worker extends Thread {
             case "ALB-AUP": return new UpdateAlbum(args, server);
             case "ALB-UAS": return new ListAlbumSlices(args, server);
             case "SHUT"   : return new ShutConnection();
+
+            //debug operation: to be removed in a real case scenario
+            case "DBG-STA": return new DebugStatus(args, server);
+            case "DBG-RST": return new DebugReset(args, server);
         }
 
 

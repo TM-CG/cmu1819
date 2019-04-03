@@ -99,19 +99,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
+        android:layout_marginBottom="8dp"
+        android:drawableStart="@drawable/baseline_cancel_black_24"
+        android:onClick="cancel"
         android:text="@string/cancelString"
-        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/usersSearch"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/usersSearch" />
+
     <Button
         android:id="@+id/confirmButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
+        android:layout_marginBottom="8dp"
+        android:drawableStart="@drawable/baseline_check_circle_black_24"
+        android:onClick="create"
         android:text="@string/confirmString"
-        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/usersSearch"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/usersSearch" />
 </android.support.constraint.ConstraintLayout>

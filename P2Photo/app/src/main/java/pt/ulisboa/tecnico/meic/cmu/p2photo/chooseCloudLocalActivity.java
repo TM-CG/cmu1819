@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.dropbox.core.android.Auth;
+
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
 public class chooseCloudLocalActivity extends AppCompatActivity {
@@ -24,8 +26,7 @@ public class chooseCloudLocalActivity extends AppCompatActivity {
     }
 
     public void selectCloud(View view){
-        Intent intent = new Intent(this, ActionsMenu.class);
-        startActivityForResult(intent, 3);
+        Auth.startOAuth2Authentication(chooseCloudLocalActivity.this, getString(R.string.app_key));
     }
 
 

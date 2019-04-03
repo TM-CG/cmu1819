@@ -36,7 +36,7 @@
 
     <EditText
         android:id="@+id/textUser"
-        android:layout_width="392dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textview"
         android:layout_marginLeft="15dp"
@@ -55,7 +55,7 @@
 
         <EditText
         android:id="@+id/textPass"
-        android:layout_width="392dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textUser"
         android:layout_marginLeft="15dp"
@@ -76,9 +76,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textPass"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="8dp"
         android:onClick="signUp"
         android:text="@string/signup"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -93,9 +90,6 @@
         android:layout_below="@id/textPass"
         android:layout_alignStart="@id/signupButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="21dp"
-        android:layout_marginBottom="8dp"
-        android:onClick="signIn"
         android:text="@string/signin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

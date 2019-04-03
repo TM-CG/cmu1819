@@ -41,6 +41,18 @@ public class Server {
         return dos;
     }
 
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public List<Album> getAlbums() {
+        return albums;
+    }
+
+    public List<Pair<String, String>> getLoggedInUsers() {
+        return loggedInUsers;
+    }
+
     /**
      * Checks if a given username exists
      * @param username to be checked

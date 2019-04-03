@@ -28,6 +28,8 @@ public class ServerConnector {
     private static final String API_ALB_UAS = "ALB-UAS %s %s";
     private static final String API_USR_FND = "USR-FND %s %s";
     private static final String API_SHUT = "SHUT";
+    private static final String API_DBG_STA = "DBG-STA";
+    private static final String API_DBG_RST = "DBG-RST";
 
 
     //Error messages
@@ -415,6 +417,56 @@ public class ServerConnector {
      */
     public void toggleDebugMode() {
         this.showDebug = !this.showDebug;
+    }
+
+    /**
+     * Display the server current status
+     * @throws P2PhotoException
+     */
+    public void displayStat() throws P2PhotoException {
+        try {
+
+            this.out.println(API_DBG_STA);
+
+            String response = this.in.readLine();
+
+            if (showDebug) {
+                System.out.println("Request: " + API_DBG_STA);
+                System.out.println("Response: " + response);
+            }
+
+            processErrors(response);
+
+        } catch (IOException e) {
+            throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new P2PhotoException(WRONG_ARGS + e.getMessage());
+        }
+    }
+
+    /**
+     * Reset the server state
+     * @throws P2PhotoException
+     */
+    public void reset() throws P2PhotoException {
+        try {
+
+            this.out.println(API_DBG_RST);
+
+            String response = this.in.readLine();
+
+            if (showDebug) {
+                System.out.println("Request: " + API_DBG_RST);
+                System.out.println("Response: " + response);
+            }
+
+            processErrors(response);
+
+        } catch (IOException e) {
+            throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new P2PhotoException(WRONG_ARGS + e.getMessage());
+        }
     }
 
 

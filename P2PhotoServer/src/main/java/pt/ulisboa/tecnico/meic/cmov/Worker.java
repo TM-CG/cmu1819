@@ -114,6 +114,10 @@ public class Worker extends Thread {
             case "ALB-AUP": return new UpdateAlbum(args, server);
             case "ALB-UAS": return new ListAlbumSlices(args, server);
             case "SHUT"   : return new ShutConnection();
+
+            //debug operation: to be removed in a real case scenario
+            case "DBG-STA": return new DebugStatus(args, server);
+            case "DBG-RST": return new DebugReset(args, server);
         }
 
 

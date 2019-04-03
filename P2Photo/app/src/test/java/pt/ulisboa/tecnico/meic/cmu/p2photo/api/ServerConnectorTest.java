@@ -97,6 +97,7 @@ public class ServerConnectorTest {
     @After
     public void tearDown() throws P2PhotoException {
         serverConnector.logOut();
+        serverConnector.reset();
         serverConnector.terminateConn();
     }
 }

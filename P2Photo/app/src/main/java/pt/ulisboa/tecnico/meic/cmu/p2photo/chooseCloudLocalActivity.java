@@ -4,14 +4,17 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dropbox.core.android.Auth;
+import com.dropbox.core.v2.users.FullAccount;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
-public class chooseCloudLocalActivity extends AppCompatActivity {
+public class chooseCloudLocalActivity extends DropboxActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,20 @@ public class chooseCloudLocalActivity extends AppCompatActivity {
 
     public void selectCloud(View view){
         Auth.startOAuth2Authentication(chooseCloudLocalActivity.this, getString(R.string.app_key));
+    }
+
+    @Override
+    protected void loadData() {
+        new GetCurrentAccountTask(DropboxClientFactory.getClient(), new GetCurrentAccountTask.Callback() {
+            @Override
+            public void onComplete(FullAccount result) {
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(getClass().getName(), "Failed to get account details.", e);
+            }
+        }).execute();
     }
 
 

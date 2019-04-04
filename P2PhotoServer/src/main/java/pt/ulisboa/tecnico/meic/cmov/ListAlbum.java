@@ -24,9 +24,9 @@ public class ListAlbum extends Instruction {
                 displayDebug(VERBOSE_NOK4);
                 return NOK_4;
             } else {
-                List<Pair<String, String>> albums = server.getAlbunsOfGivenUser(username);
+                List<Integer> albums = server.getAlbunsOfGivenUser(username);
 
-                return OK_PLUS + server.representAlbum(albums);
+                return OK_PLUS + server.representIntegerList(albums);
 
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {

@@ -18,9 +18,11 @@ import java.util.List;
  */
 public class ServerConnector {
 
-    //API Instructions (version 0.4)
+    private static final String CLI_API_VERSION = "0.5";
+
+    //API Instructions
     private static final String API_LOGIN = "LOGIN %s %s";
-    private static final String API_SIGNUP = "SIGNUP %s %s %s";
+    private static final String API_SIGNUP = "SIGNUP %s %s";
     private static final String API_LOGOUT = "LOGOUT %s";
     private static final String API_ALB_CR8 = "ALB-CR8 %s \"%s\"";
     private static final String API_ALB_AUP = "ALB-AUP %s %s %s";
@@ -30,9 +32,11 @@ public class ServerConnector {
     private static final String API_SHUT = "SHUT";
     private static final String API_DBG_STA = "DBG-STA";
     private static final String API_DBG_RST = "DBG-RST";
+    private static final String API_VER = "VER";
 
 
     //Error messages
+    private static final String WRONG_API_VERSION = "FATAL: Client is using API version %s but server uses version %s";
     private static final String CONN_PROBLEM = "Problem connecting to server ";
     private static final String CFREQUEST_PROBLEM = "Cannot fullfill request ";
     private static final String RESPONSE_PROBLEM = "Problem decoding server response ";
@@ -78,6 +82,13 @@ public class ServerConnector {
                     new OutputStreamWriter(this.socket.getOutputStream())), true);
             this.in = new BufferedReader(
                     new InputStreamReader(this.socket.getInputStream()));
+
+            //Client API is diferent from the server
+            /*String clientAPI = getClientAPIVersion();
+            String serverAPI = getServerAPIVersion();
+            if (!clientAPI.equals(serverAPI))
+                throw new P2PhotoException(String.format(WRONG_API_VERSION, clientAPI, serverAPI));*/
+
         } catch (IOException e) {
             throw new P2PhotoException(CONN_PROBLEM + e.getMessage());
         }
@@ -157,12 +168,11 @@ public class ServerConnector {
      * Registers a new user to the system
      * @param username of the new user
      * @param password of the new user
-     * @param cloudURL of the user cloud space provider
      * @throws P2PhotoException
      */
-    public void signUp(String username, String password, String cloudURL) throws P2PhotoException {
+    public void signUp(String username, String password) throws P2PhotoException {
         try {
-            String request = String.format(API_SIGNUP, username, password, cloudURL);
+            String request = String.format(API_SIGNUP, username, password);
 
             this.out.println(request);
 
@@ -185,13 +195,13 @@ public class ServerConnector {
 
     /**
      * Creates an album on the server
-     * @param albumTitle of the album
+     * @param albumDirectoryURL the path to the cloud of the owner containing the album directory file
      * @return an integer which is the albumID
      * @throws P2PhotoException if something wrong happens
      */
-    public int createAlbum(String albumTitle) throws P2PhotoException{
+    public int createAlbum(String albumDirectoryURL) throws P2PhotoException{
         try {
-            String request = String.format(API_ALB_CR8, sessionId, albumTitle);
+            String request = String.format(API_ALB_CR8, sessionId, albumDirectoryURL);
 
             this.out.println(request);
 
@@ -283,7 +293,7 @@ public class ServerConnector {
      * @return a list of pairs containing the albumID and the respective title
      * @throws P2PhotoException if something wrong happens
      */
-    public List<Pair<Integer, String>> listUserAlbums() throws P2PhotoException {
+    public List<Integer> listUserAlbums() throws P2PhotoException {
         try {
             String request = String.format(API_ALB_LST, sessionId);
 
@@ -298,7 +308,7 @@ public class ServerConnector {
 
             processErrors(response);
 
-            return parseListPairs(response);
+            return parseIntegerList(response);
 
         } catch (IOException e) {
             throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());
@@ -378,6 +388,18 @@ public class ServerConnector {
         //select content to be between < and >
         String content = response.substring(response.indexOf("<") + 1, response.indexOf(">"));
         return Arrays.asList(content.split(" , "));
+    }
+
+    private List<Integer> parseIntegerList(String response) {
+        //select content to be between < and >
+        String content = response.substring(response.indexOf("<") + 1, response.indexOf(">"));
+        String[] array = content.split(" , ");
+        List<Integer> list = new ArrayList<>();
+
+        for (String s: array) {
+            list.add(Integer.parseInt(s));
+        }
+        return list;
     }
 
     /**
@@ -461,6 +483,37 @@ public class ServerConnector {
             }
 
             processErrors(response);
+
+        } catch (IOException e) {
+            throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new P2PhotoException(WRONG_ARGS + e.getMessage());
+        }
+    }
+
+    /**
+     * Displays the client current version of API
+     * @return
+     */
+    public String getClientAPIVersion() {
+        return CLI_API_VERSION;
+    }
+
+    public String getServerAPIVersion() throws P2PhotoException {
+        try {
+
+            this.out.println(API_VER);
+
+            String response = this.in.readLine();
+
+            if (showDebug) {
+                System.out.println("Request: " + API_VER);
+                System.out.println("Response: " + response);
+            }
+
+            processErrors(response);
+            //Return the version
+            return response.split(" ")[1];
 
         } catch (IOException e) {
             throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());

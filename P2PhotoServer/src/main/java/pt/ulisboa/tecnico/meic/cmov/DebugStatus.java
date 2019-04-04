@@ -19,7 +19,7 @@ public class DebugStatus extends Instruction {
         System.out.println("============ BEGIN DEBUG ============");
         System.out.println("List of users: ");
         for (User user : server.getUsers()) {
-            System.out.printf("Username: %s\tCloud URL:%s\n", user.getUsername(), user.getCloudURL());
+            System.out.printf("Username: %s\t\n", user.getUsername());
         }
 
         System.out.println();
@@ -31,7 +31,7 @@ public class DebugStatus extends Instruction {
         System.out.println();
         System.out.println("List of albums: ");
         for (Album album : server.getAlbums()) {
-            System.out.printf("ID: %d\tTitle: %s\tOwner: %s\n", album.getID(), album.getTitle(), album.getOwner());
+            System.out.printf("ID: %d\tOwner: %s\n", album.getID(), album.getOwner());
         }
         System.out.println("============ END   DEBUG ============");
 

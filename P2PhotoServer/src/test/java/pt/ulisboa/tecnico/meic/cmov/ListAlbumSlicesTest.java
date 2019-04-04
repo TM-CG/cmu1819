@@ -18,12 +18,9 @@ public class ListAlbumSlicesTest {
     private static final String TESTPASS_3 = "testpass3";
     private static final String TESTPASS_2 = "testpass2";
     private static final String TESTPASS_1 = "testpass1";
-    private static final String ALBUM_DE_TESTE = "Album de teste";
-    private static final String ALBUM_SEGUNDO = "Album segundo";
-    private static final String ALBUM_TERCEIRO = "Album terceiro";
-    private static final String CLOUD_USER_1 = "https://user.p2photocloud.com/user1";
-    private static final String CLOUD_USER_2 = "https://user.p2photocloud.com/user2";
-    private static final String CLOUD_USER_3 = "https://user.p2photocloud.com/user3";
+    private static final String ALBUM_DE_TESTE = "https://user.p2photocloud.com/user1/album_de_teste_1.alb";
+    private static final String ALBUM_SEGUNDO = "https://user.p2photocloud.com/user1/album_segundo_2.alb";
+    private static final String ALBUM_TERCEIRO = "https://user.p2photocloud.com/user1/album_terceiro_3.alb";
 
     private Server dummyServer;
 
@@ -43,7 +40,6 @@ public class ListAlbumSlicesTest {
         this.args.add("SIGNUP");
         this.args.add(TEST_USER_3);
         this.args.add(TESTPASS_3);
-        this.args.add(CLOUD_USER_3);
 
         new SignUp(args, dummyServer).execute();
 
@@ -52,7 +48,6 @@ public class ListAlbumSlicesTest {
         this.args.add("SIGNUP");
         this.args.add(TEST_USER_2);
         this.args.add(TESTPASS_2);
-        this.args.add(CLOUD_USER_2);
 
         new SignUp(args, dummyServer).execute();
 
@@ -61,7 +56,6 @@ public class ListAlbumSlicesTest {
         this.args.add("SIGNUP");
         this.args.add(TEST_USER_1);
         this.args.add(TESTPASS_1);
-        this.args.add(CLOUD_USER_1);
 
         new SignUp(args, dummyServer).execute();
 
@@ -126,8 +120,7 @@ public class ListAlbumSlicesTest {
 
         assertNotNull(response);
 
-        assertEquals(OK_PLUS + "<" + CLOUD_USER_1 + "/" + ALBUM_DE_TESTE.toLowerCase().replace(" ", "_") +
-                "_1.alb>", response);
+        assertEquals(OK_PLUS + "<" + ALBUM_DE_TESTE + ">", response);
     }
 
     @Test

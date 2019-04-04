@@ -43,11 +43,8 @@ public class UpdateAlbum extends Instruction {
                     return NOK_6;
                 }
 
-                String url = server.getUserByUsername(username).getCloudURL() + "/" +
-                        server.getAlbumById(Integer.parseInt(albumId)).getTitle().toLowerCase().replace(" ", "_") + "_" + albumId + ".alb";
-
-                album.addUserPermission(username, url);
-                displayDebug("** ALB-AUP: User " + ownerUserName + " added " + username + " to album " + albumId + " - '" + album.getTitle() + "'");
+                album.addUserPermission(username, null);
+                displayDebug("** ALB-AUP: User " + ownerUserName + " added " + username + " to album " + albumId);
                 return OK_PLUS + albumId;
 
             }

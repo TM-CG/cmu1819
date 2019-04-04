@@ -36,7 +36,6 @@ public class UpdateAlbumTest {
         this.args.add("SIGNUP");
         this.args.add(TEST_USER_3);
         this.args.add(TESTPASS_3);
-        this.args.add("https://user.p2photocloud.com/user");
 
         new SignUp(args, dummyServer).execute();
 
@@ -45,7 +44,6 @@ public class UpdateAlbumTest {
         this.args.add("SIGNUP");
         this.args.add(TEST_USER_2);
         this.args.add(TESTPASS_2);
-        this.args.add("https://user.p2photocloud.com/user");
 
         new SignUp(args, dummyServer).execute();
 
@@ -54,7 +52,6 @@ public class UpdateAlbumTest {
         this.args.add("SIGNUP");
         this.args.add(TEST_USER_1);
         this.args.add(TESTPASS_1);
-        this.args.add("https://user.p2photocloud.com/user");
 
         new SignUp(args, dummyServer).execute();
 

@@ -155,17 +155,12 @@ public class Server {
         return rep;
     }
 
-    /**
-     * Given a list of albums transform it to a String
-     * @param list of albums, i.e, pairs of strings <albumID, Title>
-     * @return a string with all albums to send to client
-     */
-    public String representAlbum(List<Pair<String, String>> list) {
+    public String representIntegerList(List<Integer> list) {
         String rep = "<";
         int len = list.size();
 
         for (int i = 0; i < len; i++) {
-            rep += list.get(i).getKey() + " \"" + list.get(i).getValue() + "\"";
+            rep += list.get(i);
 
             if (i != (len - 1))
                 rep += " , ";
@@ -180,14 +175,13 @@ public class Server {
      * @param username of the user to search
      * @return a list of all albums ID
      */
-    public List<Pair<String, String>> getAlbunsOfGivenUser(String username) {
-        List<Pair<String, String>> albums = new ArrayList<>();
+    public List<Integer> getAlbunsOfGivenUser(String username) {
+        List<Integer> albums = new ArrayList<>();
 
         for (Album album : this.albums) {
             //User is the owner OR user participates on the album
             if ((album.getOwner().equals(username)) || (album.getIndexOfUser(username) != null))
-                //vitor: bah!!
-                albums.add(new Pair<>(new Integer(album.getID()).toString(), album.getTitle()));
+                albums.add(album.getID());
         }
 
         return albums;

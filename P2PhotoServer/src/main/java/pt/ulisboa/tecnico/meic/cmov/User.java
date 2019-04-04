@@ -8,18 +8,9 @@ public class User {
 
     private String password;
 
-    private String cloudURL;
-
-    public User(String username, String password, String cloudURL) {
-        this.username = username;
-        this.password = password;
-        this.cloudURL = cloudURL;
-    }
-
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.cloudURL = "";
     }
 
     public String getUsername() {
@@ -36,13 +27,5 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getCloudURL() {
-        return cloudURL;
-    }
-
-    public void setCloudURL(String cloudURL) {
-        this.cloudURL = cloudURL;
     }
 }

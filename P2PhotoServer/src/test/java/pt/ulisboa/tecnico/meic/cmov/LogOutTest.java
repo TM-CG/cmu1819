@@ -24,7 +24,6 @@ public class LogOutTest {
         this.args.add("SIGNUP");
         this.args.add("test_user1");
         this.args.add("testpass1");
-        this.args.add("https://user.p2photocloud.com/user");
 
         new SignUp(args, dummyServer).execute();
 

@@ -11,19 +11,15 @@ public class Album {
 
     private int ID;
 
-    private String title;
-
     private List<Pair<String, String>> indexes;
 
-    public Album(int ID, String title, User owner) {
+    public Album(int ID, User owner) {
         this.ID = ID;
-        this.title = title;
         this.indexes = new ArrayList<>();
     }
 
-    public Album(int ID, String title, User owner, String ownerURL) {
+    public Album(int ID, User owner, String ownerURL) {
         this.ID = ID;
-        this.title = title;
         this.indexes = new ArrayList<>();
         this.indexes.add(new Pair(owner.getUsername(), ownerURL));
     }
@@ -34,14 +30,6 @@ public class Album {
 
     public void setID(int ID) {
         this.ID = ID;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getOwner() {
@@ -99,6 +87,26 @@ public class Album {
             urls.add(albumSlices.getValue());
         }
         return urls;
+    }
+
+    /**
+     * Given a username of a participant of this album replace the current URL
+     * @param username
+     */
+    public void setIndexOfParticipant(String username, String directoryCloudURL) {
+        Pair<String, String> pairSelect = null;
+        synchronized (this) {
+            for (Pair<String, String> pair : indexes) {
+                if (pair.getKey().equals(username))
+                    pairSelect = pair;
+            }
+
+            if (pairSelect != null) {
+                indexes.remove(pairSelect);
+
+                indexes.add(new Pair<>(username, directoryCloudURL));
+            }
+        }
     }
 
     /**

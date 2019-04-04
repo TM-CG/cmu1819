@@ -25,7 +25,6 @@ public class CreateAlbumTest {
         this.args.add("SIGNUP");
         this.args.add("test_user1");
         this.args.add("testpass1");
-        this.args.add("https://user.p2photocloud.com/user");
 
         new SignUp(args, dummyServer).execute();
 
@@ -46,7 +45,7 @@ public class CreateAlbumTest {
 
         this.args.add("ALB-CR8");
         this.args.add(sessionId);
-        this.args.add("Album de teste");
+        this.args.add("http://cloud.com/album1");
 
         assertEquals(0, dummyServer.numberOfRegisteredAlbums());
 
@@ -67,7 +66,7 @@ public class CreateAlbumTest {
 
         this.args.add("ALB-CR8");
         this.args.add(sessionId);
-        this.args.add("Album de teste");
+        this.args.add("http://cloud.com/album1");
 
         assertEquals(0, dummyServer.numberOfRegisteredAlbums());
 
@@ -96,7 +95,7 @@ public class CreateAlbumTest {
 
         this.args.add("ALB-CR8");
         this.args.add("1nv4l1ds35510n1d");
-        this.args.add("Album de teste");
+        this.args.add("http://cloud.com/album1");
 
         assertEquals(0, dummyServer.numberOfRegisteredAlbums());
 
@@ -110,26 +109,6 @@ public class CreateAlbumTest {
 
     }
 
-    @Test
-    public void createAlbumWithInvalidTitle() {
-
-        this.args = new ArrayList<>();
-
-        this.args.add("ALB-CR8");
-        this.args.add("1nv4l1ds35510n1d");
-        this.args.add("Album de \"teste\"");
-
-        assertEquals(0, dummyServer.numberOfRegisteredAlbums());
-
-        CreateAlbum cr8Album = new CreateAlbum(args, dummyServer);
-        String response = cr8Album.execute();
-
-        assertNotNull(response);
-        assertEquals(ERR, response);
-
-        assertEquals(0, dummyServer.numberOfRegisteredAlbums());
-
-    }
 
     @Test
     public void createAlbumWithNullSessionId() {
@@ -138,7 +117,7 @@ public class CreateAlbumTest {
 
         this.args.add("ALB-CR8");
         this.args.add(null);
-        this.args.add("Album de \"teste\"");
+        this.args.add("http://cloud.com/album1");
 
         assertEquals(0, dummyServer.numberOfRegisteredAlbums());
 
@@ -153,7 +132,7 @@ public class CreateAlbumTest {
     }
 
     @Test
-    public void createAlbumWithoutTitle() {
+    public void createAlbumWithoutURL() {
 
         this.args = new ArrayList<>();
 

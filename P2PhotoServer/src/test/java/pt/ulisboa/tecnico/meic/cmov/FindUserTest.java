@@ -30,7 +30,6 @@ public class FindUserTest {
         this.args.add("SIGNUP");
         this.args.add(username);
         this.args.add("passdefault");
-        this.args.add("https://user.p2photocloud.com/user");
         new SignUp(args, dummyServer).execute();
     }
 

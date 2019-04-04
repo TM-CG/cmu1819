@@ -17,6 +17,9 @@ public class UpdateAlbumTest {
     private static final String TESTPASS_3 = "testpass3";
     private static final String TESTPASS_2 = "testpass2";
     private static final String TESTPASS_1 = "testpass1";
+    private static final String ALBUM_DE_TESTE = "https://cloud.com/teste";
+    private static final String ALBUM_SEGUNDO = "https://cloud.com/seg";
+    private static final String ALBUM_TERCEIRO = "https://cloud.com/terceiro";
 
     private Server dummyServer;
 
@@ -67,7 +70,7 @@ public class UpdateAlbumTest {
         this.args = new ArrayList<>();
         this.args.add("ALB-CR8");
         this.args.add(sessionId);
-        this.args.add("Album de teste");
+        this.args.add(ALBUM_DE_TESTE);
 
         albumId = new CreateAlbum(args, dummyServer).execute().split(" ")[1];
 
@@ -83,7 +86,7 @@ public class UpdateAlbumTest {
         this.args = new ArrayList<>();
         this.args.add("ALB-CR8");
         this.args.add(anotherSessionId);
-        this.args.add("Album segundo");
+        this.args.add(ALBUM_SEGUNDO);
 
         new CreateAlbum(args, dummyServer).execute();
 
@@ -95,7 +98,7 @@ public class UpdateAlbumTest {
     public void addUser2ToAlbum() {
 
         //only the owner is the participant of this album for now
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
 
         this.args = new ArrayList<>();
         this.args.add("ALB-AUP");
@@ -108,14 +111,14 @@ public class UpdateAlbumTest {
 
         assertEquals(OK_PLUS + albumId, response);
 
-        assertEquals(2, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(2, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
     }
 
     @Test
     public void updatingNonExistentAlbum() {
 
         //only the owner is the participant of this album for now
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
 
         this.args = new ArrayList<>();
         this.args.add("ALB-AUP");
@@ -128,14 +131,14 @@ public class UpdateAlbumTest {
 
         assertEquals(NOK_5, response);
 
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
     }
 
     @Test
     public void updatingAlbumWhichImNotTheOwner() {
 
         //only the owner is the participant of this album for now
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
 
         this.args = new ArrayList<>();
         this.args.add("ALB-AUP");
@@ -148,14 +151,14 @@ public class UpdateAlbumTest {
 
         assertEquals(NOK_6, response);
 
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
     }
 
     @Test
     public void updatingAlbumToAddMySelfWhereImTheOwner() {
 
         //only the owner is the participant of this album for now
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
 
         this.args = new ArrayList<>();
         this.args.add("ALB-AUP");
@@ -168,14 +171,14 @@ public class UpdateAlbumTest {
 
         assertEquals(NOK_6, response);
 
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
     }
 
     @Test
     public void updateAlbumWithInvalidSessionId() {
 
         //only the owner is the participant of this album for now
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
 
         this.args = new ArrayList<>();
         this.args.add("ALB-AUP");
@@ -188,7 +191,7 @@ public class UpdateAlbumTest {
 
         assertEquals(NOK_4, response);
 
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
 
     }
 
@@ -196,7 +199,7 @@ public class UpdateAlbumTest {
     public void updateAlbumWithNullSessionId() {
 
         //only the owner is the participant of this album for now
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
 
         this.args = new ArrayList<>();
         this.args.add("ALB-AUP");
@@ -209,7 +212,7 @@ public class UpdateAlbumTest {
 
         assertEquals(NOK_4, response);
 
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
 
     }
 
@@ -217,7 +220,7 @@ public class UpdateAlbumTest {
     public void updateAlbumWithoutUserName() {
 
         //only the owner is the participant of this album for now
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
 
         this.args = new ArrayList<>();
         this.args.add("ALB-AUP");
@@ -229,7 +232,7 @@ public class UpdateAlbumTest {
 
         assertEquals(ERR, response);
 
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
 
     }
 
@@ -237,7 +240,7 @@ public class UpdateAlbumTest {
     public void updateAlbumWithInvalidAlbumId() {
 
         //only the owner is the participant of this album for now
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
 
         this.args = new ArrayList<>();
         this.args.add("ALB-AUP");
@@ -250,7 +253,7 @@ public class UpdateAlbumTest {
 
         assertEquals(NOK_5, response);
 
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
 
     }
 
@@ -258,14 +261,14 @@ public class UpdateAlbumTest {
     public void updateAlbumWithNullArgs() {
 
         //only the owner is the participant of this album for now
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
 
         UpdateAlbum upd8Album = new UpdateAlbum(null, dummyServer);
         String response = upd8Album.execute();
 
         assertEquals(ERR, response);
 
-        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getNumberOfParticipants());
+        assertEquals(1, dummyServer.getAlbumById(Integer.parseInt(albumId)).getTotalNumberOfParticipants());
 
     }
 

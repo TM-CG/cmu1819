@@ -19,9 +19,9 @@ public class ListAlbumTest {
     private static final String TESTPASS_3 = "testpass3";
     private static final String TESTPASS_2 = "testpass2";
     private static final String TESTPASS_1 = "testpass1";
-    private static final String ALBUM_DE_TESTE = "Album de teste";
-    private static final String ALBUM_SEGUNDO = "Album segundo";
-    private static final String ALBUM_TERCEIRO = "Album terceiro";
+    private static final String ALBUM_DE_TESTE = "https://cloud.com/teste";
+    private static final String ALBUM_SEGUNDO = "https://cloud.com/seg";
+    private static final String ALBUM_TERCEIRO = "https://cloud.com/terceiro";
 
     private Server dummyServer;
 

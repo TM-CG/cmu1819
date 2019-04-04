@@ -29,18 +29,20 @@ public class UpdateRequests extends Instruction {
                 displayDebug(VERBOSE_NOK4);
                 return NOK_4;
             } else {
+
+                Album album = server.getAlbumById(albumId);
                 //user accepted invitation
                 if (option.equals("A")) {
-                    server.getAlbumById(albumId).setIndexOfParticipant(username, directoryCloudURL);
+                    album.setIndexOfParticipant(username, directoryCloudURL);
                 } else {
                     //user reject invitation
-                    server.getAlbumById(albumId).removeIndexOfParticipant(username);
+                    album.removeIndexOfParticipant(username);
                 }
 
                 return OK_PLUS + albumId;
 
             }
-        } catch(NullPointerException | IndexOutOfBoundsException e) {
+        } catch(NullPointerException | IndexOutOfBoundsException | NumberFormatException e) {
             return ERR;
         }
     }

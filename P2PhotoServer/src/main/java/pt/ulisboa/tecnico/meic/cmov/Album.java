@@ -3,7 +3,9 @@ package pt.ulisboa.tecnico.meic.cmov;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 public class Album {
 
@@ -105,22 +107,43 @@ public class Album {
     public void removeIndexOfParticipant(String username) {
         Pair<String, String> pairSelect = null;
         synchronized (this) {
-            for (Pair<String, String> pair : indexes) {
-                if (pair.getKey().equals(username))
-                    pairSelect = pair;
-            }
 
-            if (pairSelect != null) {
-                indexes.remove(pairSelect);
+            Iterator<Pair<String, String>> iterator = indexes.iterator();
+            while(iterator.hasNext()) {
+                if (iterator.next().getKey().equals(username)) {
+                    iterator.remove();
+                    break;
+                }
             }
         }
     }
 
     /**
-     * Returns the number of users that contributes to this album
+     * Return all members that were added by the owner but not accept the invitation yet
+     * @return the number of members that were added by the owner but not accept the invitation yet
+     */
+    public int getNumberOfPendingParticipants() {
+        int counter = 0;
+        for (Pair<String, String> pair: indexes) {
+            if (pair.getValue() == null)
+                counter++;
+        }
+        return counter;
+    }
+
+    /**
+     * Returns the number of users that contributes to this album even the ones in pending state
+     * @return the number of users belonging to this album
+     */
+    public int getTotalNumberOfParticipants() {
+        return this.indexes.size();
+    }
+
+    /**
+     * Returns the real number of users participating in the album excluding the pending ones
      * @return the number of users belonging to this album
      */
     public int getNumberOfParticipants() {
-        return this.indexes.size();
+        return this.indexes.size() - getNumberOfPendingParticipants();
     }
 }

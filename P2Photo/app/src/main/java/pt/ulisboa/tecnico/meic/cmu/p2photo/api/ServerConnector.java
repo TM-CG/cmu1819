@@ -24,11 +24,14 @@ public class ServerConnector {
     private static final String API_LOGIN = "LOGIN %s %s";
     private static final String API_SIGNUP = "SIGNUP %s %s";
     private static final String API_LOGOUT = "LOGOUT %s";
-    private static final String API_ALB_CR8 = "ALB-CR8 %s \"%s\"";
+    private static final String API_ALB_CR8 = "ALB-CR8 %s %s";
     private static final String API_ALB_AUP = "ALB-AUP %s %s %s";
     private static final String API_ALB_LST = "ALB-LST %s";
     private static final String API_ALB_UAS = "ALB-UAS %s %s";
     private static final String API_USR_FND = "USR-FND %s %s";
+    private static final String API_USR_IRQ = "USR-IRQ %s";
+    private static final String API_USR_URQ_ACCEPT = "USR-URQ %s A %s %s";
+    private static final String API_USR_URQ_REJECT = "USR-URQ %s R %s";
     private static final String API_SHUT = "SHUT";
     private static final String API_DBG_STA = "DBG-STA";
     private static final String API_DBG_RST = "DBG-RST";
@@ -83,11 +86,11 @@ public class ServerConnector {
             this.in = new BufferedReader(
                     new InputStreamReader(this.socket.getInputStream()));
 
-            //Client API is diferent from the server
-            /*String clientAPI = getClientAPIVersion();
+            //Client API is different from the server
+            String clientAPI = getClientAPIVersion();
             String serverAPI = getServerAPIVersion();
             if (!clientAPI.equals(serverAPI))
-                throw new P2PhotoException(String.format(WRONG_API_VERSION, clientAPI, serverAPI));*/
+                throw new P2PhotoException(String.format(WRONG_API_VERSION, clientAPI, serverAPI));
 
         } catch (IOException e) {
             throw new P2PhotoException(CONN_PROBLEM + e.getMessage());
@@ -98,16 +101,8 @@ public class ServerConnector {
         return serverPath;
     }
 
-    public void setServerPath(String serverPath) {
-        this.serverPath = serverPath;
-    }
-
     public int getServerPort() {
         return serverPort;
-    }
-
-    public void setServerPort(int serverPort) {
-        this.serverPort = serverPort;
     }
 
     /**
@@ -309,6 +304,90 @@ public class ServerConnector {
             processErrors(response);
 
             return parseIntegerList(response);
+
+        } catch (IOException e) {
+            throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new P2PhotoException(WRONG_ARGS + e.getMessage());
+        }
+    }
+
+    /**
+     * Displays a list of albumsIDS where the current user was invited to participate but not yet make a decision
+     * @return a list of album IDS where the user is on pending state
+     * @throws P2PhotoException
+     */
+    public List<Integer> listIncomingRequest() throws P2PhotoException {
+        try {
+            String request = String.format(API_USR_IRQ, sessionId);
+
+            this.out.println(request);
+
+            String response = this.in.readLine();
+
+            if (showDebug) {
+                System.out.println("Request: " + request);
+                System.out.println("Response: " + response);
+            }
+
+            processErrors(response);
+
+            return parseIntegerList(response);
+
+        } catch (IOException e) {
+            throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new P2PhotoException(WRONG_ARGS + e.getMessage());
+        }
+    }
+
+    /**
+     * Accepts a pending incoming request and gives the path to the cloud directory album catalog
+     * @param albumId of accepted album
+     * @param cloudDirectoryPath of the album catalog file
+     * @throws P2PhotoException
+     */
+    public void acceptIncomingRequest(int albumId, String cloudDirectoryPath) throws P2PhotoException {
+        try {
+            String request = String.format(API_USR_URQ_ACCEPT, sessionId, albumId, cloudDirectoryPath);
+
+            this.out.println(request);
+
+            String response = this.in.readLine();
+
+            if (showDebug) {
+                System.out.println("Request: " + request);
+                System.out.println("Response: " + response);
+            }
+
+            processErrors(response);
+
+        } catch (IOException e) {
+            throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new P2PhotoException(WRONG_ARGS + e.getMessage());
+        }
+    }
+
+    /**
+     * Rejects a pending incoming request and gives the path to the cloud directory album catalog
+     * @param albumId of rejected album
+     * @throws P2PhotoException
+     */
+    public void rejectIncomingRequest(int albumId) throws P2PhotoException {
+        try {
+            String request = String.format(API_USR_URQ_REJECT, sessionId, albumId);
+
+            this.out.println(request);
+
+            String response = this.in.readLine();
+
+            if (showDebug) {
+                System.out.println("Request: " + request);
+                System.out.println("Response: " + response);
+            }
+
+            processErrors(response);
 
         } catch (IOException e) {
             throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());

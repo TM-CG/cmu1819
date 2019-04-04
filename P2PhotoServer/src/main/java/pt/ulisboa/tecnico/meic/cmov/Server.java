@@ -187,6 +187,22 @@ public class Server {
         return albums;
     }
 
+    /**
+     * Returns a list of albums where the user was invited but not yet accept nor deny the invitation
+     * @param username of the user
+     * @return a list of albums ids
+     */
+    public List<Integer> getPendingAlbumsOfGivenUser(String username) {
+        List<Integer> albums = new ArrayList<>();
+
+        for (Album album : this.albums) {
+            //User is the owner OR user participates on the album
+            if (album.getIndexOfUser(username) == null)
+                albums.add(album.getID());
+        }
+
+        return albums;
+    }
 
     /** ======================================= SOCKET RELATED ======================================= **/
 

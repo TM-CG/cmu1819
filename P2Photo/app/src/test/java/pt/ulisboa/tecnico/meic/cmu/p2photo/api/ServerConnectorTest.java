@@ -1,7 +1,5 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo.api;
 
-import android.support.v4.util.Pair;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +25,7 @@ public class ServerConnectorTest {
     @Test
     public void simpleCreateUpdateAlbum() throws P2PhotoException {
 
-        serverConnector.createAlbum("Album de teste");
+        serverConnector.createAlbum("https://cloud.com/album");
         serverConnector.updateAlbum(1, "ze");
 
     }
@@ -83,7 +81,7 @@ public class ServerConnectorTest {
         List<String> urls = serverConnector.listUserAlbumSlices(1);
         assertNotNull(urls);
 
-        assertEquals(2, urls.size());
+        assertEquals(1, urls.size());
         /*assertEquals("https://cloud.org/vitor/album_de_teste_1.alb", urls.get(0));
         assertEquals("https://cloud.org/ze/album_de_teste_1.alb", urls.get(1));*/
 

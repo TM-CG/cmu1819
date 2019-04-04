@@ -84,7 +84,8 @@ public class Album {
     public List<String> getAlbumSlicesURLs() {
         List<String> urls = new ArrayList<>();
         for (Pair<String, String> albumSlices: indexes) {
-            urls.add(albumSlices.getValue());
+            if (albumSlices.getValue() != null)
+                urls.add(albumSlices.getValue());
         }
         return urls;
     }
@@ -94,6 +95,14 @@ public class Album {
      * @param username
      */
     public void setIndexOfParticipant(String username, String directoryCloudURL) {
+        removeIndexOfParticipant(username);
+
+        synchronized (this) {
+                indexes.add(new Pair<>(username, directoryCloudURL));
+            }
+    }
+
+    public void removeIndexOfParticipant(String username) {
         Pair<String, String> pairSelect = null;
         synchronized (this) {
             for (Pair<String, String> pair : indexes) {
@@ -103,8 +112,6 @@ public class Album {
 
             if (pairSelect != null) {
                 indexes.remove(pairSelect);
-
-                indexes.add(new Pair<>(username, directoryCloudURL));
             }
         }
     }

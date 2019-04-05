@@ -17,16 +17,16 @@ public abstract class Instruction {
     static final String VERBOSE_NOK7 = "URL %s is invalid!";
 
     //Server responses must follow API!
-    static final String ERR     = "ERR"  ;
-    static final String NOK_1   = "NOK 1";
-    static final String NOK_2   = "NOK 2";
-    static final String NOK_3   = "NOK 3";
-    static final String NOK_4   = "NOK 4";
-    static final String NOK_5   = "NOK 5";
-    static final String NOK_6   = "NOK 6";
-    static final String NOK_7   = "NOK 7";
-    static final String OK_PLUS = "OK "  ;
-    static final String OK      = "OK"   ;
+    static final String ERR     = "ERR"    ;
+    static final String NOK_1   = "NOK 1"  ;
+    static final String NOK_2   = "NOK 2"  ;
+    static final String NOK_3   = "NOK 3"  ;
+    static final String NOK_4   = "NOK 4"  ;
+    static final String NOK_5   = "NOK 5"  ;
+    static final String NOK_6   = "NOK 6"  ;
+    static final String NOK_7   = "NOK 7"  ;
+    static final String OK_PLUS = "OK "    ;
+    static final String OK      = "OK"     ;
     static final String SHUT_OK = "SHUT OK";
 
 

@@ -432,6 +432,10 @@ public class ServerConnector {
      */
     public void terminateConn() throws P2PhotoException {
         try {
+
+            this.out.println(API_SHUT);
+            this.in.readLine();
+
             this.out.close();
             this.in.close();
             this.socket.close();

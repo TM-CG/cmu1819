@@ -19,5 +19,5 @@ public class PicassoClient {
                 .build();
     }
 
-    public static Picasso getsPicasso() { return sPicasso; }
+    public static Picasso getPicasso() { return sPicasso; }
 }

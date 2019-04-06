@@ -5,6 +5,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -22,7 +24,7 @@
         <activity android:name=".ActionsMenu" />
         <activity android:name=".addPhotoActivity" />
         <activity android:name=".YourAlbums" />
-        <activity android:name=".ListPhoto" />
+        <activity android:name=".FilesActivity" />
         <activity android:name=".addUserFromMainMenu" />
         <activity android:name="addPhotoActivityFromMenu"/>
         <activity android:name=".LogActivity"/>

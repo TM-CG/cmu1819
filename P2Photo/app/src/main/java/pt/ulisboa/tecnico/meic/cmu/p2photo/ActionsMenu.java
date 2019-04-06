@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-public class ActionsMenu extends AppCompatActivity {
+public class ActionsMenu extends DropboxActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,5 +103,10 @@ public class ActionsMenu extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    @Override
+    protected void loadData() {
+
     }
 }

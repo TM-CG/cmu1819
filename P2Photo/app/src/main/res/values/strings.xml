@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">P2Photo</string>
     <string name="app_key">znh1m2wzcegv96c</string>
+    <string name="title_activity_files">Files</string>
     <string name="input_name">User Name</string>
     <string name="input_password">Password</string>
     <string name="logoDescription">ISTLOGO</string>
@@ -55,5 +56,6 @@
     <string name="btn_confirm_OK">Confirm</string>
     <string name="btn_confirm_cancel">Cancel</string>
     <string name="lbl_log_description">Log: For debug proposes</string>
+    <string name="authCloud">Auth</string>
 
 </resources>

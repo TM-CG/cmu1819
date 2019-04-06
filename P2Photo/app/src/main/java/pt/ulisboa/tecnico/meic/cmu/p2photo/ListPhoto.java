@@ -28,7 +28,7 @@ public class ListPhoto extends AppCompatActivity implements Toolbar.OnMenuItemCl
             @Override
             public void onClick(View v) {
                 //back button click here
-                Toast.makeText(ListPhoto.this, "Back Button", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 

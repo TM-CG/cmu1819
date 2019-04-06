@@ -53,11 +53,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <EditText
+    <TextView
         android:id="@+id/albumNameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
         android:text="Album name that we're adding photo"
         android:layout_marginTop="0dp"
         app:layout_constraintEnd_toEndOf="parent"

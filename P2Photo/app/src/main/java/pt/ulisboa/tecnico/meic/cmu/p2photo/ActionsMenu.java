@@ -37,7 +37,7 @@ public class ActionsMenu extends AppCompatActivity {
     }
 
     public void addPhoto(View view){
-        Intent intent = new Intent(this, addPhotoActivity.class);
+        Intent intent = new Intent(this, addPhotoActivityFromMenu.class);
         startActivityForResult(intent, 8);
     }
 

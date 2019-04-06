@@ -98,11 +98,11 @@ public class AddUser extends AppCompatActivity {
         }
     }
 
-    public void confirmAddUsers(View view) {
+    /*public void confirmAddUsers(View view) {
         Intent intent = new Intent(AddUser.this, ConfirmPromptActivity.class);
         intent.putExtra("message", "Are you sure?");
         startActivityForResult(intent, CONFIRMATION_REQUEST);
-    }
+    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -116,4 +116,17 @@ public class AddUser extends AppCompatActivity {
             }
         }
     }
+
+    public void cancel(View view){
+        Intent intent = getIntent();
+        setResult(RESULT_CANCELED,intent);
+        finish();
+    }
+
+    public void create(View view){
+        Intent intent = getIntent();
+        setResult(RESULT_OK,intent);
+        finish();
+    }
+
 }

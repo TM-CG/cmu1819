@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
+
 public class MainActivity extends AppCompatActivity {
     private Intent intent;
     private EditText user;
@@ -31,7 +34,11 @@ public class MainActivity extends AppCompatActivity {
     public void signUp(View view) {
         intent = new Intent(this, chooseCloudLocalActivity.class);
         if(checkArguments()){
-            /*TODO server request*/
+            /*try {
+                ServerConnector sv = new ServerConnector();
+            } catch (P2PhotoException e) {
+                e.printStackTrace();
+            }*/
             startActivityForResult(intent, 2);
         }
     }

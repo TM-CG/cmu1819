@@ -92,7 +92,6 @@
         android:layout_centerHorizontal="true"
         android:onClick="signIn"
         android:text="@string/signin"
-        android:onClick="signIn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/signupButton"

@@ -67,6 +67,14 @@ public class Worker extends Thread {
                 System.err.println("** WORKER: Invalid instruction nice try :)");
                 System.out.println();
                 System.out.flush();
+                try {
+                    this.out.close();
+                    this.in.close();
+                    this.s.close();
+                } catch(IOException f) {
+                    System.err.println("** WORKER: IOException when terminating by invalid instruction!");
+                }
+                return;
             }
         }
 

@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected ServerConnector doInBackground(Object [] objects) {
             try {
-                ServerConnector tmp = new ServerConnector("192.168.1.66", 10007);
+                ServerConnector tmp = new ServerConnector("192.168.1.3", 10000);
                 return tmp;
             } catch (P2PhotoException e) {
                 Log.d("serverTest", e.getMessage());

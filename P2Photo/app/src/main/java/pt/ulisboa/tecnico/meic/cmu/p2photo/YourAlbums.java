@@ -3,7 +3,6 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,8 +12,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 
 public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemClickListener {
@@ -55,8 +52,8 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
         albumsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(ListPhoto.getIntent(YourAlbums.this, ""));
-                /*Intent intent = new Intent(YourAlbums.this, ListPhoto.class);
+                startActivity(FilesActivity.getIntent(YourAlbums.this, ""));
+                /*Intent intent = new Intent(YourAlbums.this, FilesActivity.class);
                 intent.putExtra("title", albums.get(position));
                 startActivityForResult(intent, 11);*/
             }

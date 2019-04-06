@@ -24,7 +24,7 @@ public class Server {
     /** Displays detailed debug for testing**/
     private boolean verboseDebug;
 
-    private static final int SERVER_PORT = 10000;
+    private static final int SERVER_PORT = 10001;
 
     public Server() {
         this.users = new ArrayList<>();

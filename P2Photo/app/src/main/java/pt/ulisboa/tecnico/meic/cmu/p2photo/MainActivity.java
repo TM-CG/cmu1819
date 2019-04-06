@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected ServerConnector doInBackground(Object [] objects) {
             try {
-                ServerConnector tmp = new ServerConnector("192.168.1.3", 10000);
+                ServerConnector tmp = new ServerConnector("192.168.1.66", 10001);
                 return tmp;
             } catch (P2PhotoException e) {
                 Log.d("serverTest", e.getMessage());
@@ -137,8 +137,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object result) {
             String msg = (String) result;
-            Toast.makeText(getApplicationContext(), msg,
-                    Toast.LENGTH_LONG).show();
+            doToast(msg);
+
         }
 
     }
@@ -158,9 +158,29 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object result) {
             String msg = (String) result;
-            Toast.makeText(getApplicationContext(), msg,
-                    Toast.LENGTH_LONG).show();
+            doToast(msg);
+
         }
 
+    }
+
+    public void doToast(String data){
+        switch (data){
+            case "OK":
+                break;
+            case "NOK 1":
+                Toast.makeText(getApplicationContext(), "User name not found",
+                        Toast.LENGTH_LONG).show();
+                break;
+            case "NOK 2":
+                Toast.makeText(getApplicationContext(), "User name and password don't match",
+                        Toast.LENGTH_LONG).show();
+                break;
+            case "NOK 3":
+                Toast.makeText(getApplicationContext(), "User name already in use",
+                        Toast.LENGTH_LONG).show();
+                break;
+
+        }
     }
 }

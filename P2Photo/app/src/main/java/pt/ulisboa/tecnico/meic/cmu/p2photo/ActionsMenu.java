@@ -1,11 +1,16 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
+
+import static pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity.sv;
 
 public class ActionsMenu extends DropboxActivity {
 
@@ -16,9 +21,7 @@ public class ActionsMenu extends DropboxActivity {
     }
 
     public void goBack(View view){
-        Intent intent = getIntent();
-        setResult(RESULT_OK,intent);
-        finish();
+        new SignOut().execute();
     }
 
     public void selectSettings(View view) {
@@ -102,6 +105,27 @@ public class ActionsMenu extends DropboxActivity {
                             Toast.LENGTH_LONG).show();
                 }
                 break;
+        }
+    }
+
+    public class SignOut extends AsyncTask {
+        @Override
+        protected String doInBackground(Object[] objects) {
+            try {
+                sv.logOut();
+                return "OK";
+            } catch (P2PhotoException e) {
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object result) {
+            String msg = (String) result;
+            //Maybe a toast?
+            Intent intent = getIntent();
+            setResult(RESULT_OK,intent);
+            finish();
         }
     }
 

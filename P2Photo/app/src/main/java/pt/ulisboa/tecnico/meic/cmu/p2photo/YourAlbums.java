@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,11 +12,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.dropbox.core.v2.files.FileMetadata;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 
 public class YourAlbums extends AppCompatActivity implements Toolbar.OnMenuItemClickListener {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

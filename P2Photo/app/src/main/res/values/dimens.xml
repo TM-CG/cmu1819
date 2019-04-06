@@ -7,5 +7,8 @@
     <dimen name="font_medium">24dp</dimen>
     <dimen name="font_small">10dp</dimen>
 
+    <dimen name="global_padding">16dp</dimen>
+    <dimen name="thumbnail_size">36dp</dimen>
+
     <dimen name="font_prompt">18dp</dimen>
 </resources>

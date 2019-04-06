@@ -14,7 +14,7 @@ public abstract class DropboxActivity extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("dropbox-sample", MODE_PRIVATE);
         String accessToken = prefs.getString("access-token", null);
-        Log.d("MR TOKEN", "pls mr. token: " + new Boolean(accessToken == null));
+        Log.i("MR TOKEN", "pls mr. token: " + new Boolean(accessToken == null));
         if(accessToken == null){
             accessToken = Auth.getOAuth2Token();
             if(accessToken != null){
@@ -36,6 +36,7 @@ public abstract class DropboxActivity extends AppCompatActivity {
     public void initAndLoadData(String accessToken) {
         DropboxClientFactory.init(accessToken);
         PicassoClient.init(getApplicationContext(), DropboxClientFactory.getClient());
+        loadData();
     }
 
     protected abstract void loadData();

@@ -42,6 +42,7 @@ public class chooseCloudLocalActivity extends DropboxActivity {
         new GetCurrentAccountTask(DropboxClientFactory.getClient(), new GetCurrentAccountTask.Callback() {
             @Override
             public void onComplete(FullAccount result) {
+                Log.i("DROPBOX", result.getEmail());
             }
 
             @Override

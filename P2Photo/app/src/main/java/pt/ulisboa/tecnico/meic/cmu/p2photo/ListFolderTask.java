@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;

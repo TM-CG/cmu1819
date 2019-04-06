@@ -76,6 +76,7 @@ public class ListPhoto extends DropboxActivity {
                 performWithPermissions(FileAction.DOWNLOAD);
             }
         });
+        Log.i("DROPBOX",  new Integer(mFilesAdapter.getItemCount()).toString());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mFilesAdapter);
 
@@ -177,7 +178,7 @@ public class ListPhoto extends DropboxActivity {
             public void onError(Exception e) {
                 dialog.dismiss();
 
-                Log.e(TAG, "Failed to list folder.", e);
+                Log.i(TAG, "Failed to list folder.", e);
                 Toast.makeText(ListPhoto.this,
                         "An error has occurred",
                         Toast.LENGTH_SHORT)
@@ -207,7 +208,7 @@ public class ListPhoto extends DropboxActivity {
             public void onError(Exception e) {
                 dialog.dismiss();
 
-                Log.e(TAG, "Failed to download file.", e);
+                Log.i(TAG, "Failed to download file.", e);
                 Toast.makeText(ListPhoto.this,
                         "An error has occurred",
                         Toast.LENGTH_SHORT)
@@ -258,7 +259,7 @@ public class ListPhoto extends DropboxActivity {
             public void onError(Exception e) {
                 dialog.dismiss();
 
-                Log.e(TAG, "Failed to upload file.", e);
+                Log.i(TAG, "Failed to upload file.", e);
                 Toast.makeText(ListPhoto.this,
                         "An error has occurred",
                         Toast.LENGTH_SHORT)

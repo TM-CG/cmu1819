@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 
 /**
  * A Class for describing the Worker of the Server in order to respond to clients requests.
- * !! This is a Thread Template
  */
 public class Worker extends Thread {
     private PrintWriter out;
@@ -46,11 +45,11 @@ public class Worker extends Thread {
                 //parse to instruction
                 instruction = parseInstruction(args);
                 
-		//execute instruction
+		        //execute instruction
                 response = instruction.execute();
 
                 out.println(response);
-		out.flush();
+		        out.flush();
 
                 //User request shut of channel
                 if (response.equals("SHUT OK"))
@@ -64,11 +63,11 @@ public class Worker extends Thread {
             } catch (IOException e) {
                 System.err.println("** WORKER: IOException when Worker is running!");
             	return;
-	    } catch (NullPointerException e) {
-		System.out.println();
-		System.out.flush();
-		return; //unexpected close connection
-	    }
+            } catch (NullPointerException e) {
+                System.err.println("** WORKER: Invalid instruction nice try :)");
+                System.out.println();
+                System.out.flush();
+            }
         }
 
     }
@@ -105,19 +104,22 @@ public class Worker extends Thread {
         String instruction = args.get(0);
 
         switch (instruction) {
-            case "LOGIN"  : return new LogIn(args, server);
-            case "SIGNUP" : return new SignUp(args, server);
-            case "LOGOUT" : return new LogOut(args, server);
-            case "ALB-CR8": return new CreateAlbum(args, server);
-            case "USR-FND": return new FindUser(args, server);
-            case "ALB-LST": return new ListAlbum(args, server);
-            case "ALB-AUP": return new UpdateAlbum(args, server);
-            case "ALB-UAS": return new ListAlbumSlices(args, server);
-            case "SHUT"   : return new ShutConnection();
+            case "LOGIN"  : return new LogIn           (args, server);
+            case "SIGNUP" : return new SignUp          (args, server);
+            case "LOGOUT" : return new LogOut          (args, server);
+            case "ALB-CR8": return new CreateAlbum     (args, server);
+            case "USR-FND": return new FindUser        (args, server);
+            case "USR-IRQ": return new IncomingRequests(args, server);
+            case "USR-URQ": return new UpdateRequests  (args, server);
+            case "ALB-LST": return new ListAlbum       (args, server);
+            case "ALB-AUP": return new UpdateAlbum     (args, server);
+            case "ALB-UAS": return new ListAlbumSlices (args, server);
+            case "SHUT"   : return new ShutConnection  ();
+            case "VER"    : return new Version         ();
 
             //debug operation: to be removed in a real case scenario
-            case "DBG-STA": return new DebugStatus(args, server);
-            case "DBG-RST": return new DebugReset(args, server);
+            case "DBG-STA": return new DebugStatus     (args, server);
+            case "DBG-RST": return new DebugReset      (args, server);
         }
 
 

@@ -3,7 +3,9 @@ package pt.ulisboa.tecnico.meic.cmov;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 public class Album {
 
@@ -11,19 +13,15 @@ public class Album {
 
     private int ID;
 
-    private String title;
-
     private List<Pair<String, String>> indexes;
 
-    public Album(int ID, String title, User owner) {
+    public Album(int ID, User owner) {
         this.ID = ID;
-        this.title = title;
         this.indexes = new ArrayList<>();
     }
 
-    public Album(int ID, String title, User owner, String ownerURL) {
+    public Album(int ID, User owner, String ownerURL) {
         this.ID = ID;
-        this.title = title;
         this.indexes = new ArrayList<>();
         this.indexes.add(new Pair(owner.getUsername(), ownerURL));
     }
@@ -34,14 +32,6 @@ public class Album {
 
     public void setID(int ID) {
         this.ID = ID;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getOwner() {
@@ -96,16 +86,64 @@ public class Album {
     public List<String> getAlbumSlicesURLs() {
         List<String> urls = new ArrayList<>();
         for (Pair<String, String> albumSlices: indexes) {
-            urls.add(albumSlices.getValue());
+            if (albumSlices.getValue() != null)
+                urls.add(albumSlices.getValue());
         }
         return urls;
     }
 
     /**
-     * Returns the number of users that contributes to this album
+     * Given a username of a participant of this album replace the current URL
+     * @param username
+     */
+    public void setIndexOfParticipant(String username, String directoryCloudURL) {
+        removeIndexOfParticipant(username);
+
+        synchronized (this) {
+                indexes.add(new Pair<>(username, directoryCloudURL));
+            }
+    }
+
+    public void removeIndexOfParticipant(String username) {
+        Pair<String, String> pairSelect = null;
+        synchronized (this) {
+
+            Iterator<Pair<String, String>> iterator = indexes.iterator();
+            while(iterator.hasNext()) {
+                if (iterator.next().getKey().equals(username)) {
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Return all members that were added by the owner but not accept the invitation yet
+     * @return the number of members that were added by the owner but not accept the invitation yet
+     */
+    public int getNumberOfPendingParticipants() {
+        int counter = 0;
+        for (Pair<String, String> pair: indexes) {
+            if (pair.getValue() == null)
+                counter++;
+        }
+        return counter;
+    }
+
+    /**
+     * Returns the number of users that contributes to this album even the ones in pending state
+     * @return the number of users belonging to this album
+     */
+    public int getTotalNumberOfParticipants() {
+        return this.indexes.size();
+    }
+
+    /**
+     * Returns the real number of users participating in the album excluding the pending ones
      * @return the number of users belonging to this album
      */
     public int getNumberOfParticipants() {
-        return this.indexes.size();
+        return this.indexes.size() - getNumberOfPendingParticipants();
     }
 }

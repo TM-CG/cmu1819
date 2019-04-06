@@ -21,7 +21,7 @@ public class Server {
     private DataInputStream dis;
     private DataOutputStream dos;
 
-    private static final int SERVER_PORT = 10000;
+    private static final int SERVER_PORT = 10007;
 
     public Server() {
         this.users = new ArrayList<>();
@@ -59,11 +59,17 @@ public class Server {
      * @return true if username exists false otherwise
      */
     public boolean usernameExists(String username) {
-        for (User user: users) {
-            if (user.getUsername().equals(username))
-                return true;
+        boolean result = false;
+
+        synchronized (this.users) {
+            for (User user : this.users) {
+                if (user.getUsername().equals(username)) {
+                    result = true;
+                    break;
+                }
+            }
         }
-        return false;
+        return result;
     }
 
     /**
@@ -72,11 +78,17 @@ public class Server {
      * @return the sessionID if the user is logged in and null otherwise
      */
     public String usernameIsLoggedOn(String username) {
-        for (Pair<String, String> user: this.loggedInUsers) {
-            if (user.getKey().equals(username))
-                return user.getValue();
+        String result = null;
+
+        synchronized (this.loggedInUsers) {
+            for (Pair<String, String> user: this.loggedInUsers) {
+                if (user.getKey().equals(username)) {
+                    result = user.getValue();
+                    break;
+                }
+            }
         }
-        return null;
+        return result;
     }
 
     /**
@@ -85,11 +97,17 @@ public class Server {
      * @return the username if was a match and null otherwise
      */
     public String getUserNameBySessionID(String sessionID) {
-        for (Pair<String, String> user: this.loggedInUsers) {
-            if (user.getValue().equals(sessionID))
-                return user.getKey();
+        String result = null;
+
+        synchronized (this.loggedInUsers) {
+            for (Pair<String, String> user : this.loggedInUsers) {
+                if (user.getValue().equals(sessionID)) {
+                    result = user.getKey();
+                    break;
+                }
+            }
         }
-        return null;
+        return result;
     }
 
     /**
@@ -98,11 +116,18 @@ public class Server {
      * @return the User instance that matches the username
      */
     public User getUserByUsername(String username) {
-        for (User user: users) {
-            if (user.getUsername().equals(username))
-                return user;
+        User result = null;
+
+        synchronized (this.users) {
+            for (User user: users) {
+                if (user.getUsername().equals(username)) {
+                    result = user;
+                    break;
+                }
+            }
         }
-        return null;
+
+        return result;
     }
 
     /**
@@ -111,11 +136,17 @@ public class Server {
      * @return an album object if album exists or null otherwise
      */
     public Album getAlbumById(int id) {
-        for (Album album: albums) {
-            if (album.getID() == id)
-                return album;
+        Album result = null;
+
+        synchronized (this.albums) {
+            for (Album album : this.albums) {
+                if (album.getID() == id) {
+                    result = album;
+                    break;
+                }
+            }
         }
-        return null;
+        return result;
     }
 
     /**
@@ -126,9 +157,11 @@ public class Server {
     public List<String> findUserNameByPattern(String pattern) {
         List<String> matches = new ArrayList<>();
 
-        for (User user: users) {
-            if (user.getUsername().matches(pattern))
-                matches.add(user.getUsername());
+        synchronized (this.users) {
+            for (User user : this.users) {
+                if (user.getUsername().matches(pattern))
+                    matches.add(user.getUsername());
+            }
         }
 
         return matches;
@@ -155,17 +188,12 @@ public class Server {
         return rep;
     }
 
-    /**
-     * Given a list of albums transform it to a String
-     * @param list of albums, i.e, pairs of strings <albumID, Title>
-     * @return a string with all albums to send to client
-     */
-    public String representAlbum(List<Pair<String, String>> list) {
+    public String representIntegerList(List<Integer> list) {
         String rep = "<";
         int len = list.size();
 
         for (int i = 0; i < len; i++) {
-            rep += list.get(i).getKey() + " \"" + list.get(i).getValue() + "\"";
+            rep += list.get(i);
 
             if (i != (len - 1))
                 rep += " , ";
@@ -180,19 +208,38 @@ public class Server {
      * @param username of the user to search
      * @return a list of all albums ID
      */
-    public List<Pair<String, String>> getAlbunsOfGivenUser(String username) {
-        List<Pair<String, String>> albums = new ArrayList<>();
+    public List<Integer> getAlbunsOfGivenUser(String username) {
+        List<Integer> albums = new ArrayList<>();
 
-        for (Album album : this.albums) {
-            //User is the owner OR user participates on the album
-            if ((album.getOwner().equals(username)) || (album.getIndexOfUser(username) != null))
-                //vitor: bah!!
-                albums.add(new Pair<>(new Integer(album.getID()).toString(), album.getTitle()));
+        synchronized (this.albums) {
+            for (Album album : this.albums) {
+                //User is the owner OR user participates on the album
+                if ((album.getOwner().equals(username)) || (album.getIndexOfUser(username) != null))
+                    albums.add(album.getID());
+            }
         }
 
         return albums;
     }
 
+    /**
+     * Returns a list of albums where the user was invited but not yet accept nor deny the invitation
+     * @param username of the user
+     * @return a list of albums ids
+     */
+    public List<Integer> getPendingAlbumsOfGivenUser(String username) {
+        List<Integer> albums = new ArrayList<>();
+
+        synchronized (this.albums) {
+            for (Album album : this.albums) {
+                //User is the owner OR user participates on the album
+                if (album.getIndexOfUser(username) == null)
+                    albums.add(album.getID());
+            }
+        }
+
+        return albums;
+    }
 
     /** ======================================= SOCKET RELATED ======================================= **/
 
@@ -207,7 +254,6 @@ public class Server {
             while (true) {
                 //When receiving a connection from a user starts processing in a new thread!
                 this.clientSocket = serverSocket.accept();
-
                 dis = new DataInputStream(this.clientSocket.getInputStream());
                 dos = new DataOutputStream(this.clientSocket.getOutputStream());
 
@@ -236,49 +282,70 @@ public class Server {
     }
 
     public void addLoggedUser(String username, String sessionID) {
-        synchronized (this) {
+        synchronized (this.loggedInUsers) {
             this.loggedInUsers.add(new Pair<>(username, sessionID));
         }
     }
 
     public void removeLoggedUser(String username, String sessionID) {
-        synchronized (this) {
+        synchronized (this.loggedInUsers) {
             this.loggedInUsers.remove(new Pair<>(username, sessionID));
         }
     }
 
     public void addUser(User user) {
-        synchronized (this) {
+        synchronized (this.users) {
             this.users.add(user);
         }
     }
 
     public void addAlbum(Album album) {
-        synchronized (this) {
+        synchronized (this.albums) {
             this.albums.add(album);
         }
     }
 
     public int numberOfRegisteredUsers() {
-        return this.users.size();
+        int size;
+
+        synchronized (this.users){
+            size = this.users.size();
+        }
+        return size;
     }
 
     public int numberOfRegisteredAlbums() {
-        return this.albums.size();
+        int size;
+
+        synchronized (this.albums){
+            size = this.albums.size();
+        }
+        return size;
     }
 
     public int numberOfLoggedInUsers() {
-        return this.loggedInUsers.size();
+        int size;
+
+        synchronized (this.loggedInUsers){
+            size = this.loggedInUsers.size();
+        }
+        return size;
     }
 
     /**
      * Clears all users and albums: for testing proposes
      */
     public void reset() {
-        this.albums.clear();
-        this.loggedInUsers.clear();
-        this.users.clear();
-        Album.CounterID = 1;
+        synchronized (this.albums) {
+            this.albums.clear();
+            Album.CounterID = 1;
+        }
+        synchronized (this.loggedInUsers) {
+            this.loggedInUsers.clear();
+        }
+        synchronized (this.users) {
+            this.users.clear();
+        }
     }
 
 }

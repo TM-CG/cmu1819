@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.meic.cmov;
 
+import javafx.util.Pair;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +19,9 @@ public class ListAlbumTest {
     private static final String TESTPASS_3 = "testpass3";
     private static final String TESTPASS_2 = "testpass2";
     private static final String TESTPASS_1 = "testpass1";
-    private static final String ALBUM_DE_TESTE = "Album de teste";
-    private static final String ALBUM_SEGUNDO = "Album segundo";
-    private static final String ALBUM_TERCEIRO = "Album terceiro";
+    private static final String ALBUM_DE_TESTE = "https://cloud.com/teste";
+    private static final String ALBUM_SEGUNDO = "https://cloud.com/seg";
+    private static final String ALBUM_TERCEIRO = "https://cloud.com/terceiro";
 
     private Server dummyServer;
 
@@ -40,7 +41,6 @@ public class ListAlbumTest {
         this.args.add("SIGNUP");
         this.args.add(TEST_USER_3);
         this.args.add(TESTPASS_3);
-        this.args.add("https://user.p2photocloud.com/user");
 
         new SignUp(args, dummyServer).execute();
 
@@ -49,7 +49,6 @@ public class ListAlbumTest {
         this.args.add("SIGNUP");
         this.args.add(TEST_USER_2);
         this.args.add(TESTPASS_2);
-        this.args.add("https://user.p2photocloud.com/user");
 
         new SignUp(args, dummyServer).execute();
 
@@ -58,7 +57,6 @@ public class ListAlbumTest {
         this.args.add("SIGNUP");
         this.args.add(TEST_USER_1);
         this.args.add(TESTPASS_1);
-        this.args.add("https://user.p2photocloud.com/user");
 
         new SignUp(args, dummyServer).execute();
 
@@ -122,7 +120,26 @@ public class ListAlbumTest {
 
         assertNotNull(response);
 
-        assertEquals(OK_PLUS + "<" + 1 + " \"" + ALBUM_DE_TESTE + "\" , 2 \"" + ALBUM_SEGUNDO + "\">", response);
+        assertEquals(OK_PLUS + "<" + 1 + ">", response);
+    }
+
+    @Test
+    public void simpleListAfterSecondUserCr8Directory() {
+
+        //Simulation of file creation on server
+        Album album = dummyServer.getAlbumById(2);
+        album.setIndexOfParticipant(TEST_USER_1, "https://cloud.com/caminho/album2");
+
+        this.args = new ArrayList<>();
+        this.args.add("ALB-LST");
+        this.args.add(sessionId);
+
+        ListAlbum listAlbum = new ListAlbum(args, dummyServer);
+        String response = listAlbum.execute();
+
+        assertNotNull(response);
+
+        assertEquals(OK_PLUS + "<" + 1 + " , " + 2  + ">", response);
     }
 
     @Test
@@ -185,7 +202,6 @@ public class ListAlbumTest {
         this.args.add("SIGNUP");
         this.args.add("ze_sem_albums");
         this.args.add(TESTPASS_2);
-        this.args.add("https://user.p2photocloud.com/user");
 
         new SignUp(args, dummyServer).execute();
 

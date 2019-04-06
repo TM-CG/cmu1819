@@ -16,10 +16,10 @@ public class CreateAlbum extends Instruction {
                 return ERR;
 
             String sessionId = args.get(1);
-            String albumTitle = args.get(2);
+            String albumDirectoryURL = args.get(2);
             User owner = server.getUserByUsername(server.getUserNameBySessionID(sessionId));
 
-            if (sessionId == null || albumTitle == null || albumTitle.contains("\""))
+            if (sessionId == null)
                 return ERR;
 
             if (owner == null) {
@@ -27,10 +27,9 @@ public class CreateAlbum extends Instruction {
                 return NOK_4;
             } else {
 
-                String ownerURL = owner.getCloudURL() + "/" + albumTitle.toLowerCase().replace(" ", "_") + "_" + Album.CounterID + ".alb";
-                server.addAlbum(new Album(Album.CounterID, albumTitle, owner, ownerURL));
+                server.addAlbum(new Album(Album.CounterID, owner, albumDirectoryURL));
 
-                displayDebug("User " + owner.getUsername() + " just created one album with title: '" + albumTitle + "'");
+                displayDebug("User " + owner.getUsername() + " just created one album with ID: " + Album.CounterID);
                 return OK_PLUS + Album.CounterID++;
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {

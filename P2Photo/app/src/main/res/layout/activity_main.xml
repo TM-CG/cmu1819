@@ -90,6 +90,7 @@
         android:layout_below="@id/textPass"
         android:layout_alignStart="@id/signupButton"
         android:layout_centerHorizontal="true"
+        android:onClick="signIn"
         android:text="@string/signin"
         android:onClick="signIn"
         app:layout_constraintBottom_toBottomOf="parent"

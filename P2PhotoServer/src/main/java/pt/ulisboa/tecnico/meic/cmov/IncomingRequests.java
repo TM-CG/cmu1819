@@ -2,10 +2,10 @@ package pt.ulisboa.tecnico.meic.cmov;
 
 import java.util.List;
 
-public class ListAlbum extends Instruction {
+public class IncomingRequests extends Instruction {
 
-    ListAlbum(List<String> args, Server server) {
-        super("ALB-LST", args, server);
+    IncomingRequests(List<String> args, Server server) {
+        super("USR-IRQ", args, server);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class ListAlbum extends Instruction {
                 displayDebug(VERBOSE_NOK4);
                 return NOK_4;
             } else {
-                List<Integer> albums = server.getAlbunsOfGivenUser(username);
+                List<Integer> albums = server.getPendingAlbumsOfGivenUser(username);
 
                 return OK_PLUS + server.representIntegerList(albums);
 

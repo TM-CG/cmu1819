@@ -1,38 +1,63 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.net.URL;
+import java.util.concurrent.ExecutionException;
+
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 
 public class MainActivity extends AppCompatActivity {
     private Intent intent;
     private EditText user;
     private EditText pass;
-
+    public static ServerConnector sv;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /*try connection to server*/
+        new SocketConnect().execute();
+
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            sv.terminateConn();
+        } catch (P2PhotoException e) {
+            Log.d("serverTest", "Connection not closed!");
+        }
+    }
+
 
     public void signIn(View view) {
         intent = new Intent(this, ActionsMenu.class);
         if(checkArguments()){
-            /*TODO server request*/
-            startActivityForResult(intent, 1);
+            new SignIn().execute();
         }
     }
 
     public void signUp(View view) {
         intent = new Intent(this, chooseCloudLocalActivity.class);
         if(checkArguments()){
-            /*TODO server request*/
-            startActivityForResult(intent, 2);
+            new SignUp().execute();
         }
     }
 
@@ -74,5 +99,68 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    public class SocketConnect extends AsyncTask {
+        @Override
+        protected ServerConnector doInBackground(Object [] objects) {
+            try {
+                ServerConnector tmp = new ServerConnector("192.168.1.66", 10007);
+                return tmp;
+            } catch (P2PhotoException e) {
+                Log.d("serverTest", e.getMessage());
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object result) {
+            if(result != null) {
+                sv = (ServerConnector) result;
+                Log.d("serverTest", "Connection established");
+            }
+        }
+    }
+
+    public class SignUp extends AsyncTask {
+        @Override
+        protected String doInBackground(Object [] objects) {
+            try {
+                sv.signUp(user.getText().toString(), pass.getText().toString());
+                new SignIn().execute();
+                return "OK";
+            } catch (P2PhotoException e) {
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object result) {
+            String msg = (String) result;
+            Toast.makeText(getApplicationContext(), msg,
+                    Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    public class SignIn extends AsyncTask {
+        @Override
+        protected String doInBackground(Object [] objects) {
+            try {
+                sv.logIn(user.getText().toString(), pass.getText().toString());
+                startActivityForResult(intent, 2);
+                return "OK";
+            } catch (P2PhotoException e) {
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object result) {
+            String msg = (String) result;
+            Toast.makeText(getApplicationContext(), msg,
+                    Toast.LENGTH_LONG).show();
+        }
+
     }
 }

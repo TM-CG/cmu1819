@@ -44,7 +44,7 @@ public class UpdateAlbum extends Instruction {
                 }
 
                 album.addUserPermission(username, null);
-                displayDebug("** ALB-AUP: User " + ownerUserName + " added " + username + " to album " + albumId);
+                displayDebug("User %s added %s to album %s", ownerUserName, username, albumId);
                 return OK_PLUS + albumId;
 
             }

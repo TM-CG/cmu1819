@@ -24,6 +24,7 @@ public class LogOut extends Instruction {
                 return NOK_4;
             } else {
                 server.removeLoggedUser(username, sessionId);
+                displayDebug("User %s has just logged off successfully!", username);
                 return OK;
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {

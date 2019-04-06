@@ -24,6 +24,7 @@ public class IncomingRequests extends Instruction {
             } else {
                 List<Integer> albums = server.getPendingAlbumsOfGivenUser(username);
 
+                displayDebug("User %s requested a list of pending invitations to albums", username);
                 return OK_PLUS + server.representIntegerList(albums);
 
             }

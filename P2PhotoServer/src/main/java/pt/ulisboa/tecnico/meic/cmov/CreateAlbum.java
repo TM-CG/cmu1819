@@ -29,7 +29,7 @@ public class CreateAlbum extends Instruction {
 
                 server.addAlbum(new Album(Album.CounterID, owner, albumDirectoryURL));
 
-                displayDebug("User " + owner.getUsername() + " just created one album with ID: " + Album.CounterID);
+                displayDebug("User %s just created one album with ID %d ", owner.getUsername(), Album.CounterID);
                 return OK_PLUS + Album.CounterID++;
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {

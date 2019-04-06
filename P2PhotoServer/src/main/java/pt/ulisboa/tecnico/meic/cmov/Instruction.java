@@ -1,6 +1,8 @@
 package pt.ulisboa.tecnico.meic.cmov;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public abstract class Instruction {
@@ -28,6 +30,9 @@ public abstract class Instruction {
     static final String OK_PLUS = "OK "    ;
     static final String OK      = "OK"     ;
     static final String SHUT_OK = "SHUT OK";
+
+    /** For debug messages with time**/
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
 
     /** The instruction name **/
@@ -75,15 +80,18 @@ public abstract class Instruction {
     public abstract String execute();
 
     /**
-     * Displays a debug message
+     * Displays a debug message if server enabled the verbose debug option
      * @param message to be displayed
      */
     void displayDebug(String message) {
-        System.out.println("** " + name + ": " + message);
+        if (this.server.isVerboseDebugEnabled())
+            System.out.printf("**\t[%s]\t" + name + ":\t" + message + "\n", dateFormat.format(new Date()));
     }
 
-    void displayDebug(String message, String... arguments) {
-        System.out.printf("** " + name + ": " + message, arguments);
+    void displayDebug(String message, Object... arguments) {
+        if (this.server.isVerboseDebugEnabled()) {
+            System.out.printf(String.format("**\t[%s]\t" + name + ":\t", dateFormat.format(new Date())) + message + "\n", arguments);
+        }
     }
 
 }

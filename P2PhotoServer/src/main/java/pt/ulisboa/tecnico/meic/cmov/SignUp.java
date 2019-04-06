@@ -28,7 +28,7 @@ public class SignUp extends Instruction {
             } else {
                 //Adds user
                 server.addUser(new User(username, password));
-                displayDebug("Successfully added user " + username);
+                displayDebug("Successfully added user %s!", username);
                 return OK;
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {

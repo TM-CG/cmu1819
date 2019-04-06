@@ -19,8 +19,9 @@ public class FindUser extends Instruction {
             String sessionId = args.get(1);
             String pattern = args.get(2);
             List<String> matches;
+            String username = server.getUserNameBySessionID(sessionId);
 
-            if (server.getUserNameBySessionID(sessionId) == null) {
+            if (username == null) {
                 displayDebug(VERBOSE_NOK4);
                 return NOK_4;
             } else {
@@ -29,6 +30,7 @@ public class FindUser extends Instruction {
                     matches = server.findUserNameByPattern("\\b(\\w*" + pattern.replace("*", "") + "\\w*)\\b");
                 } else matches = server.findUserNameByPattern("\\b(\\w*" + pattern + "\\w*)\\b");
 
+                displayDebug("User %s tried to find users using pattern: %s", username, pattern);
                 return OK_PLUS + server.representList(matches);
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {

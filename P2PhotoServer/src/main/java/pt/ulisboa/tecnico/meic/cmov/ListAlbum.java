@@ -24,6 +24,7 @@ public class ListAlbum extends Instruction {
             } else {
                 List<Integer> albums = server.getAlbunsOfGivenUser(username);
 
+                displayDebug("User %s requested a list album", username);
                 return OK_PLUS + server.representIntegerList(albums);
 
             }

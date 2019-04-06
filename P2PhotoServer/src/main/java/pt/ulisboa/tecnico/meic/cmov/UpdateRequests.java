@@ -34,9 +34,13 @@ public class UpdateRequests extends Instruction {
                 //user accepted invitation
                 if (option.equals("A")) {
                     album.setIndexOfParticipant(username, directoryCloudURL);
+                    displayDebug("User %s ACCEPT invitation to participate in album %d whose owner is %s",
+                            username, albumId, album.getOwner());
                 } else {
                     //user reject invitation
                     album.removeIndexOfParticipant(username);
+                    displayDebug("User %s REJECT invitation to participate in album %d whose owner is %s",
+                            username, albumId, album.getOwner());
                 }
 
                 return OK_PLUS + albumId;

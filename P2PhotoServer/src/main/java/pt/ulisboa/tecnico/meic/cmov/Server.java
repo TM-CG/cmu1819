@@ -21,12 +21,16 @@ public class Server {
     private DataInputStream dis;
     private DataOutputStream dos;
 
+    /** Displays detailed debug for testing**/
+    private boolean verboseDebug;
+
     private static final int SERVER_PORT = 10000;
 
     public Server() {
         this.users = new ArrayList<>();
         this.loggedInUsers = new ArrayList<>();
         this.albums = new ArrayList<>();
+        this.verboseDebug = true;
     }
 
     public Socket getClientSocket() {
@@ -39,6 +43,14 @@ public class Server {
 
     public DataOutputStream getDos() {
         return dos;
+    }
+
+    public boolean isVerboseDebugEnabled() {
+        return verboseDebug;
+    }
+
+    public void setVerboseDebug(boolean verboseDebug) {
+        this.verboseDebug = verboseDebug;
     }
 
     public List<User> getUsers() {

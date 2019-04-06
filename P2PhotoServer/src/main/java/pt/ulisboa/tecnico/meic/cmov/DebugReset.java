@@ -15,7 +15,7 @@ public class DebugReset extends Instruction {
     public String execute() {
 
         server.reset();
-
+        displayDebug("Storage at Server was reset!");
         return "OK";
     }
 }

@@ -40,6 +40,7 @@ public class LogIn extends Instruction {
                         sessionId = Long.toHexString(Double.doubleToLongBits(Math.random()));
                         server.addLoggedUser(username, sessionId);
                     }
+                    displayDebug("User %s has just logged in successfully!", username);
                     return OK_PLUS + sessionId;
 
 

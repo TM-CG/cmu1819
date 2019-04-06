@@ -34,6 +34,8 @@ public class ListAlbumSlices extends Instruction {
                 }
 
                 album = server.getAlbumById(new Integer(albumId));
+
+                displayDebug("User %s requested list album slices from album %s", username, albumId);
                 return OK_PLUS + server.representList(album.getAlbumSlicesURLs());
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {

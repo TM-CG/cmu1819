@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 
-public class YourAlbums extends AppCompatActivity implements Toolbar.OnMenuItemClickListener {
+public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,5 +103,10 @@ public class YourAlbums extends AppCompatActivity implements Toolbar.OnMenuItemC
                 break;
 
         }
+    }
+
+    @Override
+    protected void loadData() {
+
     }
 }

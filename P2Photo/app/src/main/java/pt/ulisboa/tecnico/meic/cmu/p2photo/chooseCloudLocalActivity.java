@@ -2,17 +2,14 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.Button;
 
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.users.FullAccount;
 
-import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
 public class chooseCloudLocalActivity extends DropboxActivity {
 
@@ -28,8 +25,14 @@ public class chooseCloudLocalActivity extends DropboxActivity {
         finish();
     }
 
-    public void selectCloud(View view){
+    public void selectAuthCloud(View view){
         Auth.startOAuth2Authentication(chooseCloudLocalActivity.this, getString(R.string.app_key));
+
+        Button cloudButton = (Button) findViewById(R.id.cloudButton);
+        cloudButton.setEnabled(true);
+    }
+
+    public void selectCloud(View view){
         Intent intent = new Intent(this, ActionsMenu.class);
         startActivity(intent);
     }

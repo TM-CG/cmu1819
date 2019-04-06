@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,18 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.dropbox.core.v2.files.FileMetadata;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 
 public class YourAlbums extends AppCompatActivity implements Toolbar.OnMenuItemClickListener {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,10 +38,28 @@ public class YourAlbums extends AppCompatActivity implements Toolbar.OnMenuItemC
 
         ListView albumsList = (ListView) findViewById(R.id.lst_albums);
         //DEBUG ONLY! TO BE REMOVED
-        String[] albums = {"Album de ferias", "Album de LEIC", "Churrasco", "Gorilada Distribuida <3", "Almoços do Social", "Discussão de projetos", "Natal",
-        "Páscoa", "Praxe"};
+        final ArrayList<String> albums = new ArrayList<String>();
+        albums.add("Album de ferias");
+        albums.add("Album de LEIC");
+        albums.add("Churrasco");
+        albums.add("Gorilada Distribuida <3");
+        albums.add("Almoços do Social");
+        albums.add("Discussão de projetos");
+        albums.add("Páscoa");
+        albums.add("Praxe");
+
         ArrayAdapter<String> adapterTitle = new ArrayAdapter<String>(this, R.layout.your_albums_list_layout, R.id.albumTitle, albums);
         albumsList.setAdapter(adapterTitle);
+
+        albumsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(ListPhoto.getIntent(YourAlbums.this, ""));
+                /*Intent intent = new Intent(YourAlbums.this, ListPhoto.class);
+                intent.putExtra("title", albums.get(position));
+                startActivityForResult(intent, 11);*/
+            }
+        });
 
     }
 
@@ -53,7 +68,7 @@ public class YourAlbums extends AppCompatActivity implements Toolbar.OnMenuItemC
         switch (item.getItemId()) {
             case R.id.add_album:
                 Intent intent = new Intent(this, CreateAlbum.class);
-                startActivityForResult(intent, 6);
+                startActivityForResult(intent, 10);
                 return true;
 
         }
@@ -68,6 +83,17 @@ public class YourAlbums extends AppCompatActivity implements Toolbar.OnMenuItemC
         switch (requestCode){
             /*Create album inside show albums activity*/
             case 10:
+                if(resultCode==RESULT_OK){
+                    Toast.makeText(getApplicationContext(), "Album created successfully",
+                            Toast.LENGTH_LONG).show();
+                }
+                else if(resultCode==RESULT_CANCELED){
+                    Toast.makeText(getApplicationContext(), "Album creation aborted",
+                            Toast.LENGTH_LONG).show();
+                }
+                break;
+            /*View album content*/
+            case 11:
                 if(resultCode==RESULT_OK){
 
                 }

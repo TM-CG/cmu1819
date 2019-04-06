@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.dropbox.core.android.Auth;
 
@@ -13,6 +14,7 @@ public abstract class DropboxActivity extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("dropbox-sample", MODE_PRIVATE);
         String accessToken = prefs.getString("access-token", null);
+        Log.d("MR TOKEN", "pls mr. token: " + new Boolean(accessToken == null));
         if(accessToken == null){
             accessToken = Auth.getOAuth2Token();
             if(accessToken != null){

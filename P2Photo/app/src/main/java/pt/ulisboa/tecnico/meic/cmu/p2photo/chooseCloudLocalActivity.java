@@ -30,6 +30,8 @@ public class chooseCloudLocalActivity extends DropboxActivity {
 
     public void selectCloud(View view){
         Auth.startOAuth2Authentication(chooseCloudLocalActivity.this, getString(R.string.app_key));
+        Intent intent = new Intent(this, ActionsMenu.class);
+        startActivity(intent);
     }
 
     @Override

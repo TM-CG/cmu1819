@@ -38,8 +38,16 @@ public class YourAlbums extends AppCompatActivity implements Toolbar.OnMenuItemC
 
         ListView albumsList = (ListView) findViewById(R.id.lst_albums);
         //DEBUG ONLY! TO BE REMOVED
-        final String[] albums = {"Album de ferias", "Album de LEIC", "Churrasco", "Gorilada Distribuida <3", "Almoços do Social", "Discussão de projetos", "Natal",
-        "Páscoa", "Praxe"};
+        final ArrayList<String> albums = new ArrayList<String>();
+        albums.add("Album de ferias");
+        albums.add("Album de LEIC");
+        albums.add("Churrasco");
+        albums.add("Gorilada Distribuida <3");
+        albums.add("Almoços do Social");
+        albums.add("Discussão de projetos");
+        albums.add("Páscoa");
+        albums.add("Praxe");
+
         ArrayAdapter<String> adapterTitle = new ArrayAdapter<String>(this, R.layout.your_albums_list_layout, R.id.albumTitle, albums);
         albumsList.setAdapter(adapterTitle);
 
@@ -47,6 +55,7 @@ public class YourAlbums extends AppCompatActivity implements Toolbar.OnMenuItemC
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(YourAlbums.this, ListPhoto.class);
+                intent.putExtra("title", albums.get(position));
                 startActivityForResult(intent, 11);
             }
         });

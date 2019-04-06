@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.ListPhotoAdapter;
@@ -35,6 +36,10 @@ public class ListPhoto extends AppCompatActivity implements Toolbar.OnMenuItemCl
         GridView gridView = (GridView) findViewById(R.id.grid_thumbnails);
         ListPhotoAdapter photoAdapter = new ListPhotoAdapter(this);
         gridView.setAdapter(photoAdapter);
+
+        Bundle extras = getIntent().getExtras();
+        TextView tv = (TextView)findViewById(R.id.albumName);
+        tv.setText(extras.getString("title"));
     }
 
     @Override

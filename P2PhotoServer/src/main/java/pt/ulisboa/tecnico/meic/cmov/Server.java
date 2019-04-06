@@ -21,7 +21,7 @@ public class Server {
     private DataInputStream dis;
     private DataOutputStream dos;
 
-    private static final int SERVER_PORT = 10000;
+    private static final int SERVER_PORT = 10007;
 
     public Server() {
         this.users = new ArrayList<>();

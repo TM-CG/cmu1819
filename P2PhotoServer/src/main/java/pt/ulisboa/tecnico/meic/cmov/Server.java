@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Server {
@@ -24,12 +25,14 @@ public class Server {
     /** Displays detailed debug for testing**/
     private boolean verboseDebug;
 
-    private static final int SERVER_PORT = 10001;
+    private static final int SERVER_PORT = 10000;
 
     public Server() {
-        this.users = new ArrayList<>();
-        this.loggedInUsers = new ArrayList<>();
-        this.albums = new ArrayList<>();
+        if(!doRead()) {
+            this.users = new ArrayList<>();
+            this.loggedInUsers = new ArrayList<>();
+            this.albums = new ArrayList<>();
+        }
         this.verboseDebug = true;
     }
 
@@ -358,6 +361,58 @@ public class Server {
         synchronized (this.users) {
             this.users.clear();
         }
+    }
+
+    /**************************************************************/
+    /************************Persistence***************************/
+    /**************************************************************/
+
+    public void doWrite(){
+        System.out.println("Writing UsersAndAlbums ...");
+
+        try {
+            File file = new File("UsersAndAlbums.bin");
+            file.createNewFile();
+            FileOutputStream f = new FileOutputStream(file, false);
+            ObjectOutputStream o = new ObjectOutputStream(f);
+            o.writeObject(albums);
+            o.writeObject(users);
+            o.writeObject(loggedInUsers);
+            o.close();
+        }
+        catch (IOException e) {
+            System.out.println("Error initializing stream");
+        }
+    }
+
+
+    public boolean doRead() {
+        System.out.println("Reading GoodsUser...");
+        try {
+            File file = new File("UsersAndAlbums.bin");
+            if(!file.exists()){
+                System.out.println("File UsersAndAlbums.bin does not exists");
+                return false;
+            }
+            FileInputStream fi = new FileInputStream(file);
+            ObjectInputStream oi = new ObjectInputStream(fi);
+            albums = (List<Album>) oi.readObject();
+            users = (List<User>) oi.readObject();
+            loggedInUsers = (List<Pair<String, String>>) oi.readObject();
+
+            oi.close();
+            return true;
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("File UsersAndAlbums.bin not found");
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found");
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

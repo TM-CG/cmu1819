@@ -2,12 +2,14 @@ package pt.ulisboa.tecnico.meic.cmov;
 
 import javafx.util.Pair;
 
+import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class Album {
+public class Album implements Serializable {
 
     public static int CounterID = 1;
 

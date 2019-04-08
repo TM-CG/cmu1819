@@ -48,6 +48,10 @@ public class Worker extends Thread {
 		        //execute instruction
                 response = instruction.execute();
 
+                synchronized (this) {
+                    server.doWrite();
+                }
+
                 out.println(response);
 		        out.flush();
 

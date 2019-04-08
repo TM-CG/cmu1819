@@ -1,9 +1,11 @@
 package pt.ulisboa.tecnico.meic.cmov;
 
+import java.io.Serializable;
+
 /**
  * A Class for describing User
  */
-public class User {
+public class User implements Serializable {
     private String username;
 
     private String password;

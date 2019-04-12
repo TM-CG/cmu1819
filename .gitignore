@@ -12,6 +12,7 @@ Android/build
 Android/captures
 Android/.externalNativeBuild
 *.class
+P2PhotoServer/UsersAndAlbums.bin
 P2PhotoServer/.idea/
 P2PhotoServer/target/
 P2Photo/.idea/

@@ -24,7 +24,7 @@ public class Server {
     /** Displays detailed debug for testing**/
     private boolean verboseDebug;
 
-    private static final int SERVER_PORT = 10000;
+    public static final int SERVER_PORT = 10000;
 
     public Server() {
         if(!doRead()) {
@@ -65,6 +65,10 @@ public class Server {
 
     public List<Pair<String, String>> getLoggedInUsers() {
         return loggedInUsers;
+    }
+
+    public ServerSocket getServerSocket() {
+        return serverSocket;
     }
 
     /**
@@ -286,8 +290,10 @@ public class Server {
      */
     public void stopSocket() {
         try {
-            clientSocket.close();
-            serverSocket.close();
+            if (clientSocket != null)
+                clientSocket.close();
+            if (serverSocket != null)
+                serverSocket.close();
         } catch(IOException e) {
             System.err.println("IOException: " + e.getMessage());
         }

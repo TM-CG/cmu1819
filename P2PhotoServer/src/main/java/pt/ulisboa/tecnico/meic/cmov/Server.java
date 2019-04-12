@@ -6,7 +6,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Server {
@@ -278,7 +277,7 @@ public class Server {
             }
 
         }catch (IOException e) {
-            System.err.println("** SERVER: InitSocket IOException!");
+            System.err.println("** SERVER: InitSocket IOException: " + e.getMessage());
         }
     }
 
@@ -287,12 +286,10 @@ public class Server {
      */
     public void stopSocket() {
         try {
-            dis.close();
-            dos.close();
             clientSocket.close();
             serverSocket.close();
         } catch(IOException e) {
-            System.err.println("IOException!");
+            System.err.println("IOException: " + e.getMessage());
         }
     }
 

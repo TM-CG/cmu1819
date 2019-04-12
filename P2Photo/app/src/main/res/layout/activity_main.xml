@@ -71,17 +71,52 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textUser" />
 
+    <EditText
+        android:id="@+id/ip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textUser"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:backgroundTint="#01A0E4"
+        android:hint="@string/ip"
+        android:focusable="true"
+        android:textColorHighlight="#000000"
+        android:textColorHint="#666768"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textPass" />
+
+    <EditText
+        android:id="@+id/port"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textUser"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:backgroundTint="#01A0E4"
+        android:hint="@string/port"
+        android:focusable="true"
+        android:textColorHighlight="#000000"
+        android:textColorHint="#666768"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ip" />
+
     <Button
         android:id="@+id/signupButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textPass"
+        android:layout_marginTop="8dp"
         android:onClick="signUp"
         android:text="@string/signup"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/signinButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textPass" />
+        app:layout_constraintTop_toBottomOf="@+id/port" />
 
     <Button
         android:id="@+id/signinButton"
@@ -90,12 +125,13 @@
         android:layout_below="@id/textPass"
         android:layout_alignStart="@id/signupButton"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
         android:onClick="signIn"
         android:text="@string/signin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/signupButton"
-        app:layout_constraintTop_toBottomOf="@id/textPass" />
+        app:layout_constraintTop_toBottomOf="@+id/port" />
 
 
 </android.support.constraint.ConstraintLayout>

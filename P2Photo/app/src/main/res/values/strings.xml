@@ -57,5 +57,9 @@
     <string name="btn_confirm_cancel">Cancel</string>
     <string name="lbl_log_description">Log: For debug proposes</string>
     <string name="authCloud">Auth</string>
+    <string name="ip">IP</string>
+    <string name="port">Port</string>
+
+
 
 </resources>

@@ -24,16 +24,15 @@ public class MainActivity extends AppCompatActivity {
     private Intent intent;
     private EditText user;
     private EditText pass;
+    private EditText ip;
+    private EditText port;
     public static ServerConnector sv;
+
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        /*try connection to server*/
-        new SocketConnect().execute();
-
     }
 
     @Override
@@ -48,16 +47,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void signIn(View view) {
-        intent = new Intent(this, ActionsMenu.class);
-        if(checkArguments()){
-            new SignIn().execute();
+        if(checkConnectionParameters()){
+            intent = new Intent(this, ActionsMenu.class);
+            new SocketConnect().execute("signIn");
         }
     }
 
     public void signUp(View view) {
-        intent = new Intent(this, chooseCloudLocalActivity.class);
-        if(checkArguments()){
-            new SignUp().execute();
+        if(checkConnectionParameters()){
+            intent = new Intent(this, chooseCloudLocalActivity.class);
+            new SocketConnect().execute("signUp");
         }
     }
 
@@ -70,17 +69,7 @@ public class MainActivity extends AppCompatActivity {
             case 1:
                 /*Sign Up*/
             case 2:
-                if(resultCode==RESULT_OK){
-                    Toast.makeText(getApplicationContext(), "User "
-                                    + data.getStringExtra("name") + " logged out",
-                            Toast.LENGTH_LONG).show();
-                }
-                else if(resultCode==RESULT_CANCELED){
-                    Toast.makeText(getApplicationContext(), "User " + user.getText().toString() + " logged out abruptly",
-                            Toast.LENGTH_LONG).show();
-                }
-                user.setText("");
-                pass.setText("");
+                new LogOut().execute(resultCode,data);
                 break;
         }
     }
@@ -101,24 +90,107 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public class SocketConnect extends AsyncTask {
-        @Override
-        protected ServerConnector doInBackground(Object [] objects) {
+    public boolean checkConnectionParameters(){
+        /*try connection to server*/
+        ip = findViewById(R.id.ip);
+        port = findViewById(R.id.port);
+        if(ip.getText().toString().matches("") || port.getText().toString().matches("")) {
+            Toast.makeText(getApplicationContext(), "Ip and Port cannot be empty",
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
+        else {
             try {
-                ServerConnector tmp = new ServerConnector("192.168.1.66", 10001);
-                return tmp;
+                Integer.parseInt(port.getText().toString());
+                return true;
+            } catch(NumberFormatException e){
+                Toast.makeText(getApplicationContext(), "Port must be an integer",
+                        Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+    }
+    public class SocketConnect extends AsyncTask<Object,Void,Object[]> {
+        @Override
+        protected Object[] doInBackground(Object [] objects) {
+            Object[] result = new Object[2];
+            result[0] = objects[0];
+            try {
+                ServerConnector tmp = new ServerConnector(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
+                result[1] =  tmp;
+                return result;
             } catch (P2PhotoException e) {
-                Log.d("serverTest", e.getMessage());
-                return null;
+                result[1] =  null;
+                return result;
             }
         }
 
         @Override
-        protected void onPostExecute(Object result) {
-            if(result != null) {
-                sv = (ServerConnector) result;
-                Log.d("serverTest", "Connection established");
+        protected void onPostExecute(Object[] result) {
+            if(result[1] == null) {
+                sv = null;
+                Toast.makeText(getApplicationContext(), "Connection not established",
+                        Toast.LENGTH_LONG).show();
             }
+            else{
+                sv = (ServerConnector) result[1];
+                if(result[0] == "signIn"){
+                    if (checkArguments()) {
+                        new SignIn().execute();
+                    }
+                }
+                else if(result[0] == "signUp"){
+                    if (checkArguments()) {
+                        new SignUp().execute();
+                    }
+                }
+            }
+        }
+    }
+
+    public class LogOut extends AsyncTask<Object,Void,Object[]> {
+        @Override
+        protected Object[] doInBackground(Object [] objects) {
+            try {
+                sv.logOut();
+            } catch (P2PhotoException e) {
+                Toast.makeText(getApplicationContext(), "Server side problem logging out",
+                        Toast.LENGTH_LONG).show();
+            }
+            return objects;
+        }
+
+        @Override
+        protected void onPostExecute(Object[] result) {
+            Integer res = (Integer) result[0];
+            if(result != null) {
+                Intent data = (Intent) result[1];
+                if(res==RESULT_OK){
+                    try {
+                        sv.logOut();
+                        Toast.makeText(getApplicationContext(), "User "
+                                        + data.getStringExtra("name") + " logged out",
+                                Toast.LENGTH_LONG).show();
+                    } catch (P2PhotoException e) {
+                        Toast.makeText(getApplicationContext(), "Server side problem logging out",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+                else if(res==RESULT_CANCELED){
+                    try {
+                        sv.logOut();
+                        Toast.makeText(getApplicationContext(), "User "
+                                        + data.getStringExtra("name") + " logged out",
+                                Toast.LENGTH_LONG).show();
+                    } catch (P2PhotoException e) {
+                        Toast.makeText(getApplicationContext(), "User " + user.getText().toString() + " logged out abruptly",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+                user.setText("");
+                pass.setText("");
+            }
+
         }
     }
 

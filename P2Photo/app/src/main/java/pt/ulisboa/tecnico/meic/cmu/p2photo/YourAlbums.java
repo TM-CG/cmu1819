@@ -68,7 +68,6 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
                 Intent intent = new Intent(this, CreateAlbum.class);
                 startActivityForResult(intent, 10);
                 return true;
-
         }
 
         return true;

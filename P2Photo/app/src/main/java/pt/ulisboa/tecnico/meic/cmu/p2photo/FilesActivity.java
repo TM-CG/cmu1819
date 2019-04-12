@@ -17,7 +17,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.dropbox.core.v2.files.FileMetadata;
@@ -60,6 +62,15 @@ public class FilesActivity extends DropboxActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
+
+        //vitor: debug button to be removed!
+        Button debugButton = (Button) findViewById(R.id.button);
+        debugButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                performWithPermissions(FileAction.UPLOAD);
+            }
+        });
 
         //init picaso client
         PicassoClient.init(this,DropboxClientFactory.getClient());

@@ -7,13 +7,13 @@ import android.util.Log;
 import com.dropbox.core.android.Auth;
 
 public abstract class DropboxActivity extends AppCompatActivity {
-
+    private static String accessToken;
     @Override
     protected void onResume() {
         super.onResume();
 
         SharedPreferences prefs = getSharedPreferences("dropbox-sample", MODE_PRIVATE);
-        String accessToken = prefs.getString("access-token", null);
+        accessToken = prefs.getString("access-token", null);
         Log.i("MR TOKEN", "pls mr. token: " + new Boolean(accessToken == null));
         if(accessToken == null){
             accessToken = Auth.getOAuth2Token();
@@ -45,6 +45,10 @@ public abstract class DropboxActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("dropbox-sample", MODE_PRIVATE);
         String accessToken = prefs.getString("access-token", null);
         return accessToken != null;
+    }
+
+    public static String getToken(){
+        return accessToken;
     }
 }
 

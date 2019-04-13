@@ -22,6 +22,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.FolderMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;

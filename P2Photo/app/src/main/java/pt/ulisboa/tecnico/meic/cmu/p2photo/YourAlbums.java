@@ -37,14 +37,14 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
         ListView albumsList = (ListView) findViewById(R.id.lst_albums);
         //DEBUG ONLY! TO BE REMOVED
         final ArrayList<String> albums = new ArrayList<String>();
-        albums.add("Album de ferias");
+        /*albums.add("Album de ferias");
         albums.add("Album de LEIC");
         albums.add("Churrasco");
         albums.add("Gorilada Distribuida <3");
         albums.add("Almoços do Social");
         albums.add("Discussão de projetos");
         albums.add("Páscoa");
-        albums.add("Praxe");
+        albums.add("Praxe");*/
 
         ArrayAdapter<String> adapterTitle = new ArrayAdapter<String>(this, R.layout.your_albums_list_layout, R.id.albumTitle, albums);
         albumsList.setAdapter(adapterTitle);

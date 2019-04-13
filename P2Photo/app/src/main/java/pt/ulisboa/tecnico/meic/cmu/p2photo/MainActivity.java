@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,11 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.api.CloudStorage;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.api.StorageProvider;
 
 public class MainActivity extends AppCompatActivity {
     private Intent intent;

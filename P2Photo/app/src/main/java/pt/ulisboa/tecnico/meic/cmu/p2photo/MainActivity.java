@@ -1,8 +1,6 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,12 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.net.URL;
-import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
@@ -33,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
     }
 
     @Override
@@ -54,6 +48,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void signUp(View view) {
+        //vitor: just for testing read and write of temp files
+        /*AlbumCatalog catalog = new AlbumCatalog(1, "Album do zé");
+
+        new Thread(new CloudStorage(this, catalog, StorageProvider.Operation.WRITE), "WritingThread").start();
+
+        CloudStorage cs = new CloudStorage(this, null, StorageProvider.Operation.READ);
+        new Thread(cs, "ReadingThread").start();*/
+
         if(checkConnectionParameters()){
             intent = new Intent(this, chooseCloudLocalActivity.class);
             new SocketConnect().execute("signUp");

@@ -25,6 +25,10 @@ import java.net.ProtocolException;
 import java.net.URL;
 
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.CloudStorage;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.StorageProvider;
+
 public class CreateAlbum extends AppCompatActivity {
     EditText album;
 
@@ -42,10 +46,15 @@ public class CreateAlbum extends AppCompatActivity {
 
     public void create(View view){
         album = (EditText) findViewById(R.id.nameInput);
-        //Intent intent = getIntent();
-        //setResult(RESULT_OK,intent);
         new CreateFolderTask().execute(album.getText().toString(),getApplicationContext());
-        //finish();
+        
+        //TODO: hardcoded to be changed
+        AlbumCatalog catalog = new AlbumCatalog(1, "Album do zé");
+
+        new Thread(new CloudStorage(CreateAlbum.this, catalog, StorageProvider.Operation.WRITE), "WritingThread").start();
+
+        CloudStorage cs = new CloudStorage(CreateAlbum.this, 1, StorageProvider.Operation.READ);
+        new Thread(cs, "ReadingThread").start();
     }
 
 
@@ -80,7 +89,6 @@ class CreateFolderTask extends AsyncTask<Object,Object,Object[]> {
             Toast.makeText((Context)result[0], "Album NOT created in your dropbox",
                     Toast.LENGTH_LONG).show();
         }
-
     }
 
 

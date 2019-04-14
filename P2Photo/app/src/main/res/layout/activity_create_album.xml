@@ -41,64 +41,60 @@
 
 
     <TextView
-        android:id="@+id/authorizedUsersString"
-        android:layout_width="wrap_content"
+        android:id="@+id/searchUsers"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="@string/authUsersString"
-        android:textSize="13sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nameString" />
-
-    <ListView
-        android:id="@+id/usersList"
-        android:layout_width="315dp"
-        android:layout_height="150dp"
-        android:background="@android:color/transparent"
-        android:headerDividersEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/authorizedUsersString" />
-
-
-    <TextView
-        android:id="@+id/findUsersString"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/findUsersString"
-        android:textSize="13sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/usersList" />
-
-    <EditText
-        android:id="@+id/searchInput"
-        android:layout_width="315dp"
-        android:layout_height="wrap_content"
         android:inputType="text"
+        android:hint="@string/findUser"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/findUsersString"/>
-        <!--android:drawableStart="@drawable/baseline_search_black_18" -->
+        app:layout_constraintTop_toBottomOf="@id/nameInput"
+        />
 
     <ListView
         android:id="@+id/usersSearch"
-        android:layout_width="315dp"
+        android:layout_width="fill_parent"
         android:layout_height="150dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchInput"
+        app:layout_constraintTop_toBottomOf="@+id/searchUsers"
+        android:background="@drawable/border_ui"
+
         />
+
+    <TextView
+        android:id="@+id/usersBeingAddedString"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/usersAdded"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/usersSearch" />
+
+    <ListView
+        android:id="@+id/usersBeingAdded"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usersBeingAddedString"
+        android:background="@drawable/border_ui"
+        />
+
 
     <Button
         android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:drawableStart="@drawable/baseline_cancel_black_24"
         android:onClick="cancel"
@@ -107,13 +103,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/usersSearch" />
+        app:layout_constraintTop_toBottomOf="@+id/usersBeingAdded" />
 
     <Button
         android:id="@+id/confirmButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:drawableStart="@drawable/baseline_check_circle_black_24"
         android:onClick="create"
@@ -122,5 +118,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/usersSearch" />
+        app:layout_constraintTop_toBottomOf="@+id/usersBeingAdded" />
 </android.support.constraint.ConstraintLayout>

@@ -81,9 +81,6 @@ public class CreateAlbum extends AppCompatActivity {
         setupListViewListener();
         createUsersTest();
 
-        //create a new folder
-        new CreateFolderTask().execute(album.getText().toString(),getApplicationContext());
-
         //creates album on the server
         new CreateAlbumOnServer().execute();
 
@@ -165,7 +162,8 @@ public class CreateAlbum extends AppCompatActivity {
             AlbumCatalog catalog = new AlbumCatalog(albumId, albumTitle);
 
             new Thread(new CloudStorage(CreateAlbum.this, catalog, StorageProvider.Operation.WRITE), "WritingThread").start();
-
+            //create a new folder
+            new CreateFolderTask().execute(albumId + " " + albumTitle,getApplicationContext());
         }
 
         @Override

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.FolderMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
+import com.dropbox.core.v2.files.Metadata;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -86,21 +87,13 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
         albums = new ArrayList<String>();
         adapterTitle = new ArrayAdapter<String>(getApplicationContext(), R.layout.your_albums_list_layout, R.id.albumTitle, albums);
         albumsList.setAdapter(adapterTitle);
-        /*albums.add("Album de ferias");
-        albums.add("Album de LEIC");
-        albums.add("Churrasco");
-        albums.add("Gorilada Distribuida <3");
-        albums.add("Almoços do Social");
-        albums.add("Discussão de projetos");
-        albums.add("Páscoa");
 
-
-        /*albumsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        albumsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 startActivity(FilesActivity.getIntent(YourAlbums.this, ""));
             }
-        });*/
+        });
 
         loadData();
 
@@ -161,11 +154,21 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
             @Override
             public void onDataLoaded(ListFolderResult result) {
                 dialog.dismiss();
+                if(result != null) {
+                    try {
+                        Log.d("entradas", result.getEntries().toString());
+                        for(Metadata m : result.getEntries()){
+                            Log.d("entrei", "estou nas metadatas");
+                            if(m.getName().endsWith("_catalog.txt")) {
+                                Log.d("entrei", "sou um catalog");
+                                downloadFile((FileMetadata) m);
+                            }
+                        }
 
-                Log.d("entradas", result.getEntries().toString());
-                Log.d("files", result.getEntries().get(2).toStringMultiline());
-                downloadFile((FileMetadata) result.getEntries().get(2));
-                //mFilesAdapter.setFiles(result.getEntries());
+                    } catch (Exception e) {
+
+                    }
+                }
             }
 
             @Override

@@ -18,13 +18,14 @@ import java.util.List;
  */
 public class ServerConnector {
 
-    private static final String CLI_API_VERSION = "0.5";
+    private static final String CLI_API_VERSION = "0.6";
 
     //API Instructions
     private static final String API_LOGIN = "LOGIN %s %s";
     private static final String API_SIGNUP = "SIGNUP %s %s";
     private static final String API_LOGOUT = "LOGOUT %s";
     private static final String API_ALB_CR8 = "ALB-CR8 %s %s";
+    private static final String API_ALB_CR8_NO_URL = "ALB-CR8 %s";
     private static final String API_ALB_AUP = "ALB-AUP %s %s %s";
     private static final String API_ALB_LST = "ALB-LST %s";
     private static final String API_ALB_UAS = "ALB-UAS %s %s";
@@ -197,6 +198,36 @@ public class ServerConnector {
     public int createAlbum(String albumDirectoryURL) throws P2PhotoException{
         try {
             String request = String.format(API_ALB_CR8, sessionId, albumDirectoryURL);
+
+            this.out.println(request);
+
+            String response = this.in.readLine();
+
+            if (showDebug) {
+                System.out.println("Request: " + request);
+                System.out.println("Response: " + response);
+            }
+
+            processErrors(response);
+
+            //return albumID
+            return Integer.parseInt(response.split(" ")[1]);
+
+        } catch (IOException e) {
+            throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new P2PhotoException(WRONG_ARGS + e.getMessage());
+        }
+    }
+
+    /**
+     * Creates an album on the server without need to pass the path to catalog file
+     * @return an integer which is the albumID
+     * @throws P2PhotoException if something wrong happens
+     */
+    public int createAlbum() throws P2PhotoException{
+        try {
+            String request = String.format(API_ALB_CR8_NO_URL, sessionId);
 
             this.out.println(request);
 

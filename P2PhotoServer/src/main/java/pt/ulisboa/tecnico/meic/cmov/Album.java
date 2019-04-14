@@ -17,7 +17,7 @@ public class Album implements Serializable {
 
     private List<Pair<String, String>> indexes;
 
-    public Album(int ID, User owner) {
+    public Album(int ID) {
         this.ID = ID;
         this.indexes = new ArrayList<>();
     }

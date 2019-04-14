@@ -27,6 +27,8 @@ import java.net.URL;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.CloudStorage;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.StorageProvider;
 
 public class CreateAlbum extends AppCompatActivity {
@@ -46,18 +48,57 @@ public class CreateAlbum extends AppCompatActivity {
 
     public void create(View view){
         album = (EditText) findViewById(R.id.nameInput);
+
+        //create a new folder
         new CreateFolderTask().execute(album.getText().toString(),getApplicationContext());
-        
-        //TODO: hardcoded to be changed
-        AlbumCatalog catalog = new AlbumCatalog(1, "Album do zé");
 
-        new Thread(new CloudStorage(CreateAlbum.this, catalog, StorageProvider.Operation.WRITE), "WritingThread").start();
+        //creates album on the server
+        new CreateAlbumOnServer().execute();
 
-        CloudStorage cs = new CloudStorage(CreateAlbum.this, 1, StorageProvider.Operation.READ);
-        new Thread(cs, "ReadingThread").start();
+        /*CloudStorage cs = new CloudStorage(CreateAlbum.this, 1, StorageProvider.Operation.READ);
+        new Thread(cs, "ReadingThread").start();*/
     }
 
+    class CreateAlbumOnServer extends AsyncTask {
 
+        private ServerConnector sv = MainActivity.sv;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            Integer albumId = null;
+
+            if (o != null) {
+                albumId = (Integer) o;
+            } else {
+                Log.i("CreateAlbumOnServer", "albumId is null");
+                return;
+            }
+
+            String albumTitle = album.getText().toString();
+
+            //create album catalog for new album
+            AlbumCatalog catalog = new AlbumCatalog(albumId, albumTitle);
+
+            new Thread(new CloudStorage(CreateAlbum.this, catalog, StorageProvider.Operation.WRITE), "WritingThread").start();
+
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            try {
+                return sv.createAlbum();
+            } catch (P2PhotoException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
 }
 
 

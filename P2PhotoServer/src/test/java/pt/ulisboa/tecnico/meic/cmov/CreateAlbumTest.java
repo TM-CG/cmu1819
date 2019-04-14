@@ -145,9 +145,9 @@ public class CreateAlbumTest {
         String response = cr8Album.execute();
 
         assertNotNull(response);
-        assertEquals(ERR, response);
+        assertEquals(OK_PLUS + 1, response);
 
-        assertEquals(0, dummyServer.numberOfRegisteredAlbums());
+        assertEquals(1, dummyServer.numberOfRegisteredAlbums());
 
     }
 

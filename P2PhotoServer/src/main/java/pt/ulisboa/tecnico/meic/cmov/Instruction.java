@@ -7,7 +7,7 @@ import java.util.List;
 
 public abstract class Instruction {
 
-    static final String API_VERSION = "0.5";
+    static final String API_VERSION = "0.6";
 
     /** Debug verbose messages **/
     static final String VERBOSE_NOK1 = "User %s does not exist!";

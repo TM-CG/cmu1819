@@ -242,7 +242,6 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
             }
 
             //append new photoURL
-            FileWriter fileWriter = new FileWriter(catalogFile.get)
 
 
             return null;

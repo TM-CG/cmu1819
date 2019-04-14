@@ -239,8 +239,12 @@ class FindUsers extends AsyncTask<Object,Void,Object[]> {
     protected void onPostExecute(Object[] result) {
         if(result != null){
             ArrayAdapter<String> itemsAdapter = (ArrayAdapter<String>) result[0];
+            Log.d("users", MainActivity.getUser());
             for(String user: (List<String>) result[1]){
-                itemsAdapter.add(user);
+                if(!MainActivity.getUser().equals(user)) {
+                    Log.d("users", user);
+                    itemsAdapter.add(user);
+                }
             }
         }
 

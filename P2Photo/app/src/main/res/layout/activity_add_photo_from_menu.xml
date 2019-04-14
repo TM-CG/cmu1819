@@ -22,25 +22,14 @@
         android:id="@+id/addPhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="140dp"
         android:drawableStart="@drawable/baseline_add_a_photo_black_24"
         android:onClick="selectPhoto"
         android:text="@string/menu3"
-        app:layout_constraintEnd_toStartOf="@id/previewPhoto"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/textview" />
 
-    <ImageView
-        android:id="@+id/previewPhoto"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="140dp"
-        android:text="@string/preview"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/addPhoto"
-        app:layout_constraintTop_toTopOf="@id/textview"
-        android:src="@drawable/preview"
-        />
     <TextView
         android:id="@+id/albumName"
         android:layout_width="wrap_content"
@@ -71,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
         android:drawableStart="@drawable/baseline_check_circle_black_24"
-        android:onClick="create"
+        android:onClick="add"
         android:text="@string/add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cancel"

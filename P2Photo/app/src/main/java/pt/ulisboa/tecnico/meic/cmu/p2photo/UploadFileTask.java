@@ -51,7 +51,15 @@ public class UploadFileTask extends AsyncTask<String, Void, FileMetadata> {
     @Override
     protected FileMetadata doInBackground(String... params) {
         String localUri = params[0];
-        File localFile = new File(localUri); //UriHelpers.getFileForUri(mContext, Uri.parse(localUri));
+        File localFile = null;
+
+        //Support for file path or context://URL
+        if (params.length > 2) {
+            if (params[2] != null)
+                localFile = UriHelpers.getFileForUri(mContext, Uri.parse(localUri));
+        }
+        else
+            localFile = new File(localUri);
 
         Log.i("CloudStorage", "LocalURI: " + localUri);
         Log.i("CloudStorage", "localFile: " + new Boolean(localFile == null).toString());
@@ -64,7 +72,14 @@ public class UploadFileTask extends AsyncTask<String, Void, FileMetadata> {
             Log.i("CloudStorage", "UploadFileTask remoteFolderPath: " + remoteFolderPath);
             Log.i("CloudStorage", "UploadFileTask remoteFileName: " + remoteFileName);
             try (InputStream inputStream = new FileInputStream(localFile)) {
-                return mDbxClient.files().uploadBuilder(remoteFolderPath + "/" + remoteFileName)
+                String path;
+
+                //support for uploading files in sub folders
+                if (remoteFolderPath == "")
+                    path = "/" + remoteFileName;
+                else path = "/" + remoteFolderPath + "/" + remoteFileName;
+
+                return mDbxClient.files().uploadBuilder(path)
                         .withMode(WriteMode.OVERWRITE)
                         .uploadAndFinish(inputStream);
             } catch (DbxException | IOException e) {

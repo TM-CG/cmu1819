@@ -19,6 +19,9 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.UploadFileTask;
  */
 public class CloudStorage extends StorageProvider {
 
+    /** Prefix of catalog files **/
+    public static final String CATALOG_SUFFIX = "%d_catalog.txt";
+
     private static final String TAG = CloudStorage.class.getName();
 
     public CloudStorage(Context context, AlbumCatalog catalog, Operation operation) {

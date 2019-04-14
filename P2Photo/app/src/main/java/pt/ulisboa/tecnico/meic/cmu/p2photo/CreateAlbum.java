@@ -87,9 +87,6 @@ public class CreateAlbum extends AppCompatActivity {
     public void create(View view){
 
 
-        //create a new folder
-        new CreateFolderTask().execute(album.getText().toString(),getApplicationContext());
-
         //creates album on the server
         new CreateAlbumOnServer().execute(items2);
 
@@ -163,6 +160,8 @@ public class CreateAlbum extends AppCompatActivity {
             t1.start();
             try {
                 t1.join();
+                //create a new folder
+                new CreateFolderTask().execute(albumId + " " + albumTitle,getApplicationContext());
                 //add users to albums
                 new AddUsersToAlbum().execute(o);
 
@@ -170,6 +169,7 @@ public class CreateAlbum extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            
         }
 
         @Override

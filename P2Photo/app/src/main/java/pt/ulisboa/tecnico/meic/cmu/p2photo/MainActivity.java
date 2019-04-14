@@ -257,4 +257,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+    public static ServerConnector getSv(){
+        return sv;
+    }
 }

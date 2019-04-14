@@ -17,9 +17,10 @@ public class Album implements Serializable {
 
     private List<Pair<String, String>> indexes;
 
-    public Album(int ID) {
+    public Album(int ID, User owner) {
         this.ID = ID;
         this.indexes = new ArrayList<>();
+        this.indexes.add(new Pair(owner.getUsername(), null));
     }
 
     public Album(int ID, User owner, String ownerURL) {

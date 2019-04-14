@@ -28,7 +28,7 @@ public class UpdateAlbum extends Instruction {
                 return NOK_4;
             } else {
 
-                album = server.getAlbumById(new Integer(albumId));
+                album = server.getAlbumById(Integer.parseInt(albumId));
                 //Checks if album ID exists
                 if (album == null) {
                     displayDebug(VERBOSE_NOK5);
@@ -49,7 +49,8 @@ public class UpdateAlbum extends Instruction {
 
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {
-            return ERR;
+            e.printStackTrace();
+	    return ERR;
         }
     }
 }

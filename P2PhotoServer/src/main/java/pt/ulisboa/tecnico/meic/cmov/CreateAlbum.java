@@ -29,7 +29,7 @@ public class CreateAlbum extends Instruction {
                 return NOK_4;
             } else {
                 if (albumDirectoryURL == null)
-                    server.addAlbum(new Album(Album.CounterID));
+                    server.addAlbum(new Album(Album.CounterID, owner));
                 else server.addAlbum(new Album(Album.CounterID, owner, albumDirectoryURL));
 
                 displayDebug("User %s just created one album with ID %d ", owner.getUsername(), Album.CounterID);

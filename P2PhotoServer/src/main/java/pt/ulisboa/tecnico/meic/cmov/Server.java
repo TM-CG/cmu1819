@@ -24,7 +24,7 @@ public class Server {
     /** Displays detailed debug for testing**/
     private boolean verboseDebug;
     
-    public static final int SERVER_PORT = 10000;
+    public static final int SERVER_PORT = 10005;
 
     public Server() {
         if(!doRead()) {

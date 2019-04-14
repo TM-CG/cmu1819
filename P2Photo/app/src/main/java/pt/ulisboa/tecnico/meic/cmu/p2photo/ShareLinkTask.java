@@ -1,16 +1,16 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.sharing.ListSharedLinksResult;
 import com.dropbox.core.v2.sharing.SharedLinkMetadata;
 
-import java.io.File;
+import java.util.List;
 
 /**
  * A task for creating shared links of a file
@@ -22,7 +22,7 @@ public class ShareLinkTask extends AsyncTask<FileMetadata, Void, SharedLinkMetad
     private Exception mException;
 
     public interface Callback {
-        void onUploadComplete(SharedLinkMetadata result);
+        void onShareComplete(SharedLinkMetadata result);
         void onError(Exception e);
     }
 
@@ -40,7 +40,7 @@ public class ShareLinkTask extends AsyncTask<FileMetadata, Void, SharedLinkMetad
         } else if (result == null) {
             mCallback.onError(null);
         } else {
-            mCallback.onUploadComplete(result);
+            mCallback.onShareComplete(result);
         }
     }
 
@@ -55,10 +55,28 @@ public class ShareLinkTask extends AsyncTask<FileMetadata, Void, SharedLinkMetad
             Log.i("CloudStorage", "ShareLinkTask remoteFileName: " + metadata.getPathLower());
 
             try {
+
+                ListSharedLinksResult listSharedLinksResult = mDbxClient.sharing()
+                        .listSharedLinksBuilder()
+                        .withPath(metadata.getPathLower()).withDirectOnly(true)
+                        .start();
+
+                List<SharedLinkMetadata> links = listSharedLinksResult.getLinks();
+
+                if ((links != null) && (links.size() > 0)) {
+                    SharedLinkMetadata sharedLinkMetadata = links.get(0);
+                    Log.i("CloudStorage", "Existing url found: " + sharedLinkMetadata.getUrl());
+                    return sharedLinkMetadata;
+                }
+
+
+                //create new shared link
                 return mDbxClient.sharing().createSharedLinkWithSettings(metadata.getPathLower());
+
+
             } catch (DbxException e) {
                 mException = e;
-                Log.i("CloudStorage", "ShareLinkTask doInBack: got exception!");
+                Log.i("CloudStorage", "ShareLinkTask doInBack: got exception!" + e.getMessage());
             }
 
         }

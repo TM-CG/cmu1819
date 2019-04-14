@@ -14,8 +14,10 @@ import android.widget.Toast;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
+import com.dropbox.core.v2.sharing.SharedLinkMetadata;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -83,14 +85,16 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
         startActivityForResult(intent, PICKFILE_REQUEST_CODE);
     }
 
-    private void uploadFile(String fileUri) {
+    private void uploadFile(final String fileUri) {
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCancelable(false);
         dialog.setMessage("Uploading");
         dialog.show();
 
-        String folderPath = sel_album.getSelectedItem().toString();
+        final String folderPath = sel_album.getSelectedItem().toString();
+        final int albumId = Integer.parseInt(folderPath.split(" ")[0]);
+
         Log.i(TAG, "Path to remote folder to upload: " + folderPath);
 
         new UploadFileTask(this, DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
@@ -102,7 +106,49 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
                 Toast.makeText(addPhotoActivityFromMenu.this, message, Toast.LENGTH_SHORT)
                         .show();
 
-                //File uploaded so lets add it to the catalog
+                Log.i(TAG, "UploadFileTask: Album: " + albumId);
+
+                //Generate link for that photo
+                new ShareLinkTask(addPhotoActivityFromMenu.this, DropboxClientFactory.getClient(), new ShareLinkTask.Callback() {
+                    @Override
+                    public void onShareComplete(SharedLinkMetadata result) {
+                        //File uploaded so lets add it to the catalog
+                        Log.i(TAG, "UploadFileTask: URL 4 pic: " + result.getUrl());
+                        Log.i(TAG, "Successfully generated link for new picture");
+
+                        //vitor: bah :)
+                        new UpdateAlbumCatalog() {
+                            @Override
+                            protected void onPostExecute(Object o) {
+                                Log.i(TAG, "Successfully created local album catalog");
+
+                                String filePath;
+                                if (o != null) {
+                                    filePath = (String) o;
+
+                                    //After updating the local Album Catalog it is necessary to upload it again
+                                    new UploadFileTask(addPhotoActivityFromMenu.this, DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
+                                        @Override
+                                        public void onUploadComplete(FileMetadata result) {
+                                            Log.i(TAG, "Uploading catalog after update: success");
+                                        }
+
+                                        @Override
+                                        public void onError(Exception e) {
+                                            Log.i(TAG, "Uploading catalog after update: error");
+                                        }
+                                    }).execute(filePath, "");
+                                }
+                            }
+                        }.execute(albumId, result.getUrl());
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.i(TAG, "Error on creating share link on uploading new photo!");
+                    }
+                }).execute(result);
+
 
             }
 
@@ -217,18 +263,8 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
     class UpdateAlbumCatalog extends AsyncTask {
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-        }
-
-        @Override
         protected Object doInBackground(Object[] objects) {
-            String albumId = (String) objects[0];
+            Integer albumId = (Integer) objects[0];
             String photoURL = (String) objects[1];
             String fileName = String.format(CATALOG_SUFFIX, albumId);
             File catalogFile = null;
@@ -241,11 +277,43 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
                 }
             }
 
-            //append new photoURL
-            FileWriter fileWriter = new FileWriter(catalogFile.get)
+            FileWriter fileWriter = null;
+            BufferedWriter bufferedWriter = null;
 
+            if (catalogFile != null) {
+                //append new photoURL
+                try {
+                    fileWriter = new FileWriter(catalogFile.getAbsoluteFile(), true);
+                    bufferedWriter = new BufferedWriter(fileWriter);
+                    Log.i(TAG, "UpdateAlbumCatalog: Writing URL to catalog: " + photoURL);
+                    bufferedWriter.write(photoURL + "\n");
 
-            return null;
+                } catch (IOException e) {
+                    Log.i(TAG, "UpdateAlbumCatalog: IOException");
+                } finally {
+
+                    try {
+
+                        if (bufferedWriter != null)
+                            bufferedWriter.close();
+
+                        if (fileWriter != null)
+                            fileWriter.close();
+
+                    } catch (IOException ex) {
+
+                        Log.i(TAG, "UpdateAlbumCatalog: IOException when closing");
+
+                    }
+                }
+            }
+            else {
+                Log.i(TAG, "UpdateAlbumCatalog: catalogFile is null!");
+            }
+
+            if (catalogFile == null)
+                return null;
+            return catalogFile.getAbsolutePath();
         }
     }
 }

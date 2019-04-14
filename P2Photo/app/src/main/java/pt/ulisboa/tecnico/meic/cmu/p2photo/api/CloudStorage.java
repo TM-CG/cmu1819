@@ -62,7 +62,7 @@ public class CloudStorage extends StorageProvider {
                 //to read it
                 new ShareLinkTask(getContext(), DropboxClientFactory.getClient(), new ShareLinkTask.Callback() {
                     @Override
-                    public void onUploadComplete(SharedLinkMetadata result) {
+                    public void onShareComplete(SharedLinkMetadata result) {
                         Log.i(TAG, "Successfully generated link to shared file: " + result.getUrl());
 
                         //Set that url to the server

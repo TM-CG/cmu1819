@@ -15,13 +15,16 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 
 public class MainActivity extends AppCompatActivity {
     private Intent intent;
-    private EditText user;
+    private static EditText user;
     private EditText pass;
     private EditText ip;
     private EditText port;
     public static ServerConnector sv;
 
-    
+    public static String getUser() {
+        return user.getText().toString();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

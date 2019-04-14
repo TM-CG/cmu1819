@@ -45,28 +45,6 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
 
         String path = getIntent().getStringExtra(EXTRA_PATH);
         mPath = path == null ? "" : path;
-        //NEW
-
-        /*PicassoClient.init(this,DropboxClientFactory.getClient());
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.files_list);
-        mFilesAdapter = new FilesAdapter(PicassoClient.getPicasso(), new FilesAdapter.Callback() {
-            @Override
-            public void onFolderClicked(FolderMetadata folder) {
-            }
-
-            @Override
-            public void onFileClicked(final FileMetadata file) {
-
-            }
-        });
-        Log.i("DROPBOX",  new Integer(mFilesAdapter.getItemCount()).toString());
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mFilesAdapter);*/
-
-
-
-
-        //OLD
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         myToolbar.inflateMenu(R.menu.albums_menu);
@@ -83,7 +61,6 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
             }
         });
         albumsList = (ListView) findViewById(R.id.lst_albums);
-        //DEBUG ONLY! TO BE REMOVED
         albums = new ArrayList<String>();
         adapterTitle = new ArrayAdapter<String>(getApplicationContext(), R.layout.your_albums_list_layout, R.id.albumTitle, albums);
         albumsList.setAdapter(adapterTitle);

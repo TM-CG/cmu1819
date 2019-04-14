@@ -72,7 +72,6 @@ public class CreateAlbum extends AppCompatActivity {
         lvItems2.setAdapter(itemsAdapter2);
 
         setupListViewListener();
-        //createUsersTest();
 
         new FindUsers().execute(itemsAdapter);
 
@@ -89,7 +88,7 @@ public class CreateAlbum extends AppCompatActivity {
 
 
         //creates album on the server
-        new CreateAlbumOnServer().execute();
+        new CreateAlbumOnServer().execute(items2);
 
         /*CloudStorage cs = new CloudStorage(CreateAlbum.this, 1, StorageProvider.Operation.READ);
         new Thread(cs, "ReadingThread").start();*/
@@ -120,19 +119,6 @@ public class CreateAlbum extends AppCompatActivity {
                 });
     }
 
-    private void createUsersTest(){
-        itemsAdapter.add("João");
-        itemsAdapter.add("Carlos");
-        itemsAdapter.add("Alberto");
-        itemsAdapter.add("Gorila");
-        itemsAdapter.add("Pulpo");
-        itemsAdapter.add("Pardal");
-        itemsAdapter.add("Vitor");
-        itemsAdapter.add("Titas");
-        itemsAdapter.add("Miguel");
-        itemsAdapter.add("Samora");
-    }
-
     private void addUser(int pos){
         // Remove the item within array at position
         if(!items2.contains(items.get(pos))) {
@@ -143,7 +129,7 @@ public class CreateAlbum extends AppCompatActivity {
         }
     }
 
-    class CreateAlbumOnServer extends AsyncTask {
+    class CreateAlbumOnServer extends AsyncTask<Object,Object,Object[]> {
 
         private ServerConnector sv = MainActivity.sv;
 
@@ -153,11 +139,13 @@ public class CreateAlbum extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Object o) {
+        protected void onPostExecute(Object[] o) {
             Integer albumId = null;
+            ArrayList<String> items2 = null;
 
             if (o != null) {
-                albumId = (Integer) o;
+                albumId = (Integer) o[1];
+                items2 = (ArrayList<String>) o[0];
             } else {
                 Log.i("CreateAlbumOnServer", "albumId is null");
                 return;
@@ -168,15 +156,30 @@ public class CreateAlbum extends AppCompatActivity {
             //create album catalog for new album
             AlbumCatalog catalog = new AlbumCatalog(albumId, albumTitle);
 
-            new Thread(new CloudStorage(CreateAlbum.this, catalog, StorageProvider.Operation.WRITE), "WritingThread").start();
-            //create a new folder
-            new CreateFolderTask().execute(albumId + " " + albumTitle,getApplicationContext());
+            Thread t1 = new Thread(new CloudStorage(CreateAlbum.this, catalog, StorageProvider.Operation.WRITE), "WritingThread");
+            t1.start();
+            try {
+                t1.join();
+                //create a new folder
+                new CreateFolderTask().execute(albumId + " " + albumTitle,getApplicationContext());
+                //add users to albums
+                new AddUsersToAlbum().execute(o);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            
         }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object[] doInBackground(Object[] objects) {
+            Object[] result = new Object[2];
+            //adds the array of users (names)
+            result[0] = objects[0];
             try {
-                return sv.createAlbum();
+                result[1] = sv.createAlbum();
+                return result;
             } catch (P2PhotoException e) {
                 e.printStackTrace();
             }
@@ -236,11 +239,45 @@ class FindUsers extends AsyncTask<Object,Void,Object[]> {
     protected void onPostExecute(Object[] result) {
         if(result != null){
             ArrayAdapter<String> itemsAdapter = (ArrayAdapter<String>) result[0];
+            Log.d("users", MainActivity.getUser());
             for(String user: (List<String>) result[1]){
-                itemsAdapter.add(user);
+                if(!MainActivity.getUser().equals(user)) {
+                    Log.d("users", user);
+                    itemsAdapter.add(user);
+                }
             }
         }
 
+    }
+}
+
+class AddUsersToAlbum extends AsyncTask<Object,Void,Object[]> {
+    @Override
+    protected Object[] doInBackground(Object [] o) {
+        Integer albumId = null;
+        ArrayList<String> items2 = null;
+
+        if (o != null) {
+            albumId = (Integer) o[1];
+            items2 = (ArrayList<String>) o[0];
+            if (items2 != null) {
+                for (String item : items2) {
+                    try {
+                        Log.d("inviteAlbum", item);
+                        MainActivity.getSv().updateAlbum(albumId,item);
+                    } catch (P2PhotoException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        //TODO
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Object[] result) {
+        //TODO
     }
 }
 

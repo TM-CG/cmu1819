@@ -6,10 +6,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.sharing.SharedLinkMetadata;
 
 import java.text.DateFormat;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.ShareLinkTask;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.UploadFileTask;
 
 /**
@@ -28,8 +30,9 @@ public class CloudStorage extends StorageProvider {
     }
 
     @Override
-    void writeFile(String fileURL) {
+    void writeFile(final String fileURL) {
 
+        final int albumId = getCatalog().getAlbumId();
         //Writing file to a cloud provider is equivalent to upload it
 
         //vitor: i just remove the dialog because CreateAlbum closes so fast that dialog is running
@@ -51,6 +54,23 @@ public class CloudStorage extends StorageProvider {
                 /*Toast.makeText(getContext(), message, Toast.LENGTH_SHORT)
                         .show();*/
                 Log.i(TAG, message);
+
+                //After upload let's share the catalog in order to every with the link be able
+                //to read it
+                new ShareLinkTask(getContext(), DropboxClientFactory.getClient(), new ShareLinkTask.Callback() {
+                    @Override
+                    public void onUploadComplete(SharedLinkMetadata result) {
+                        Log.i(TAG, "Successfully generated link to shared file: " + result.getUrl());
+
+                        //Set that url to the server
+                        new StorageProvider.AddAlbumSliceCatalogURL().execute(albumId, result.getUrl());
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.i(TAG, "There was an error in generating the shared link!");
+                    }
+                }).execute(result);
             }
 
             @Override

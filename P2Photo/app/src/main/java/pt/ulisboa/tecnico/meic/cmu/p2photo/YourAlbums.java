@@ -184,7 +184,7 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCancelable(false);
-        dialog.setMessage("Downloading");
+        dialog.setMessage("Reading catalogs");
         dialog.show();
 
         new DownloadFileTask(this, DropboxClientFactory.getClient(), new DownloadFileTask.Callback() {

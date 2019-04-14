@@ -1,26 +1,44 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class addPhotoActivityFromMenu extends AppCompatActivity {
+import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.files.ListFolderResult;
+import com.dropbox.core.v2.files.Metadata;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class addPhotoActivityFromMenu extends DropboxActivity {
+
+    private List<String> albums;
+    private ArrayAdapter<String> spinnerArrayAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_photo_from_menu);
 
         Spinner sel_album = (Spinner) findViewById(R.id.sel_album);
-        String[] albums = {"Album de ferias", "Album de LEIC", "Churrasco", "Gorilada Distribuida <3", "Almoços do Social", "Discussão de projetos", "Natal",
-                "Páscoa", "Praxe"};
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item, albums);
+
+        albums = new ArrayList<String>();
+
+        spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item, albums);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+
         sel_album.setAdapter(spinnerArrayAdapter);
     }
 
@@ -57,5 +75,85 @@ public class addPhotoActivityFromMenu extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    private void downloadFile(FileMetadata file) {
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setCancelable(false);
+        dialog.setMessage("Reading catalogs");
+        dialog.show();
+
+        new DownloadFileTask(this, DropboxClientFactory.getClient(), new DownloadFileTask.Callback() {
+            @Override
+            public void onDownloadComplete(File result) {
+                dialog.dismiss();
+                if(result != null) {
+                    try {
+
+                        BufferedReader br = new BufferedReader(new FileReader(result));
+                        String st;
+                        while ((st = br.readLine()) != null) {
+                            Log.d("readFile", st);
+                            st = st.replace(System.getProperty("line.separator"), "");
+                            if(! albums.contains(st)) {
+                                albums.add(st);
+                            }
+                            break;
+                        }
+                        Log.d("albumsTeste", albums.toString());
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                dialog.dismiss();
+
+                Log.i("download", "fail");
+
+            }
+        }).execute(file);
+
+    }
+
+    @Override
+    protected void loadData() {
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setCancelable(false);
+        dialog.setMessage("Loading");
+        dialog.show();
+
+        new ListFolderTask(DropboxClientFactory.getClient(), new ListFolderTask.Callback() {
+            @Override
+            public void onDataLoaded(ListFolderResult result) {
+                dialog.dismiss();
+                if(result != null) {
+                    try {
+                        for(Metadata m : result.getEntries()){
+                            if(m.getName().endsWith("_catalog.txt")) {
+                                downloadFile((FileMetadata) m);
+                            }
+                        }
+
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                dialog.dismiss();
+
+
+            }
+        }).execute("");
     }
 }

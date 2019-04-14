@@ -39,7 +39,7 @@ import java.util.List;
 public class FilesActivity extends DropboxActivity {
     private static final String TAG = FilesActivity.class.getName();
 
-    public final static String EXTRA_PATH = "ListPhoto_Path";
+    public final static String EXTRA_PATH = "albumFolder_path";
     private static final int PICKFILE_REQUEST_CODE = 1;
 
     private String mPath;

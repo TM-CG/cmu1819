@@ -45,7 +45,9 @@ public class AddUser extends AppCompatActivity {
         lvItems2.setAdapter(itemsAdapter2);
 
         setupListViewListener();
-        createUsersTest();
+        //createUsersTest();
+        new FindUsers().execute(itemsAdapter);
+
 
     }
 

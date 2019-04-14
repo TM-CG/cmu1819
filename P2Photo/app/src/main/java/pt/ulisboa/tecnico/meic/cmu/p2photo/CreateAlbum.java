@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
@@ -45,19 +46,11 @@ public class CreateAlbum extends AppCompatActivity {
     private ArrayAdapter<String> itemsAdapter2;
     private ListView lvItems2;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_album);
-    }
-
-    public void cancel(View view){
-        Intent intent = getIntent();
-        setResult(RESULT_CANCELED,intent);
-        finish();
-    }
-
-    public void create(View view){
         album = (EditText) findViewById(R.id.nameInput);
 
         items = new ArrayList<String>();
@@ -79,7 +72,21 @@ public class CreateAlbum extends AppCompatActivity {
         lvItems2.setAdapter(itemsAdapter2);
 
         setupListViewListener();
-        createUsersTest();
+        //createUsersTest();
+
+        new FindUsers().execute(itemsAdapter);
+
+
+    }
+
+    public void cancel(View view){
+        Intent intent = getIntent();
+        setResult(RESULT_CANCELED,intent);
+        finish();
+    }
+
+    public void create(View view){
+
 
         //create a new folder
         new CreateFolderTask().execute(album.getText().toString(),getApplicationContext());
@@ -202,15 +209,41 @@ class CreateFolderTask extends AsyncTask<Object,Object,Object[]> {
     @Override
     protected void onPostExecute(Object[] result) {
         String res = (String) result[1];
-        if(res == "OK"){
-            Toast.makeText((Context)result[0], "Album created in your dropbox",
+        if (res == "OK") {
+            Toast.makeText((Context) result[0], "Album created in your dropbox",
                     Toast.LENGTH_LONG).show();
-        }
-        else {
-            Toast.makeText((Context)result[0], "Album NOT created in your dropbox",
+        } else {
+            Toast.makeText((Context) result[0], "Album NOT created in your dropbox",
                     Toast.LENGTH_LONG).show();
         }
     }
-
-
 }
+
+class FindUsers extends AsyncTask<Object,Void,Object[]> {
+    @Override
+    protected Object[] doInBackground(Object [] objects) {
+        Object[] result = new Object[2];
+        result[0] = objects[0];
+        try {
+            List<String> users = MainActivity.getSv().findUsers("*");
+            result[1] = users;
+            return result;
+        } catch (P2PhotoException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    protected void onPostExecute(Object[] result) {
+        if(result != null){
+            ArrayAdapter<String> itemsAdapter = (ArrayAdapter<String>) result[0];
+            for(String user: (List<String>) result[1]){
+                itemsAdapter.add(user);
+            }
+        }
+
+    }
+}
+
+

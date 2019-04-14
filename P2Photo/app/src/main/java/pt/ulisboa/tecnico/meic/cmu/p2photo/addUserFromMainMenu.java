@@ -45,7 +45,9 @@ public class addUserFromMainMenu extends AppCompatActivity {
         lvItems2.setAdapter(itemsAdapter2);
 
         setupListViewListener();
-        createUsersTest();
+        //createUsersTest();
+        new FindUsers().execute(itemsAdapter);
+
     }
 
     private void setupListViewListener() {

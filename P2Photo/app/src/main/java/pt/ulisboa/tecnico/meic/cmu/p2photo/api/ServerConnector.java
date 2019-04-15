@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class ServerConnector {
 
-    private static final String CLI_API_VERSION = "0.6";
+    private static final String CLI_API_VERSION = "0.7";
 
     //API Instructions
     private static final String API_LOGIN = "LOGIN %s %s";
@@ -28,6 +28,7 @@ public class ServerConnector {
     private static final String API_ALB_CR8_NO_URL = "ALB-CR8 %s";
     private static final String API_ALB_AUP = "ALB-AUP %s %s %s";
     private static final String API_ALB_LST = "ALB-LST %s";
+    private static final String API_ALB_LST_WITH_OPTION = "ALB-LST %s %s";
     private static final String API_ALB_UAS = "ALB-UAS %s %s";
     private static final String API_USR_FND = "USR-FND %s %s";
     private static final String API_USR_IRQ = "USR-IRQ %s";
@@ -58,6 +59,17 @@ public class ServerConnector {
     public static final String OK_PLUS = "OK "  ;
     public static final String OK      = "OK"   ;
     public static final String SHUT_OK = "SHUT OK";
+
+    /** Options for List Album **/
+    public enum ListAlbumOption {
+        VIEW_ALL("ALL"),
+        VIEW_PAR("PAR"),
+        VIEW_OWN("OWN");
+
+        private final String stringValue;
+        ListAlbumOption(final String s) { stringValue = s; }
+        public String toString() { return stringValue; }
+    }
 
     private String serverPath;
 
@@ -316,12 +328,27 @@ public class ServerConnector {
 
     /**
      * Returns all albums whose owner is currently logged in and all albums where the user participates
+     * @param options (optional) which allows to specify search criteria
+     *               VIEW_ALL displays all user owned albums and albums where the user participates
+     *               VIEW_PAR displays only the albums where the user IS NOT the owner but participates
+     *               VIEW_OWN displays only the albuns whose owner IS the user
+     *
+     *               By default, if no option is provided then VIEW_ALL is assumed.
+     *
      * @return a list of pairs containing the albumID and the respective title
      * @throws P2PhotoException if something wrong happens
      */
-    public List<Integer> listUserAlbums() throws P2PhotoException {
+    public List<Integer> listUserAlbums(ListAlbumOption... options) throws P2PhotoException {
         try {
-            String request = String.format(API_ALB_LST, sessionId);
+            ListAlbumOption option = null;
+            String request;
+
+            if (options.length > 0) {
+                option = options[0];
+                request = String.format(API_ALB_LST_WITH_OPTION, sessionId, option);
+            } else {
+                request = String.format(API_ALB_LST, sessionId);
+            }
 
             this.out.println(request);
 
@@ -511,7 +538,8 @@ public class ServerConnector {
         List<Integer> list = new ArrayList<>();
 
         for (String s: array) {
-            list.add(Integer.parseInt(s));
+            if (!s.equals("")) //ignore empty strings
+                list.add(Integer.parseInt(s));
         }
         return list;
     }

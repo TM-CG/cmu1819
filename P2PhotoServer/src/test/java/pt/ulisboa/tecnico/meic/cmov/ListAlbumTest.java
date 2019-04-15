@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.meic.cmov;
 
-import javafx.util.Pair;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +27,7 @@ public class ListAlbumTest {
     private List<String> args;
 
     private String sessionId;
+    private String anotherSessionId;
 
     private String albumId;
 
@@ -81,7 +81,7 @@ public class ListAlbumTest {
         this.args.add(TEST_USER_2);
         this.args.add(TESTPASS_2);
 
-        String anotherSessionId = new LogIn(args, dummyServer).execute().split(" ")[1];
+        anotherSessionId = new LogIn(args, dummyServer).execute().split(" ")[1];
 
         //create album de teste
         this.args = new ArrayList<>();
@@ -91,12 +91,22 @@ public class ListAlbumTest {
 
         new CreateAlbum(args, dummyServer).execute();
 
+        //Adds user 1 to album
         this.args = new ArrayList<>();
         this.args.add("ALB-AUP");
         this.args.add(anotherSessionId);
         this.args.add("2");
         this.args.add(TEST_USER_1);
         new UpdateAlbum(args, dummyServer).execute();
+
+        //User 1 accepts invitation
+        this.args = new ArrayList<>();
+        this.args.add("USR-URQ");
+        this.args.add(sessionId);
+        this.args.add("A");
+        this.args.add("2");
+        this.args.add("https://cloud.com/example/user1");
+        new UpdateRequests(args, dummyServer).execute();
 
         //create album de teste
         this.args = new ArrayList<>();
@@ -120,7 +130,50 @@ public class ListAlbumTest {
 
         assertNotNull(response);
 
-        assertEquals(OK_PLUS + "<" + 1 + ">", response);
+        assertEquals(OK_PLUS + "<1 , 2>", response);
+    }
+
+    @Test
+    public void listParticipateOnly() {
+        this.args = new ArrayList<>();
+        this.args.add("ALB-LST");
+        this.args.add(sessionId);
+        this.args.add(ListAlbum.VIEW_PAR);
+
+        ListAlbum listAlbum = new ListAlbum(args, dummyServer);
+        String response = listAlbum.execute();
+
+        assertNotNull(response);
+
+        assertEquals(OK_PLUS + "<2>", response);
+    }
+
+    @Test
+    public void listOwningOnly() {
+        this.args = new ArrayList<>();
+        this.args.add("ALB-LST");
+        this.args.add(sessionId);
+        this.args.add(ListAlbum.VIEW_OWN);
+
+        ListAlbum listAlbum = new ListAlbum(args, dummyServer);
+        String response = listAlbum.execute();
+
+        assertNotNull(response);
+
+        assertEquals(OK_PLUS + "<1>", response);
+
+        //using other sessionId
+        this.args = new ArrayList<>();
+        this.args.add("ALB-LST");
+        this.args.add(anotherSessionId);
+        this.args.add(ListAlbum.VIEW_OWN);
+
+        listAlbum = new ListAlbum(args, dummyServer);
+        response = listAlbum.execute();
+
+        assertNotNull(response);
+
+        assertEquals(OK_PLUS + "<2 , 3>", response);
     }
 
     @Test

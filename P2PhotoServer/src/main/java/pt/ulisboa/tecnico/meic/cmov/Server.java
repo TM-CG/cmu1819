@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class Server {
@@ -226,18 +227,53 @@ public class Server {
      * @param username of the user to search
      * @return a list of all albums ID
      */
-    public List<Integer> getAlbunsOfGivenUser(String username) {
+    public List<Integer> getAlbunsWhereGiveUserParticipates(String username) {
         List<Integer> albums = new ArrayList<>();
 
         synchronized (this.albums) {
             for (Album album : this.albums) {
-                //User is the owner OR user participates on the album
-                if ((album.getOwner().equals(username)) || (album.getIndexOfUser(username) != null))
+                //user is not the owner and participates
+                if ((!album.getOwner().equals(username)) && (album.getIndexOfUser(username) != null))
                     albums.add(album.getID());
             }
         }
 
         return albums;
+    }
+
+    /**
+     * Given a username returns a list of albums ID where the user is the owner of that album
+     * @param username of the user to search
+     * @return a list of all albums ID
+     */
+    public List<Integer> getAlbunsOwnedByGivenUser(String username) {
+        List<Integer> albums = new ArrayList<>();
+
+        synchronized (this.albums) {
+            for (Album album : this.albums) {
+                if (album.getOwner().equals(username))
+                    albums.add(album.getID());
+            }
+        }
+
+        return albums;
+    }
+
+    /**
+     * Given a username returns a list of albums ID where the user is the owner OR he participates in.
+     * Calling this method is equivalent of computing the union of getAlbunsWhereGiveUserParticipates and
+     * getAlbunsOwnedByGivenUser
+     *
+     * @param username of the user to search
+     * @return a list of all albums ID
+     */
+    public List<Integer> getAllAlbunsRelatedToUser(String username) {
+        HashSet<Integer> ownedAlbums = new HashSet(getAlbunsOwnedByGivenUser(username));
+        HashSet <Integer> participates = new HashSet(getAlbunsWhereGiveUserParticipates(username));
+
+        ownedAlbums.addAll(participates);
+
+        return new ArrayList<Integer>(ownedAlbums);
     }
 
     /**

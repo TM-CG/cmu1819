@@ -68,7 +68,7 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
         albumsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(FilesActivity.getIntent(YourAlbums.this, ""));
+                startActivity(ListPhoto.getIntent(YourAlbums.this, 1));
             }
         });
 

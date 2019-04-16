@@ -33,9 +33,8 @@ import static pt.ulisboa.tecnico.meic.cmu.p2photo.FilesActivity.EXTRA_PATH;
 public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemClickListener {
     private FilesAdapter mFilesAdapter;
     private String mPath;
-    private ArrayList<String> albums;
-    private ArrayAdapter<String> adapterTitle;
-    private ListView albumsList;
+    private Cache cacheInstance;
+
 
 
     @Override
@@ -43,8 +42,13 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_your_albums);
 
+
+
+
         String path = getIntent().getStringExtra(EXTRA_PATH);
         mPath = path == null ? "" : path;
+        Log.d("caminho", mPath);
+
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         myToolbar.inflateMenu(R.menu.albums_menu);
@@ -60,21 +64,16 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
                 finish();
             }
         });
-        albumsList = (ListView) findViewById(R.id.lst_albums);
-        albums = new ArrayList<String>();
-        adapterTitle = new ArrayAdapter<String>(getApplicationContext(), R.layout.your_albums_list_layout, R.id.albumTitle, albums);
-        albumsList.setAdapter(adapterTitle);
-
-        albumsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        cacheInstance = Cache.getInstance();
+        cacheInstance.albumsList = (ListView) findViewById(R.id.lst_albums);
+        cacheInstance.adapterTitle = new ArrayAdapter<String>(getApplicationContext(), R.layout.your_albums_list_layout, R.id.albumTitle, cacheInstance.albums);
+        cacheInstance.albumsList.setAdapter(cacheInstance.adapterTitle);
+        cacheInstance.albumsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 startActivity(FilesActivity.getIntent(YourAlbums.this, ""));
             }
         });
-
-        loadData();
-
-
 
     }
 
@@ -121,85 +120,7 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
 
     @Override
     protected void loadData() {
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setCancelable(false);
-        dialog.setMessage("Loading");
-        dialog.show();
-
-        new ListFolderTask(DropboxClientFactory.getClient(), new ListFolderTask.Callback() {
-            @Override
-            public void onDataLoaded(ListFolderResult result) {
-                dialog.dismiss();
-                if(result != null) {
-                    try {
-                        Log.d("entradas", result.getEntries().toString());
-                        for(Metadata m : result.getEntries()){
-                            Log.d("entrei", "estou nas metadatas");
-                            if(m.getName().endsWith("_catalog.txt")) {
-                                Log.d("entrei", "sou um catalog");
-                                downloadFile((FileMetadata) m);
-                            }
-                        }
-
-                    } catch (Exception e) {
-
-                    }
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                dialog.dismiss();
-
-
-            }
-        }).execute(mPath);
     }
 
-    private void downloadFile(FileMetadata file) {
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setCancelable(false);
-        dialog.setMessage("Reading catalogs");
-        dialog.show();
 
-        new DownloadFileTask(this, DropboxClientFactory.getClient(), new DownloadFileTask.Callback() {
-            @Override
-            public void onDownloadComplete(File result) {
-                dialog.dismiss();
-                if(result != null) {
-                    try {
-
-                        BufferedReader br = new BufferedReader(new FileReader(result));
-                        String st;
-                        while ((st = br.readLine()) != null) {
-                            Log.d("readFile", st);
-                            st = st.replace(System.getProperty("line.separator"), "");
-                            if(! albums.contains(st)) {
-                                albums.add(st);
-                            }
-                            break;
-                        }
-                        adapterTitle.notifyDataSetChanged();
-                        Log.d("albumsTeste", albums.toString());
-
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                dialog.dismiss();
-
-                Log.i("download", "fail");
-
-            }
-        }).execute(file);
-
-    }
 }

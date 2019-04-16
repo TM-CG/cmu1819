@@ -71,6 +71,7 @@ public class CreateAlbum extends AppCompatActivity {
 
         lvItems2.setAdapter(itemsAdapter2);
 
+
         setupListViewListener();
 
         new FindUsers().execute(itemsAdapter);
@@ -199,6 +200,9 @@ class CreateFolderTask extends AsyncTask<Object,Object,Object[]> {
         result[0] = objects[1];
         try {
             CreateFolderResult res = DropboxClientFactory.getClient().files().createFolderV2("/" + albumName);
+            String[] splited = albumName.split(" ");
+            Cache.getInstance().albumsIDs.add(Integer.parseInt(splited[0]));
+            Cache.getInstance().albums.add(splited[1]);
             result[1] = "OK";
             return result;
         } catch (DbxException e1) {
@@ -211,6 +215,7 @@ class CreateFolderTask extends AsyncTask<Object,Object,Object[]> {
     protected void onPostExecute(Object[] result) {
         String res = (String) result[1];
         if (res == "OK") {
+            Cache.getInstance().notifyAdapters();
             Toast.makeText((Context) result[0], "Album created in your dropbox",
                     Toast.LENGTH_LONG).show();
         } else {

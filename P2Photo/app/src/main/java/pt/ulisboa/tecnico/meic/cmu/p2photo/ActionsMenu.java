@@ -18,6 +18,9 @@ public class ActionsMenu extends DropboxActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actions_menu);
+
+
+        //
     }
 
     public void goBack(View view){

@@ -24,6 +24,7 @@
         <activity android:name=".ActionsMenu" />
         <activity android:name=".addPhotoActivity" />
         <activity android:name=".YourAlbums" />
+        <activity android:name=".ListPhoto"/>
         <activity android:name=".FilesActivity" />
         <activity android:name=".addUserFromMainMenu" />
         <activity android:name="addPhotoActivityFromMenu"/>

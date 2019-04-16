@@ -14,9 +14,11 @@ public class Cache extends AppCompatActivity {
     public static ArrayList<String> albums;
     public static ArrayAdapter<String> adapterTitle;
     public static ListView albumsList;
-    //albums but using spinner
+    //albums but using spinners
     public static ArrayAdapter<String> itemsAdapterSpinner;
     public static Spinner lvItemsSpinner;
+    public static ArrayAdapter<String> spinnerArrayAdapter;
+    public static Spinner sel_album;
 
     private static Cache single_instance = null;
 
@@ -41,6 +43,11 @@ public class Cache extends AppCompatActivity {
         }
         try {
             itemsAdapterSpinner.notifyDataSetChanged();
+        } catch(Exception e) {
+            //TODO
+        }
+        try {
+            spinnerArrayAdapter.notifyDataSetChanged();
         } catch(Exception e) {
             //TODO
         }

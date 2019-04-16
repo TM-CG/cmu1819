@@ -33,28 +33,26 @@ import static pt.ulisboa.tecnico.meic.cmu.p2photo.api.CloudStorage.CATALOG_SUFFI
 public class addPhotoActivityFromMenu extends DropboxActivity {
     private static final String TAG = addPhotoActivityFromMenu.class.getName();
 
-    private List<String> albums;
-    private ArrayAdapter<String> spinnerArrayAdapter;
     private static final int PICKFILE_REQUEST_CODE = 1;
-    private Spinner sel_album;
-    private AlbumCatalog catalog;
 
+
+    private AlbumCatalog catalog;
+    private Cache cacheInstance;
     private ArrayList<File> catalogFiles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_photo_from_menu);
+        cacheInstance = Cache.getInstance();
 
-        sel_album = (Spinner) findViewById(R.id.sel_album);
-
-        albums = new ArrayList<String>();
+        cacheInstance.sel_album = (Spinner) findViewById(R.id.sel_album);
         catalogFiles = new ArrayList<>();
 
-        spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item, albums);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+        cacheInstance.spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item, cacheInstance.albums);
+        cacheInstance.spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
 
-        sel_album.setAdapter(spinnerArrayAdapter);
+        cacheInstance.sel_album.setAdapter(cacheInstance.spinnerArrayAdapter);
 
     }
 
@@ -92,7 +90,7 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
         dialog.setMessage("Uploading");
         dialog.show();
 
-        final String folderPath = sel_album.getSelectedItem().toString();
+        final String folderPath = cacheInstance.sel_album.getSelectedItem().toString();
         final int albumId = Integer.parseInt(folderPath.split(" ")[0]);
 
         Log.i(TAG, "Path to remote folder to upload: " + folderPath);
@@ -178,86 +176,8 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
         }
     }
 
-    private void downloadFile(FileMetadata file) {
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setCancelable(false);
-        dialog.setMessage("Reading catalogs");
-        dialog.show();
-
-        new DownloadFileTask(this, DropboxClientFactory.getClient(), new DownloadFileTask.Callback() {
-            @Override
-            public void onDownloadComplete(File result) {
-                dialog.dismiss();
-                if(result != null) {
-                    try {
-
-                        BufferedReader br = new BufferedReader(new FileReader(result));
-                        String st;
-                        st = br.readLine();
-                        Log.d("readFile", st);
-                        st = st.replace(System.getProperty("line.separator"), "");
-                        if(! albums.contains(st)) {
-                            albums.add(st);
-                        }
-
-                        spinnerArrayAdapter.notifyDataSetChanged();
-                        catalogFiles.add(result);
-
-                        Log.d("albumsTeste", albums.toString());
-
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                dialog.dismiss();
-
-                Log.i("download", "fail");
-
-            }
-        }).execute(file);
-
-    }
-
     @Override
     protected void loadData() {
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setCancelable(false);
-        dialog.setMessage("Please wait");
-        dialog.show();
-
-        new ListFolderTask(DropboxClientFactory.getClient(), new ListFolderTask.Callback() {
-            @Override
-            public void onDataLoaded(ListFolderResult result) {
-                dialog.dismiss();
-                if(result != null) {
-                    try {
-                        for(Metadata m : result.getEntries()){
-                            if(m.getName().endsWith("_catalog.txt")) {
-                                downloadFile((FileMetadata) m);
-                            }
-                        }
-
-                    } catch (Exception e) {
-
-                    }
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                dialog.dismiss();
-
-
-            }
-        }).execute("");
     }
 
     class UpdateAlbumCatalog extends AsyncTask {

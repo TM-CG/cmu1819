@@ -52,6 +52,11 @@ public class ActionsMenu extends DropboxActivity {
         startActivityForResult(intent, 9);
     }
 
+    public void watchPending(View view){
+        Intent intent = new Intent(this, PendingRequestsActivity.class);
+        startActivityForResult(intent, 10);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -106,6 +111,15 @@ public class ActionsMenu extends DropboxActivity {
                 else if(resultCode==RESULT_CANCELED){
                     Toast.makeText(getApplicationContext(), "User adding aborted",
                             Toast.LENGTH_LONG).show();
+                }
+                break;
+            /*pendings list*/
+            case 10:
+                if(resultCode==RESULT_OK){
+
+                }
+                else if(resultCode==RESULT_CANCELED){
+
                 }
                 break;
         }

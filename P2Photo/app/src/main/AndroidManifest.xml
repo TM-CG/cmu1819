@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".selectPhotoActivity"/>
+        <activity android:name=".PendingRequestsActivity"></activity>
+        <activity android:name=".selectPhotoActivity" />
         <activity android:name=".settingsActivity" />
         <activity android:name=".chooseCloudLocalActivity" />
         <activity android:name=".AddUser" />
@@ -24,14 +25,14 @@
         <activity android:name=".ActionsMenu" />
         <activity android:name=".addPhotoActivity" />
         <activity android:name=".YourAlbums" />
-        <activity android:name=".ListPhoto"/>
+        <activity android:name=".ListPhoto" />
         <activity android:name=".FilesActivity" />
         <activity android:name=".addUserFromMainMenu" />
-        <activity android:name="addPhotoActivityFromMenu"/>
-        <activity android:name=".LogActivity"/>
-        <activity android:name=".ConfirmPromptActivity"
-            android:theme="@android:style/Theme.Dialog">
-        </activity>
+        <activity android:name=".addPhotoActivityFromMenu" />
+        <activity android:name=".LogActivity" />
+        <activity
+            android:name=".ConfirmPromptActivity"
+            android:theme="@android:style/Theme.Dialog"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,7 +45,7 @@
             android:configChanges="orientation|keyboard"
             android:launchMode="singleTask">
             <intent-filter>
-                <data android:scheme="db-znh1m2wzcegv96c"/>
+                <data android:scheme="db-znh1m2wzcegv96c" />
 
                 <action android:name="android.intent.action.VIEW" />
 

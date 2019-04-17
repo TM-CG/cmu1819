@@ -61,7 +61,7 @@
         android:layout_height="75dp"
         android:layout_marginTop="75dp"
         android:drawableStart="@drawable/ic_event_black_48dp"
-        android:onClick="addUsersToAlbum"
+        android:onClick="watchPending"
         android:text="@string/menu5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

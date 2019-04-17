@@ -5,7 +5,7 @@ import android.util.Log;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 
-public class allAlbumsThread extends Thread {
+public class allAlbumsThread implements Runnable {
     @Override
     public void run() {
         try {

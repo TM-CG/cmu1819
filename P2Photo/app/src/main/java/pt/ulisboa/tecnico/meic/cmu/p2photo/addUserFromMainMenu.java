@@ -124,6 +124,13 @@ public class addUserFromMainMenu extends AppCompatActivity {
     public void create(View view){
         Intent intent = getIntent();
         setResult(RESULT_OK,intent);
+        String name = cacheInstance.lvItemsSpinner.getSelectedItem().toString();
+        Object[] o = new Object[2];
+        //Log.d("addUsers", items2.toString());
+        o[1] = cacheInstance.albumsIDs.get(cacheInstance.albums.indexOf(name));
+        //Log.d("addUsers", String.valueOf(o[0]));
+        o[0] = items2;
+        new AddUsersToAlbum().execute(o);
         finish();
     }
 

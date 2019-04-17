@@ -14,7 +14,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 
 public class MainActivity extends AppCompatActivity {
-    private Intent intent;
+    private Intent  intent;
     private static EditText user;
     private EditText pass;
     private EditText ip;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void signIn(View view) {
         if(checkConnectionParameters()){
-            intent = new Intent(this, ActionsMenu.class);
+            intent = new Intent(this, chooseCloudLocalActivity.class);
             new SocketConnect().execute("signIn");
         }
     }

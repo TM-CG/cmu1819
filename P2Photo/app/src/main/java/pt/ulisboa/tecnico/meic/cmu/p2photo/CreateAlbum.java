@@ -269,6 +269,7 @@ class AddUsersToAlbum extends AsyncTask<Object,Void,Object[]> {
         if (o != null) {
             albumId = (Integer) o[1];
             items2 = (ArrayList<String>) o[0];
+
             if (items2 != null) {
                 for (String item : items2) {
                     try {

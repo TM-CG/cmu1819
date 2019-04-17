@@ -97,6 +97,23 @@ public class chooseCloudLocalActivity extends DropboxActivity {
                 if(result != null) {
                     try {
                         Log.d("entradas", result.getEntries().toString());
+                        //get my albums
+                        Thread t1 = new Thread(new allAlbumsThread());
+                        t1.start();
+                        Thread t2 = new Thread(new owningAlbumsThread());
+                        t2.start();
+                        t1.join();
+                        t2.join();
+                        Log.d("ownedAlbums", "owned and part");
+                        Log.d("ownedAlbums", String.valueOf(cacheInstance.ownedAndPartAlbumsIDs.size()));
+                        for(Integer elm : cacheInstance.ownedAndPartAlbumsIDs){
+                            Log.d("ownedAlbums", String.valueOf(elm));
+                        }
+                        Log.d("ownedAlbums", "owned");
+                        Log.d("ownedAlbums", String.valueOf(cacheInstance.ownedAlbumsIDs.size()));
+                        for(Integer elm : cacheInstance.ownedAlbumsIDs){
+                            Log.d("ownedAlbums", String.valueOf(elm));
+                        }
                         for(Metadata m : result.getEntries()){
                             Log.d("entrei", "estou nas metadatas");
                             if(m.getName().endsWith("_catalog.txt")) {
@@ -136,19 +153,6 @@ public class chooseCloudLocalActivity extends DropboxActivity {
 
                         BufferedReader br = new BufferedReader(new FileReader(result));
                         String st;
-                        //get my albums
-                        allAlbumsThread t1 = new allAlbumsThread();
-                        owningAlbumsThread t2 = new owningAlbumsThread();
-                        t1.join();
-                        t2.join();
-                        /*Log.d("ownedAlbums", "owned and part");
-                        for(Integer elm : cacheInstance.ownedAndPartAlbumsIDs){
-                            Log.d("ownedAlbums", String.valueOf(elm));
-                        }
-                        Log.d("ownedAlbums", "owned");
-                        for(Integer elm : cacheInstance.ownedAlbumsIDs){
-                            Log.d("ownedAlbums", String.valueOf(elm));
-                        }*/
                         while ((st = br.readLine()) != null) {
                             String[] splited = st.split(" ");
                             if(! cacheInstance.albums.contains(splited[1])) {
@@ -175,8 +179,6 @@ public class chooseCloudLocalActivity extends DropboxActivity {
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }

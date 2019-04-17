@@ -6,12 +6,17 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Cache extends AppCompatActivity {
 
     //all about the albums
+    public static List<Integer> ownedAlbumsIDs; /*just the owned albums*/
+    public static List<Integer> ownedAndPartAlbumsIDs; /*owned + participating albums*/
     public static ArrayList<Integer> albumsIDs;
-    public static ArrayList<String> albums;
+    public static List<String> ownedAlbums;
+    public static List<String> ownedAndPartAlbums;
+    public static ArrayList<String> albums; /*all albums fetched from dropbox*/
     public static ArrayAdapter<String> adapterTitle;
     public static ListView albumsList;
     //albums but using spinners
@@ -24,7 +29,12 @@ public class Cache extends AppCompatActivity {
 
     private Cache(){
         albums = new ArrayList<String>();
+        ownedAlbums = new ArrayList<String>();
+        ownedAndPartAlbums = new ArrayList<String>();
         albumsIDs = new ArrayList<Integer>();
+        ownedAlbumsIDs = new ArrayList<Integer>();
+        ownedAndPartAlbumsIDs = new ArrayList<Integer>();
+
     }
 
     public static Cache getInstance() {
@@ -51,6 +61,15 @@ public class Cache extends AppCompatActivity {
         } catch(Exception e) {
             //TODO
         }
+    }
+    //To be called when context is changed
+    public void cleanArrays() {
+        albums = new ArrayList<String>();
+        ownedAlbums = new ArrayList<String>();
+        ownedAndPartAlbums = new ArrayList<String>();
+        albumsIDs = new ArrayList<Integer>();
+        ownedAlbumsIDs = new ArrayList<Integer>();
+        ownedAndPartAlbumsIDs = new ArrayList<Integer>();
     }
 
 }

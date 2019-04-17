@@ -203,6 +203,10 @@ class CreateFolderTask extends AsyncTask<Object,Object,Object[]> {
             String[] splited = albumName.split(" ");
             Cache.getInstance().albumsIDs.add(Integer.parseInt(splited[0]));
             Cache.getInstance().albums.add(splited[1]);
+            Cache.getInstance().ownedAndPartAlbumsIDs.add(Integer.parseInt(splited[0]));
+            Cache.getInstance().ownedAndPartAlbums.add(splited[1]);
+            Cache.getInstance().ownedAlbumsIDs.add(Integer.parseInt(splited[0]));
+            Cache.getInstance().ownedAlbums.add(splited[1]);
             result[1] = "OK";
             return result;
         } catch (DbxException e1) {

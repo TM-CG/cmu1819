@@ -92,7 +92,7 @@ public class addUserFromMainMenu extends AppCompatActivity {
 
         cacheInstance.lvItemsSpinner = (Spinner) findViewById(R.id.spinner1);
         cacheInstance.itemsAdapterSpinner = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, cacheInstance.albums);
+                android.R.layout.simple_list_item_1, cacheInstance.ownedAlbums);
         cacheInstance.itemsAdapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         cacheInstance.lvItemsSpinner.setAdapter(cacheInstance.itemsAdapterSpinner);

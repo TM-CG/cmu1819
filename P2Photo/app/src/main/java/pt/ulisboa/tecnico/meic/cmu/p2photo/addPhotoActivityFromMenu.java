@@ -49,7 +49,7 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
         cacheInstance.sel_album = (Spinner) findViewById(R.id.sel_album);
         catalogFiles = new ArrayList<>();
 
-        cacheInstance.spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item, cacheInstance.albums);
+        cacheInstance.spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item, cacheInstance.ownedAlbums);
         cacheInstance.spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
 
         cacheInstance.sel_album.setAdapter(cacheInstance.spinnerArrayAdapter);

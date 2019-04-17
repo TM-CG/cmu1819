@@ -44,6 +44,7 @@ public class chooseCloudLocalActivity extends DropboxActivity {
 
     public void selectCloud(View view){
         Intent intent = new Intent(this, ActionsMenu.class);
+        cacheInstance.cleanArrays();
         loadCache();
         startActivity(intent);
     }
@@ -135,13 +136,35 @@ public class chooseCloudLocalActivity extends DropboxActivity {
 
                         BufferedReader br = new BufferedReader(new FileReader(result));
                         String st;
+                        //get my albums
+                        allAlbumsThread t1 = new allAlbumsThread();
+                        owningAlbumsThread t2 = new owningAlbumsThread();
+                        t1.join();
+                        t2.join();
+                        /*Log.d("ownedAlbums", "owned and part");
+                        for(Integer elm : cacheInstance.ownedAndPartAlbumsIDs){
+                            Log.d("ownedAlbums", String.valueOf(elm));
+                        }
+                        Log.d("ownedAlbums", "owned");
+                        for(Integer elm : cacheInstance.ownedAlbumsIDs){
+                            Log.d("ownedAlbums", String.valueOf(elm));
+                        }*/
                         while ((st = br.readLine()) != null) {
-                            Log.d("readFile", st);
-                            st = st.replace(System.getProperty("line.separator"), "");
                             String[] splited = st.split(" ");
                             if(! cacheInstance.albums.contains(splited[1])) {
+                                //all results contained in dropbox
                                 cacheInstance.albumsIDs.add(Integer.parseInt(splited[0]));
                                 cacheInstance.albums.add(splited[1]);
+                                //add to owned?
+                                if(cacheInstance.ownedAlbumsIDs.contains(Integer.parseInt(splited[0]))) {
+                                    cacheInstance.ownedAlbums.add(splited[1]);
+                                    cacheInstance.ownedAndPartAlbums.add(splited[1]);
+                                }
+                                //add to owned and parsed?
+                                else if(cacheInstance.ownedAndPartAlbumsIDs.contains(Integer.parseInt(splited[0]))) {
+                                    cacheInstance.ownedAndPartAlbums.add(splited[1]);
+                                }
+
 
                             }
                             break;
@@ -152,6 +175,8 @@ public class chooseCloudLocalActivity extends DropboxActivity {
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }

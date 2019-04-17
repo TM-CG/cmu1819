@@ -14,6 +14,7 @@ public class Server {
     private List<User> users;
     private List<Album> albums;
     private List<Pair<String, String>> loggedInUsers;
+    public static int CounterID;
 
     /** Socket related **/
     private ServerSocket serverSocket;
@@ -32,6 +33,7 @@ public class Server {
             this.users = new ArrayList<>();
             this.loggedInUsers = new ArrayList<>();
             this.albums = new ArrayList<>();
+            CounterID = 1;
         }
         this.verboseDebug = true;
     }
@@ -71,6 +73,8 @@ public class Server {
     public ServerSocket getServerSocket() {
         return serverSocket;
     }
+
+
 
     /**
      * Checks if a given username exists
@@ -392,7 +396,7 @@ public class Server {
     public void reset() {
         synchronized (this.albums) {
             this.albums.clear();
-            Album.CounterID = 1;
+            CounterID = 1;
         }
         synchronized (this.loggedInUsers) {
             this.loggedInUsers.clear();
@@ -417,6 +421,7 @@ public class Server {
             o.writeObject(albums);
             o.writeObject(users);
             o.writeObject(loggedInUsers);
+            o.writeObject(CounterID);
             o.close();
         }
         catch (IOException e) {
@@ -438,6 +443,7 @@ public class Server {
             albums = (List<Album>) oi.readObject();
             users = (List<User>) oi.readObject();
             loggedInUsers = (List<Pair<String, String>>) oi.readObject();
+            CounterID = (Integer) oi.readObject();
 
             oi.close();
             return true;

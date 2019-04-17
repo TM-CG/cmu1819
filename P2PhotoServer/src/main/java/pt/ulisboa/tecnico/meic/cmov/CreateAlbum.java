@@ -29,11 +29,11 @@ public class CreateAlbum extends Instruction {
                 return NOK_4;
             } else {
                 if (albumDirectoryURL == null)
-                    server.addAlbum(new Album(Album.CounterID, owner));
-                else server.addAlbum(new Album(Album.CounterID, owner, albumDirectoryURL));
+                    server.addAlbum(new Album(Server.CounterID, owner));
+                else server.addAlbum(new Album(Server.CounterID, owner, albumDirectoryURL));
 
-                displayDebug("User %s just created one album with ID %d ", owner.getUsername(), Album.CounterID);
-                return OK_PLUS + Album.CounterID++;
+                displayDebug("User %s just created one album with ID %d ", owner.getUsername(), Server.CounterID);
+                return OK_PLUS + Server.CounterID++;
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {
             return ERR;

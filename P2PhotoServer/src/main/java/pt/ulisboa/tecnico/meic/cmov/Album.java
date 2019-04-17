@@ -11,7 +11,7 @@ import java.util.ListIterator;
 
 public class Album implements Serializable {
 
-    public static int CounterID = 1;
+    //public static int CounterID;
 
     private int ID;
 

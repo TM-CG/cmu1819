@@ -56,6 +56,18 @@
         app:layout_constraintTop_toTopOf="@id/addPhoto" />
 
     <Button
+        android:id="@+id/invitations"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_marginTop="75dp"
+        android:drawableStart="@drawable/ic_event_black_48dp"
+        android:onClick="addUsersToAlbum"
+        android:text="@string/menu5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/addUsers" />
+
+    <Button
         android:id="@+id/settingsButton"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
@@ -68,7 +80,7 @@
         android:text="@string/settingsButtonString"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addUsers" />
+        app:layout_constraintTop_toBottomOf="@+id/invitations" />
 
     <Button
         android:id="@+id/logoutButton"
@@ -83,6 +95,6 @@
         android:text="@string/logOutButtonString"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addUsers" />
+        app:layout_constraintTop_toBottomOf="@+id/invitations" />
 
 </android.support.constraint.ConstraintLayout>

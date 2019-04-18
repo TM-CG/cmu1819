@@ -22,6 +22,8 @@ public class PendingRequestsActivity extends AppCompatActivity {
     private ArrayAdapter<String> itemsAdapter;
     private ListView lvItems;
 
+    private String pos;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +42,7 @@ public class PendingRequestsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(PendingRequestsActivity.this, ActionOnPendingActivity.class);
+                pos = items.get(position);
                 intent.putExtra("albumID", items.get(position));
                 startActivityForResult(intent, 1);
             }
@@ -61,9 +64,13 @@ public class PendingRequestsActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     Toast.makeText(getApplicationContext(), "Action performed on pending request",
                             Toast.LENGTH_LONG).show();
+                    items.remove(pos);
+                    itemsAdapter.notifyDataSetChanged();
                 } else if (resultCode == RESULT_CANCELED) {
                     Toast.makeText(getApplicationContext(), "Action on pending request aborted",
                             Toast.LENGTH_LONG).show();
+                    items.remove(pos);
+                    itemsAdapter.notifyDataSetChanged();
                 }
                 break;
 

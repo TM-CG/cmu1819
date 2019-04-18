@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".PendingRequestsActivity"></activity>
+        <activity android:name=".ActionOnPendingActivity"></activity>
+        <activity android:name=".PendingRequestsActivity" />
         <activity android:name=".selectPhotoActivity" />
         <activity android:name=".settingsActivity" />
         <activity android:name=".chooseCloudLocalActivity" />
@@ -32,7 +33,7 @@
         <activity android:name=".LogActivity" />
         <activity
             android:name=".ConfirmPromptActivity"
-            android:theme="@android:style/Theme.Dialog"></activity>
+            android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

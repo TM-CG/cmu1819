@@ -1,11 +1,16 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +36,38 @@ public class PendingRequestsActivity extends AppCompatActivity {
 
         lvItems.setAdapter(itemsAdapter);
 
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(PendingRequestsActivity.this, ActionOnPendingActivity.class);
+                startActivityForResult(intent, 1);
+            }
+        });
+
         new PendingRequests().execute(itemsAdapter);
 
     }
-}
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            /*Action performed on pending request*/
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    Toast.makeText(getApplicationContext(), "Action performed on pending request",
+                            Toast.LENGTH_LONG).show();
+                } else if (resultCode == RESULT_CANCELED) {
+                    Toast.makeText(getApplicationContext(), "Action on pending request aborted",
+                            Toast.LENGTH_LONG).show();
+                }
+                break;
+
+        }
+    }
+}
 
 class PendingRequests extends AsyncTask<Object,Void,Object[]> {
     @Override

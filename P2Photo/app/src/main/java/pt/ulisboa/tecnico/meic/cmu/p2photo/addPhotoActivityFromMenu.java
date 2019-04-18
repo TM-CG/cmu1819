@@ -16,15 +16,10 @@ import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.sharing.SharedLinkMetadata;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
 
@@ -38,7 +33,7 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
 
     private AlbumCatalog catalog;
     private Cache cacheInstance;
-    private ArrayList<File> catalogFiles;
+    private File catalogFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +42,10 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
         cacheInstance = Cache.getInstance();
 
         cacheInstance.sel_album = (Spinner) findViewById(R.id.sel_album);
-        catalogFiles = new ArrayList<>();
 
-        cacheInstance.spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item, cacheInstance.ownedAlbums);
+        //create a cache string description in the following format: albumID albumTitle
+        cacheInstance.parseOwnedAlbumWithIDs();
+        cacheInstance.spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item, cacheInstance.ownedAlbumWithIDs);
         cacheInstance.spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
 
         cacheInstance.sel_album.setAdapter(cacheInstance.spinnerArrayAdapter);
@@ -65,6 +61,8 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
     public void add(View view){
 
         launchFilePicker();
+
+        selectCatalogFile(cacheInstance.sel_album.getSelectedItem().toString());
         /*Intent intent = getIntent();
         setResult(RESULT_OK,intent);
         finish();*/
@@ -178,6 +176,79 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
 
     @Override
     protected void loadData() {
+
+    }
+
+    /**
+     * Selects the file that corresponds to the catalog that the user choose in order to
+     * download it (temporarily)
+     * @param selectedOption the string in the format: <albumID> <albumTitle>
+     */
+    private void selectCatalogFile(String selectedOption) {
+
+        final int albumId = Integer.parseInt(selectedOption.split(" ")[0]);
+
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setCancelable(false);
+        dialog.setMessage("Please wait");
+        dialog.show();
+
+        new ListFolderTask(DropboxClientFactory.getClient(), new ListFolderTask.Callback() {
+            @Override
+            public void onDataLoaded(ListFolderResult result) {
+                dialog.dismiss();
+                if(result != null) {
+                    try {
+                        for(Metadata m : result.getEntries()){
+                            if(m.getName().equals(albumId + "_catalog.txt")) {
+                                Log.i(TAG, "selectCatalogFile: Downloading catalog " + m.getName());
+                                downloadFile((FileMetadata) m);
+                                break;
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        Log.i(TAG, "selectCatalogFile: IOException when downloading ");
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                dialog.dismiss();
+
+
+            }
+        }).execute("");
+    }
+
+    private void downloadFile(FileMetadata file) {
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setCancelable(false);
+        dialog.setMessage("Reading catalogs");
+        dialog.show();
+
+        new DownloadFileTask(this, DropboxClientFactory.getClient(), new DownloadFileTask.Callback() {
+            @Override
+            public void onDownloadComplete(File result) {
+                dialog.dismiss();
+                if(result != null) {
+
+                    catalogFile = result;
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                dialog.dismiss();
+
+                Log.i("download", "fail");
+
+            }
+        }).execute(file);
+
     }
 
     class UpdateAlbumCatalog extends AsyncTask {
@@ -185,17 +256,11 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
         @Override
         protected Object doInBackground(Object[] objects) {
             Integer albumId = (Integer) objects[0];
+            Log.i(TAG, "UpdateAlbumCatalog: AlbumID: " + albumId);
             String photoURL = (String) objects[1];
+            Log.i(TAG, "UpdateAlbumCatalog: photoURL: " + photoURL);
             String fileName = String.format(CATALOG_SUFFIX, albumId);
-            File catalogFile = null;
 
-            //search for catalog
-            for (File f : catalogFiles) {
-                if (f.getName().equals(fileName)) {
-                    catalogFile = f;
-                    break;
-                }
-            }
 
             FileWriter fileWriter = null;
             BufferedWriter bufferedWriter = null;

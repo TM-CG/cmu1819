@@ -202,6 +202,7 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
                                 Environment.DIRECTORY_DOWNLOADS + "/" + tmpFolderPath);
                         folder.mkdir();
 
+                        Log.i(TAG, "Ready for download " + pURL.size() + " photo(s)!");
                         for (String photoURL : pURL) {
                             downloadFile(photoURL, "Loading photo", tmpFolderPath, null, 0);
                         }

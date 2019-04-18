@@ -71,7 +71,8 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
         cacheInstance.albumsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(ListPhoto.getIntent(YourAlbums.this, 1));
+                int albumId = cacheInstance.ownedAndPartAlbumsIDs.get(position);
+                startActivity(ListPhoto.getIntent(YourAlbums.this, albumId));
             }
         });
 

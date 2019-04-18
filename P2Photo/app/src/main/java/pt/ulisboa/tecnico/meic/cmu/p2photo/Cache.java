@@ -15,6 +15,7 @@ public class Cache extends AppCompatActivity {
     public static List<Integer> ownedAndPartAlbumsIDs; /*owned + participating albums*/
     public static ArrayList<Integer> albumsIDs;
     public static List<String> ownedAlbums;
+    public static List<String> ownedAlbumWithIDs;
     public static List<String> ownedAndPartAlbums;
     public static ArrayList<String> albums; /*all albums fetched from dropbox*/
     public static ArrayAdapter<String> adapterTitle;
@@ -34,6 +35,7 @@ public class Cache extends AppCompatActivity {
         albumsIDs = new ArrayList<Integer>();
         ownedAlbumsIDs = new ArrayList<Integer>();
         ownedAndPartAlbumsIDs = new ArrayList<Integer>();
+        ownedAlbumWithIDs = new ArrayList<>();
 
     }
 
@@ -70,6 +72,15 @@ public class Cache extends AppCompatActivity {
         albumsIDs = new ArrayList<Integer>();
         ownedAlbumsIDs = new ArrayList<Integer>();
         ownedAndPartAlbumsIDs = new ArrayList<Integer>();
+        ownedAlbumWithIDs = new ArrayList<>();
+    }
+
+    public void parseOwnedAlbumWithIDs() {
+
+        int i;
+        for (i = 0; i < ownedAlbumsIDs.size(); i++) {
+            ownedAlbumWithIDs.add(ownedAlbumsIDs.get(i) + " " + ownedAlbums.get(i));
+        }
     }
 
 }

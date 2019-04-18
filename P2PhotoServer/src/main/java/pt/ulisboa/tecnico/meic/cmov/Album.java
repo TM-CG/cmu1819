@@ -11,7 +11,7 @@ import java.util.ListIterator;
 
 public class Album implements Serializable {
 
-    //public static int CounterID;
+    public static final String NOT_AVAILABLE_URL = "NA";
 
     private int ID;
 
@@ -71,7 +71,7 @@ public class Album implements Serializable {
     /**
      * Returns the index URL of a given user of this album.
      * @param username of the user to search
-     * @return the URL of the album index
+     * @return the URL of the album index, null if its pending or "NA" if user doesnt participate in this album
      */
     public String getIndexOfUser(String username) {
         for (Pair<String, String> p: this.indexes) {
@@ -79,7 +79,7 @@ public class Album implements Serializable {
                 return p.getValue();
         }
 
-        return null;
+        return "NA";
     }
 
     /**

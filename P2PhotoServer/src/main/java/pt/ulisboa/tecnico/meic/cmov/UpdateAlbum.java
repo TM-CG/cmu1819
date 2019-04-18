@@ -49,8 +49,7 @@ public class UpdateAlbum extends Instruction {
 
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {
-            e.printStackTrace();
-	    return ERR;
+	        return ERR;
         }
     }
 }

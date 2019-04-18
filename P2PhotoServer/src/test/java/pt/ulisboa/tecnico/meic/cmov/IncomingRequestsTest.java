@@ -165,6 +165,38 @@ public class IncomingRequestsTest {
         assertEquals(NOK_4, response);
     }
 
+    @Test
+    /**
+     * Tests for Bug #58 which consists on new user see pending invitations for albums he didnt participate
+     */
+    public void BugTest_58() {
+        this.args = new ArrayList<>();
+        this.args.add("SIGNUP");
+        this.args.add("newUSER");
+        this.args.add("passUSER");
+        new SignUp(args, dummyServer).execute();
+
+        //Login to another user
+        this.args = new ArrayList<>();
+        this.args.add("LOGIN");
+        this.args.add("newUSER");
+        this.args.add("passUSER");
+        String sessionId3 = new LogIn(args, dummyServer).execute().split(" ")[1];
+
+        assertNotNull(sessionId3);
+
+        this.args = new ArrayList<>();
+        this.args.add("USR-IRQ");
+        this.args.add(sessionId3);
+
+        IncomingRequests incomingRequests = new IncomingRequests(args, dummyServer);
+        String response = incomingRequests.execute();
+
+        assertNotNull(response);
+        assertEquals(OK_PLUS + "<>", response);
+
+    }
+
     @After
     public void tearDown() {
         dummyServer.reset();

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import static pt.ulisboa.tecnico.meic.cmov.Album.NOT_AVAILABLE_URL;
+
 public class Server {
 
     private List<User> users;
@@ -233,11 +235,13 @@ public class Server {
      */
     public List<Integer> getAlbunsWhereGiveUserParticipates(String username) {
         List<Integer> albums = new ArrayList<>();
+        String index;
 
         synchronized (this.albums) {
             for (Album album : this.albums) {
+                index = album.getIndexOfUser(username);
                 //user is not the owner and participates
-                if ((!album.getOwner().equals(username)) && (album.getIndexOfUser(username) != null))
+                if ((!album.getOwner().equals(username)) && (index != null && index != NOT_AVAILABLE_URL))
                     albums.add(album.getID());
             }
         }

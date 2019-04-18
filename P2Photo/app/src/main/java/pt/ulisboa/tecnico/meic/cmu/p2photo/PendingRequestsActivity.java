@@ -40,11 +40,13 @@ public class PendingRequestsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(PendingRequestsActivity.this, ActionOnPendingActivity.class);
+                intent.putExtra("albumID", items.get(position));
                 startActivityForResult(intent, 1);
             }
         });
 
         new PendingRequests().execute(itemsAdapter);
+
 
     }
 

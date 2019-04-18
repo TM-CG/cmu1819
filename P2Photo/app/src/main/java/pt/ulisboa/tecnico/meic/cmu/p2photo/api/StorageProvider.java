@@ -18,7 +18,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
  * Abstract class for describing generic StorageProvider
  */
 public abstract class StorageProvider extends DropboxActivity implements Runnable{
-
+    private static final String TAG = StorageProvider.class.getName();
     static final String CATALOG_TMP_FILE = "_catalog.txt";
     static final String LINE_SEP = System.getProperty("line.separator");
 
@@ -148,11 +148,13 @@ public abstract class StorageProvider extends DropboxActivity implements Runnabl
 
         @Override
         protected Object doInBackground(Object[] objects) {
+            Log.i(TAG, "Starting doInBackground");
             try {
                 int albumId = (int) objects[0];
                 String sliceURL = (String) objects[1];
 
                 sv.acceptIncomingRequest(albumId, sliceURL);
+                Log.i(TAG, "Accepted my own request!");
 
             } catch (P2PhotoException e) {
                 e.printStackTrace();

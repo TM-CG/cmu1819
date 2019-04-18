@@ -9,6 +9,7 @@ import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.sharing.SharedLinkMetadata;
 
 import java.text.DateFormat;
+import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.ShareLinkTask;
@@ -47,47 +48,80 @@ public class CloudStorage extends StorageProvider {
         dialog.setMessage("Writing catalog file");
         dialog.show();*/
 
-        new UploadFileTask(getContext(), DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
-            @Override
-            public void onUploadComplete(FileMetadata result) {
-                //dialog.dismiss();
 
-                String message = result.getName() + " size " + result.getSize() + " modified " +
-                        DateFormat.getDateTimeInstance().format(result.getClientModified());
-                /*Toast.makeText(getContext(), message, Toast.LENGTH_SHORT)
-                        .show();*/
-                Log.i(TAG, message);
+        FileMetadata result = null;
+        try {
+            result = new UploadFileTask(getContext(), DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
 
-                //After upload let's share the catalog in order to every with the link be able
-                //to read it
-                new ShareLinkTask(getContext(), DropboxClientFactory.getClient(), new ShareLinkTask.Callback() {
-                    @Override
-                    public void onShareComplete(SharedLinkMetadata result) {
-                        Log.i(TAG, "Successfully generated link to shared file: " + result.getUrl());
+                @Override
+                public void onUploadComplete(FileMetadata result) {
+                    String message = result.getName() + " size " + result.getSize() + " modified " +
+                            DateFormat.getDateTimeInstance().format(result.getClientModified());
+                    /*Toast.makeText(getContext(), message, Toast.LENGTH_SHORT)
+                            .show();*/
+                    Log.i(TAG, message);
+                    //After upload let's share the catalog in order to every with the link be able
+                    //to read it
 
-                        //Set that url to the server
-                        new StorageProvider.AddAlbumSliceCatalogURL().execute(albumId, result.getUrl());
-                    }
+                }
 
-                    @Override
-                    public void onError(Exception e) {
-                        Log.i(TAG, "There was an error in generating the shared link!");
-                    }
-                }).execute(result);
-            }
 
-            @Override
-            public void onError(Exception e) {
-                //dialog.dismiss();
+                @Override
+                public void onError(Exception e) {
+                    //dialog.dismiss();
 
-                Log.i(TAG, "Failed to upload file.", e);
-                /*Toast.makeText(getContext(),
-                        "An error has occurred",
-                        Toast.LENGTH_SHORT)
-                        .show();*/
+                    Log.i(TAG, "Failed to upload file.", e);
+                    /*Toast.makeText(getContext(),
+                            "An error has occurred",
+                            Toast.LENGTH_SHORT)
+                            .show();*/
 
-            }
-        }).execute(fileURL, "");
+                }
+
+                //wait until the execution finishes
+            }).execute(fileURL, "").get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        SharedLinkMetadata linkMetadata = null;
+        try {
+            linkMetadata = new ShareLinkTask(getContext(), DropboxClientFactory.getClient(), new ShareLinkTask.Callback() {
+                @Override
+                public void onShareComplete(SharedLinkMetadata result) {
+                    Log.i(TAG, "Successfully generated link to shared file: " + result.getUrl());
+
+                    //Set that url to the server
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.i(TAG, "There was an error in generating the shared link!");
+                }
+                //need to wait this thread until asynctask finishes
+            }).execute(result).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        try {
+            new AddAlbumSliceCatalogURL().execute(albumId, linkMetadata.getUrl()).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     @Override
@@ -100,3 +134,4 @@ public class CloudStorage extends StorageProvider {
 
     }
 }
+

@@ -162,7 +162,7 @@ public class CreateAlbum extends AppCompatActivity {
             try {
                 t1.join();
                 //create a new folder
-                new CreateFolderTask().execute(albumId + " " + albumTitle,getApplicationContext());
+                new CreateFolderTask().execute(albumId + " " + albumTitle, getApplicationContext());
                 //add users to albums
                 new AddUsersToAlbum().execute(o);
 

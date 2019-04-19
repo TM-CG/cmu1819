@@ -21,6 +21,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.api.StorageProvider;
 public class ActionOnPendingActivity extends AppCompatActivity {
     private TextView albumIDtv;
     private TextView albumNametv;
+    private TextView ownerNametv;
     private String id;
     private String name;
     private Cache cacheInstance;
@@ -33,38 +34,28 @@ public class ActionOnPendingActivity extends AppCompatActivity {
         cacheInstance = Cache.getInstance();
         albumIDtv = (TextView) findViewById(R.id.albumIDtext);
         albumNametv = (TextView) findViewById(R.id.pendingTittle);
+        ownerNametv = (TextView) findViewById(R.id.ownerNameText);
         Intent intent = getIntent();
         id = intent.getStringExtra("albumID");
         position = cacheInstance.albumsIDs.indexOf(Integer.parseInt(id));
         name = cacheInstance.albums.get(position);
+        new getOwner().execute(ownerNametv,id);
         albumIDtv.setText(id);
         albumNametv.setText(name);
     }
 
     public void acceptInvitation(View view) {
-        try {
-            new processRequest().execute("OK", id, getApplicationContext()).get();
-            Intent intent = getIntent();
-            setResult(RESULT_OK,intent);
-            finish();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        new processRequest().execute("OK", id, getApplicationContext());
+        Intent intent = getIntent();
+        setResult(RESULT_OK,intent);
+        finish();
     }
 
     public void rejectInvitation(View view) {
-        try {
-            new processRequest().execute("NOK", id, getApplicationContext()).get();
-            Intent intent = getIntent();
-            setResult(RESULT_OK,intent);
-            finish();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        new processRequest().execute("NOK", id, getApplicationContext());
+        Intent intent = getIntent();
+        setResult(RESULT_OK,intent);
+        finish();
     }
 
 }
@@ -94,6 +85,32 @@ class processRequest extends AsyncTask<Object, Object, Object[]> {
             }
         }
 
+        return null;
+    }
+}
+
+class getOwner extends AsyncTask<Object, Object, Object[]> {
+
+    private ServerConnector sv = MainActivity.sv;
+
+    @Override
+    protected void onPostExecute(Object[] o) {
+        if(o!=null){
+            TextView tv = (TextView) o[0];
+            String ownerName = (String) o[1];
+            tv.setText(ownerName);
+        }
+    }
+
+    @Override
+    protected Object[] doInBackground(Object[] objects) {
+        Integer albumID = Integer.parseInt((String)objects[1]);
+        try {
+            objects[1] = sv.getAlbumOwner(albumID);
+            return objects;
+        } catch (P2PhotoException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

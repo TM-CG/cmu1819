@@ -3,13 +3,24 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.dropbox.core.DbxException;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
@@ -20,8 +31,8 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.api.StorageProvider;
 
 public class ActionOnPendingActivity extends AppCompatActivity {
     private TextView albumIDtv;
-    private TextView albumNametv;
     private TextView ownerNametv;
+    private TextView albumNametv;
     private String id;
     private String name;
     private Cache cacheInstance;
@@ -33,15 +44,14 @@ public class ActionOnPendingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_action_on_pending);
         cacheInstance = Cache.getInstance();
         albumIDtv = (TextView) findViewById(R.id.albumIDtext);
-        albumNametv = (TextView) findViewById(R.id.pendingTittle);
         ownerNametv = (TextView) findViewById(R.id.ownerNameText);
+        albumNametv = (TextView) findViewById(R.id.pendingTittle);
         Intent intent = getIntent();
         id = intent.getStringExtra("albumID");
         position = cacheInstance.albumsIDs.indexOf(Integer.parseInt(id));
-        name = cacheInstance.albums.get(position);
         new getOwner().execute(ownerNametv,id);
+        new getAlbumURL().execute(albumNametv, Integer.parseInt(id), getApplicationContext());
         albumIDtv.setText(id);
-        albumNametv.setText(name);
     }
 
     public void acceptInvitation(View view) {
@@ -114,4 +124,121 @@ class getOwner extends AsyncTask<Object, Object, Object[]> {
         return null;
     }
 }
+
+class getAlbumURL extends AsyncTask<Object, Object, Object[]> {
+
+    private ServerConnector sv = MainActivity.sv;
+    @Override
+    protected void onPostExecute(Object[] o) {
+        if(o!=null){
+            BufferedReader br = null;
+            TextView tv = (TextView) o[0];
+            File f = (File) o[1];
+
+            try {
+                br = new BufferedReader(new FileReader(f));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                tv.setText(br.readLine().split(" ")[1]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    protected Object[] doInBackground(Object[] objects) {
+        Integer albumID = (Integer) objects[1];
+        Context context = (Context) objects[2];
+        Object[] result = new Object[2];
+        result[0] = objects[0];
+        try {
+            List<String> urlList = sv.listUserAlbumSlices(albumID);
+            if(urlList.size() > 0) {
+                String ownerURL = urlList.get(0);
+                try {
+                    File path;
+                    path = Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_DOWNLOADS + "/" + MainActivity.username);
+                    File file = new File(path, "albumName.txt");
+
+                    // Download the file.
+                    try (OutputStream outputStream = new FileOutputStream(file)) {
+                        DropboxClientFactory.getClient().sharing().getSharedLinkFile(ownerURL).download(outputStream);
+                    }
+                    result[1] = file;
+                    return result;
+                } catch (DbxException | IOException e) {
+                }
+            }
+            return null;
+        } catch (P2PhotoException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}
+
+/*class getAlbumURL extends AsyncTask<Object, Object, Object[]> {
+
+    private ServerConnector sv = MainActivity.sv;
+    @Override
+    protected void onPostExecute(Object[] o) {
+        if(o!=null){
+            BufferedReader br = null;
+            TextView tv = (TextView) o[0];
+            File f = (File) o[1];
+
+            try {
+                br = new BufferedReader(new FileReader(f));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                tv.setText(br.readLine().split(" ")[1]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    protected Object[] doInBackground(Object[] objects) {
+        Integer albumID = (Integer) objects[1];
+        Context context = (Context) objects[2];
+        Object[] result = new Object[2];
+        result[0] = objects[0];
+        try {
+            List<String> urlList = sv.listUserAlbumSlices(albumID);
+            if(urlList.size() > 0) {
+                String ownerURL = urlList.get(0);
+                try {
+                    File f = new DownloadFileFromLinkTask(context, DropboxClientFactory.getClient(), new DownloadFileFromLinkTask.Callback() {
+
+                        @Override
+                        public void onDownloadComplete(File result) {
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+
+                        }
+                    }).execute(ownerURL,"","albumName").get();
+                    result[1] = f;
+                    return result;
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        } catch (P2PhotoException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}*/
 

@@ -37,11 +37,14 @@ public class ListAlbumSlices extends Instruction {
                     return NOK_5;
                 } else {
                     String index = album.getIndexOfUser(username);
-                    //if album exists but user is not participant (either is on pending or not) of that album
-                    if ((index == null) || (index.equals(NOT_AVAILABLE_URL))) {
-                        displayDebug(VERBOSE_NOK5);
-                        return NOK_5;
+                    //if album exists but user is not participant and not on pending
+                    if(index != null) {
+                        if (index.equals(NOT_AVAILABLE_URL)) {
+                            displayDebug(VERBOSE_NOK5);
+                            return NOK_5;
+                        }
                     }
+
                 }
 
                 album = server.getAlbumById(new Integer(albumId));

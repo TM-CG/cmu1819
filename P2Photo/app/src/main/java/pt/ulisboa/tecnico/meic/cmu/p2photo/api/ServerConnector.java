@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class ServerConnector {
 
-    private static final String CLI_API_VERSION = "0.7";
+    private static final String CLI_API_VERSION = "0.8";
 
     //API Instructions
     private static final String API_LOGIN = "LOGIN %s %s";
@@ -30,6 +30,7 @@ public class ServerConnector {
     private static final String API_ALB_LST = "ALB-LST %s";
     private static final String API_ALB_LST_WITH_OPTION = "ALB-LST %s %s";
     private static final String API_ALB_UAS = "ALB-UAS %s %s";
+    private static final String API_ALB_OWN = "ALB-OWN %s %s";
     private static final String API_USR_FND = "USR-FND %s %s";
     private static final String API_USR_IRQ = "USR-IRQ %s";
     private static final String API_USR_URQ_ACCEPT = "USR-URQ %s A %s %s";
@@ -286,6 +287,38 @@ public class ServerConnector {
 
             //return albumID
             return Integer.parseInt(response.split(" ")[1]);
+
+        } catch (IOException e) {
+            throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new P2PhotoException(WRONG_ARGS + e.getMessage());
+        }
+    }
+
+    /**
+     * Displays the username of an album's owner
+     * @param albumId the album identifier
+     * @return username of the owner's album
+     * @throws P2PhotoException if you don't have permission to access that album or the
+     * album doesn't exists
+     */
+    public String getAlbumOwner(int albumId) throws P2PhotoException {
+        try {
+            String request = String.format(API_ALB_OWN, sessionId, albumId);
+
+            this.out.println(request);
+
+            String response = this.in.readLine();
+
+            if (showDebug) {
+                System.out.println("Request: " + request);
+                System.out.println("Response: " + response);
+            }
+
+            processErrors(response);
+
+            //return username as response
+            return response.split(" ")[1];
 
         } catch (IOException e) {
             throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());

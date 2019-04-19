@@ -158,6 +158,17 @@ public class ServerConnectorTest {
 
     }
 
+    @Test
+    public void testDisplayAlbumOwner() throws P2PhotoException {
+        simpleCreateUpdateAlbum();
+
+        String username = serverConnector.getAlbumOwner(1);
+
+        assertNotNull(username);
+
+        assertEquals("vitor", username);
+    }
+
     @After
     public void tearDown() throws P2PhotoException {
         serverConnector.logOut();

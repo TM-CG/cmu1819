@@ -21,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     private EditText port;
     public static ServerConnector sv;
 
+    /** The username of the current user **/
+    public static String username;
+
     public static String getUser() {
         return user.getText().toString();
     }
@@ -225,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(Object [] objects) {
             try {
                 sv.logIn(user.getText().toString(), pass.getText().toString());
+                username = user.getText().toString();
                 startActivityForResult(intent, 2);
                 return "OK";
             } catch (P2PhotoException e) {

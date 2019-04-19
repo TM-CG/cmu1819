@@ -199,7 +199,7 @@ class CreateFolderTask extends AsyncTask<Object,Object,Object[]> {
         Object[] result = new Object[2];
         result[0] = objects[1];
         try {
-            CreateFolderResult res = DropboxClientFactory.getClient().files().createFolderV2("/" + albumName);
+            CreateFolderResult res = DropboxClientFactory.getClient().files().createFolderV2("/" + MainActivity.username + "/" + albumName);
             String[] splited = albumName.split(" ");
             Cache.getInstance().albumsIDs.add(Integer.parseInt(splited[0]));
             Cache.getInstance().albums.add(splited[1]);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
@@ -50,19 +51,20 @@ class DownloadFileTask extends AsyncTask<FileMetadata, Void, File> {
     protected File doInBackground(FileMetadata... params) {
         FileMetadata metadata = params[0];
         try {
+            Log.i("DownloadFileTask", Environment.DIRECTORY_DOWNLOADS + "/" + MainActivity.username);
             File path = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS);
+                    Environment.DIRECTORY_DOWNLOADS + "/" + MainActivity.username);
             File file = new File(path, metadata.getName());
 
             // Make sure the Downloads directory exists.
             if (!path.exists()) {
-                if (!path.mkdirs()) {
-                    mException = new RuntimeException("Unable to create directory: " + path);
-                }
+                path.mkdir();
+
             } else if (!path.isDirectory()) {
                 mException = new IllegalStateException("Download path is not a directory: " + path);
                 return null;
             }
+
 
             // Download the file.
             try (OutputStream outputStream = new FileOutputStream(file)) {
@@ -77,6 +79,7 @@ class DownloadFileTask extends AsyncTask<FileMetadata, Void, File> {
 
             return file;
         } catch (DbxException | IOException e) {
+            e.printStackTrace();
             mException = e;
         }
 

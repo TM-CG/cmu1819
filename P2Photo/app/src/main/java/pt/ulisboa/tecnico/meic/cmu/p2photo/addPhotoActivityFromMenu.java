@@ -219,7 +219,7 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
 
 
             }
-        }).execute("");
+        }).execute("/" + MainActivity.username);
     }
 
     private void downloadFile(FileMetadata file) {

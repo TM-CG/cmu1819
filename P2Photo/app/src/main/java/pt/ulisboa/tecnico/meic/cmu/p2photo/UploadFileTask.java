@@ -76,8 +76,8 @@ public class UploadFileTask extends AsyncTask<String, Void, FileMetadata> {
 
                 //support for uploading files in sub folders
                 if (remoteFolderPath == "")
-                    path = "/" + remoteFileName;
-                else path = "/" + remoteFolderPath + "/" + remoteFileName;
+                    path = "/" + MainActivity.username + "/" + remoteFileName;
+                else path = "/" + MainActivity.username + "/" + remoteFolderPath + "/" + remoteFileName;
 
                 return mDbxClient.files().uploadBuilder(path)
                         .withMode(WriteMode.OVERWRITE)

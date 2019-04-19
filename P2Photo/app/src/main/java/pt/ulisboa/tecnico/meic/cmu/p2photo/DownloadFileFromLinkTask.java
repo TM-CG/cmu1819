@@ -56,10 +56,10 @@ class DownloadFileFromLinkTask extends AsyncTask<String, Void, File> {
             File path;
             if (folderPath == "") {
                 path = Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOWNLOADS);
+                        Environment.DIRECTORY_DOWNLOADS + "/" + MainActivity.username);
             } else {
                 path = Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOWNLOADS + "/" + folderPath);
+                        Environment.DIRECTORY_DOWNLOADS + "/" + MainActivity.username + "/" + folderPath);
             }
             File file = new File(path, fileName);
 

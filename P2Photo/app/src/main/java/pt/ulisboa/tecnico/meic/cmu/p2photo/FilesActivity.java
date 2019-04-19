@@ -196,7 +196,7 @@ public class FilesActivity extends DropboxActivity {
                         Toast.LENGTH_SHORT)
                         .show();
             }
-        }).execute(mPath);
+        }).execute("/" + MainActivity.username);
     }
 
     private void downloadFile(FileMetadata file) {

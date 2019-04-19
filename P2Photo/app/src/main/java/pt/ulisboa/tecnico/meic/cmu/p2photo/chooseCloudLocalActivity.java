@@ -86,7 +86,7 @@ public class chooseCloudLocalActivity extends DropboxActivity {
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCancelable(false);
-        dialog.setMessage("Loading");
+        dialog.setMessage("Loading cache");
         dialog.show();
 
 
@@ -137,7 +137,7 @@ public class chooseCloudLocalActivity extends DropboxActivity {
 
 
             }
-        }).execute("");
+        }).execute("/" + MainActivity.username);
     }
 
     private void downloadFile(FileMetadata file) {
@@ -153,7 +153,7 @@ public class chooseCloudLocalActivity extends DropboxActivity {
                 dialog.dismiss();
                 if(result != null) {
                     try {
-
+                        Log.i("chooseCloudLocalActivit", "Im on download!");
                         BufferedReader br = new BufferedReader(new FileReader(result));
                         String st;
                         while ((st = br.readLine()) != null) {

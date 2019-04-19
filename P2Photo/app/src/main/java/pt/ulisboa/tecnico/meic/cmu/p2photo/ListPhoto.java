@@ -199,7 +199,7 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
 
                         //Create temporary folder
                         File folder = Environment.getExternalStoragePublicDirectory(
-                                Environment.DIRECTORY_DOWNLOADS + "/" + tmpFolderPath);
+                                Environment.DIRECTORY_DOWNLOADS + "/" + MainActivity.username + "/" + tmpFolderPath);
                         folder.mkdir();
 
                         Log.i(TAG, "Ready for download " + pURL.size() + " photo(s)!");

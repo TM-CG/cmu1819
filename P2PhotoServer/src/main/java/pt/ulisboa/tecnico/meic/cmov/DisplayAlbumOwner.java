@@ -4,10 +4,10 @@ import java.util.List;
 
 import static pt.ulisboa.tecnico.meic.cmov.Album.NOT_AVAILABLE_URL;
 
-public class ListAlbumSlices extends Instruction {
+public class DisplayAlbumOwner extends Instruction {
 
-    ListAlbumSlices(List<String> args, Server server) {
-        super("ALB-UAS", args, server);
+    DisplayAlbumOwner(List<String> args, Server server) {
+        super("ALB-OWN", args, server);
     }
 
     @Override
@@ -29,7 +29,6 @@ public class ListAlbumSlices extends Instruction {
                 return NOK_4;
             } else {
                 album = server.getAlbumById(new Integer(albumId));
-                //Checks if album ID exists and if the current user has permission to access
 
                 //if album does not exists
                 if (album == null)  {
@@ -37,17 +36,23 @@ public class ListAlbumSlices extends Instruction {
                     return NOK_5;
                 } else {
                     String index = album.getIndexOfUser(username);
-                    //if album exists but user is not participant (either is on pending or not) of that album
-                    if ((index == null) || (index.equals(NOT_AVAILABLE_URL))) {
+
+                    //user is on pending state
+                    if (index == null || !index.equals(NOT_AVAILABLE_URL)) {
+
+                        String owner = album.getOwner();
+
+                        displayDebug("User %s requested to know the owner of album %s which is %s", username,
+                                albumId, owner);
+
+                        return OK_PLUS + owner;
+
+                    } else { //the user is not on pending state or participates
                         displayDebug(VERBOSE_NOK5);
                         return NOK_5;
                     }
                 }
 
-                album = server.getAlbumById(new Integer(albumId));
-
-                displayDebug("User %s requested list album slices from album %s", username, albumId);
-                return OK_PLUS + server.representList(album.getAlbumSlicesURLs());
             }
         } catch(NullPointerException | IndexOutOfBoundsException e) {
             return ERR;

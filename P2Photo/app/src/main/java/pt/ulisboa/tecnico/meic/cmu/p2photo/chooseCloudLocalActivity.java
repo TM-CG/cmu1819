@@ -114,6 +114,9 @@ public class chooseCloudLocalActivity extends DropboxActivity {
                         for(Integer elm : cacheInstance.ownedAlbumsIDs){
                             Log.d("ownedAlbums", String.valueOf(elm));
                         }
+                        for(String elm:cacheInstance.ownedAlbumWithIDs ) {
+                            Log.d("ownedAlbums", elm);
+                        }
                         for(Metadata m : result.getEntries()){
                             Log.d("entrei", "estou nas metadatas");
                             if(m.getName().endsWith("_catalog.txt")) {
@@ -159,14 +162,17 @@ public class chooseCloudLocalActivity extends DropboxActivity {
                                 //all results contained in dropbox
                                 cacheInstance.albumsIDs.add(Integer.parseInt(splited[0]));
                                 cacheInstance.albums.add(splited[1]);
-                                //add to owned?
+                                //add to owned
                                 if(cacheInstance.ownedAlbumsIDs.contains(Integer.parseInt(splited[0]))) {
                                     cacheInstance.ownedAlbums.add(splited[1]);
                                     cacheInstance.ownedAndPartAlbums.add(splited[1]);
+                                    cacheInstance.ownedAlbumWithIDs.add(splited[0] + " " + splited[1]); //same but parsed
                                 }
-                                //add to owned and parsed?
+                                //add to owned and parsed
                                 else if(cacheInstance.ownedAndPartAlbumsIDs.contains(Integer.parseInt(splited[0]))) {
                                     cacheInstance.ownedAndPartAlbums.add(splited[1]);
+                                    cacheInstance.ownedAlbumWithIDs.add(splited[0] + " " + splited[1]); //same but parsed
+
                                 }
 
 

@@ -34,7 +34,7 @@ public class ActionOnPendingActivity extends AppCompatActivity {
     private TextView ownerNametv;
     private TextView albumNametv;
     private String id;
-    private String name;
+    private String name = null;
     private Cache cacheInstance;
     private int position;
 
@@ -50,19 +50,34 @@ public class ActionOnPendingActivity extends AppCompatActivity {
         id = intent.getStringExtra("albumID");
         position = cacheInstance.albumsIDs.indexOf(Integer.parseInt(id));
         new getOwner().execute(ownerNametv,id);
-        new getAlbumURL().execute(albumNametv, Integer.parseInt(id), getApplicationContext());
+        try {
+            new getAlbumURL().execute(albumNametv, Integer.parseInt(id), getApplicationContext()).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         albumIDtv.setText(id);
     }
 
     public void acceptInvitation(View view) {
-        new processRequest().execute("OK", id, getApplicationContext());
+        name = albumNametv.getText().toString();
+        AlbumCatalog catalog = new AlbumCatalog(Integer.parseInt(id), name);
+        Thread t1 = new Thread(new CloudStorage(getApplicationContext(), catalog, StorageProvider.Operation.WRITE), "WritingThread");
+        t1.start();
+        try {
+            t1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        new CreateFolderTask().execute(id + " " + name, getApplicationContext());
         Intent intent = getIntent();
         setResult(RESULT_OK,intent);
         finish();
     }
 
     public void rejectInvitation(View view) {
-        new processRequest().execute("NOK", id, getApplicationContext());
+        new processRequest().execute(id);
         Intent intent = getIntent();
         setResult(RESULT_OK,intent);
         finish();
@@ -75,29 +90,20 @@ class processRequest extends AsyncTask<Object, Object, Object[]> {
 
     @Override
     protected void onPostExecute(Object[] o) {
-
     }
 
     @Override
     protected Object[] doInBackground(Object[] objects) {
-        String state = (String) objects[0];
-        String id = (String) objects[1];
-        Context context = (Context) objects[2];
-        if (state.equals("OK")) {
-            AlbumCatalog catalog = new AlbumCatalog(Integer.parseInt(id), "DEFAULT_VALUE");
-            Thread t1 = new Thread(new CloudStorage(context, catalog, StorageProvider.Operation.WRITE), "WritingThread");
-            t1.start();
-        } else {
-            try {
-                sv.rejectIncomingRequest(Integer.parseInt(id));
-            } catch (P2PhotoException e) {
-                e.printStackTrace();
-            }
+        String id = (String) objects[0];
+        try {
+            sv.rejectIncomingRequest(Integer.parseInt(id));
+        } catch (P2PhotoException e) {
+            e.printStackTrace();
         }
-
         return null;
     }
 }
+
 
 class getOwner extends AsyncTask<Object, Object, Object[]> {
 

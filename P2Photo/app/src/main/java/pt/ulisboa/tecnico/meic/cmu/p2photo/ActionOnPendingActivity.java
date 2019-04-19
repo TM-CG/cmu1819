@@ -44,6 +44,8 @@ public class ActionOnPendingActivity extends AppCompatActivity {
     public void acceptInvitation(View view) {
         try {
             new processRequest().execute("OK", id, getApplicationContext()).get();
+            Intent intent = getIntent();
+            setResult(RESULT_OK,intent);
             finish();
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -55,6 +57,8 @@ public class ActionOnPendingActivity extends AppCompatActivity {
     public void rejectInvitation(View view) {
         try {
             new processRequest().execute("NOK", id, getApplicationContext()).get();
+            Intent intent = getIntent();
+            setResult(RESULT_OK,intent);
             finish();
         } catch (ExecutionException e) {
             e.printStackTrace();

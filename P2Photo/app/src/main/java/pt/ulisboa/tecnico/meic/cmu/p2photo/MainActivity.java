@@ -231,7 +231,8 @@ public class MainActivity extends AppCompatActivity {
                                         + data.getStringExtra("name") + " logged out",
                                 Toast.LENGTH_LONG).show();
                     } catch (P2PhotoException e) {
-                        Toast.makeText(getApplicationContext(), "Server side problem logging out",
+                        Toast.makeText(getApplicationContext(), "User "
+                                        + data.getStringExtra("name") + " logged out",
                                 Toast.LENGTH_LONG).show();
                     }
                 }
@@ -246,8 +247,8 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.LENGTH_LONG).show();
                     }
                 }
-                user.setText("");
-                pass.setText("");
+                //user.setText("");
+                //pass.setText("");
             }
 
         }

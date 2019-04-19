@@ -46,7 +46,7 @@ public class chooseCloudLocalActivity extends DropboxActivity {
         Intent intent = new Intent(this, ActionsMenu.class);
         cacheInstance.cleanArrays();
         loadCache();
-        startActivity(intent);
+        startActivityForResult(intent, 4);
     }
 
     @Override
@@ -79,6 +79,17 @@ public class chooseCloudLocalActivity extends DropboxActivity {
 
                 }
                 break;
+            /*logOut*/
+            case 4:
+                if(resultCode==RESULT_OK){
+                    Intent intent = getIntent();
+                    setResult(RESULT_OK,intent);
+                    finish();
+                }
+                else if(resultCode==RESULT_CANCELED){
+                    finish();
+                }
+                break;
         }
     }
 
@@ -88,6 +99,7 @@ public class chooseCloudLocalActivity extends DropboxActivity {
         dialog.setCancelable(false);
         dialog.setMessage("Loading cache");
         dialog.show();
+
 
 
         new ListFolderTask(DropboxClientFactory.getClient(), new ListFolderTask.Callback() {
@@ -129,6 +141,7 @@ public class chooseCloudLocalActivity extends DropboxActivity {
 
                     }
                 }
+
             }
 
             @Override
@@ -138,6 +151,7 @@ public class chooseCloudLocalActivity extends DropboxActivity {
 
             }
         }).execute("/" + MainActivity.username);
+
     }
 
     private void downloadFile(FileMetadata file) {

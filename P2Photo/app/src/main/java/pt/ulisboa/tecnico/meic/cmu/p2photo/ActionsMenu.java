@@ -24,7 +24,9 @@ public class ActionsMenu extends DropboxActivity {
     }
 
     public void goBack(View view){
-        new SignOut().execute();
+        Intent intent = getIntent();
+        setResult(RESULT_OK,intent);
+        finish();
     }
 
     public void selectSettings(View view) {
@@ -138,11 +140,7 @@ public class ActionsMenu extends DropboxActivity {
 
         @Override
         protected void onPostExecute(Object result) {
-            String msg = (String) result;
-            //Maybe a toast?
-            Intent intent = getIntent();
-            setResult(RESULT_OK,intent);
-            finish();
+
         }
     }
 

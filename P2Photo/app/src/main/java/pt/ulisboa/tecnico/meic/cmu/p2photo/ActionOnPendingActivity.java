@@ -20,16 +20,25 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.api.StorageProvider;
 
 public class ActionOnPendingActivity extends AppCompatActivity {
     private TextView albumIDtv;
+    private TextView albumNametv;
     private String id;
+    private String name;
+    private Cache cacheInstance;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_action_on_pending);
+        cacheInstance = Cache.getInstance();
         albumIDtv = (TextView) findViewById(R.id.albumIDtext);
+        albumNametv = (TextView) findViewById(R.id.pendingTittle);
         Intent intent = getIntent();
         id = intent.getStringExtra("albumID");
+        position = cacheInstance.albumsIDs.indexOf(Integer.parseInt(id));
+        name = cacheInstance.albums.get(position);
         albumIDtv.setText(id);
+        albumNametv.setText(name);
     }
 
     public void acceptInvitation(View view) {

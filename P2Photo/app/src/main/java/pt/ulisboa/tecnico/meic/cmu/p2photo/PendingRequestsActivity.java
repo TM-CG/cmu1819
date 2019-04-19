@@ -69,8 +69,7 @@ public class PendingRequestsActivity extends AppCompatActivity {
                 } else if (resultCode == RESULT_CANCELED) {
                     Toast.makeText(getApplicationContext(), "Action on pending request aborted",
                             Toast.LENGTH_LONG).show();
-                    items.remove(pos);
-                    itemsAdapter.notifyDataSetChanged();
+
                 }
                 break;
 

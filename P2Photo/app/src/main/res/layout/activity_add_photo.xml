@@ -39,7 +39,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/addPhoto"
         app:layout_constraintTop_toTopOf="@id/textview"
-        android:src="@drawable/preview"
         />
     <TextView
         android:id="@+id/albumName"

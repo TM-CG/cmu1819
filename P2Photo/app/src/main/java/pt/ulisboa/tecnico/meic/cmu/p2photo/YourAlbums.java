@@ -81,13 +81,6 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.add_album:
-                Intent intent = new Intent(this, CreateAlbum.class);
-                startActivityForResult(intent, 10);
-                return true;
-        }
-
         return true;
     }
 

@@ -16,7 +16,6 @@
 
     <style name="MyToolbar">
         <item name="theme">@style/ThemeOverlay.AppCompat.Dark</item>
-        <item name="navigationIcon">@drawable/ic_arrow_back_black_24dp</item>
         <item name="android:background">#e8e8e8</item>
         <item name="android:elevation">4dp</item>
     </style>

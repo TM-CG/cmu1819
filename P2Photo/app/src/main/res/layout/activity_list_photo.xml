@@ -16,10 +16,10 @@
         >
 
         <TextView
+            android:id="@+id/grid_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/albumName"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             android:textStyle="bold"

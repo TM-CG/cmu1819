@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +44,7 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
     private int albumId;
     private String albumTitle;
     private ListPhotoAdapter adapter;
-
+    private TextView albumNametv;
     private String mPath;
     private FilesAdapter mFilesAdapter;
     private FileMetadata mSelectedFile;
@@ -63,7 +64,8 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
 
         this.albumId = getIntent().getExtras().getInt("album");
         this.albumTitle = getIntent().getExtras().getString("albumTitle");
-
+        albumNametv = (TextView) findViewById(R.id.grid_name);
+        albumNametv.setText(albumTitle);
         Log.i(TAG, "Album: " + albumId);
 
         catalogFile = getIntent().getStringExtra("catalog");

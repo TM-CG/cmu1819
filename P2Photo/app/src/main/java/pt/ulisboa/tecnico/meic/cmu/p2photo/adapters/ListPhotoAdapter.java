@@ -1,11 +1,14 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import java.io.File;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
@@ -16,17 +19,21 @@ public class ListPhotoAdapter extends BaseAdapter {
 
     private final Context context;
 
+    /** The directory of pictures **/
+    private File directory;
+
     /** Size of thumbnail pictures on albums directory **/
     private static final int THUMBNAIL_SIZE = 180;
 
-    public ListPhotoAdapter(Context context) {
+    public ListPhotoAdapter(Context context, String pathToDirectory) {
         this.context = context;
+        this.directory = new File(pathToDirectory);
     }
 
     @Override
     public int getCount() {
-        //vitor: to be replace with the total number of photos in this album
-        return 100;
+        Log.i("ListPhotoAdapter", new Boolean(directory == null).toString());
+        return directory.listFiles().length;
     }
 
     @Override

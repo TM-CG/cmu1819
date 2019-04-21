@@ -17,8 +17,8 @@ public class selectPhotoActivity extends AppCompatActivity {
 
         //Set GridView for thumbnails preview using the ListPhotoAdapter
         GridView gridView = (GridView) findViewById(R.id.grid_thumbnails);
-        ListPhotoAdapter photoAdapter = new ListPhotoAdapter(this);
-        gridView.setAdapter(photoAdapter);
+        /*ListPhotoAdapter photoAdapter = new ListPhotoAdapter(this);
+        gridView.setAdapter(photoAdapter);*/
     }
 
     public void cancel(View view){

@@ -64,14 +64,6 @@ public class FilesActivity extends DropboxActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
 
-        //vitor: debug button to be removed!
-        Button debugButton = (Button) findViewById(R.id.button);
-        debugButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                performWithPermissions(FileAction.UPLOAD);
-            }
-        });
 
         //init picaso client
         PicassoClient.init(this,DropboxClientFactory.getClient());

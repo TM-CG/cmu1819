@@ -27,6 +27,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.ListPhotoAdapter;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
@@ -38,14 +41,17 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
 
     private String catalogFile;
     private int albumId;
+    private String albumTitle;
+    private ListPhotoAdapter adapter;
 
     private String mPath;
     private FilesAdapter mFilesAdapter;
     private FileMetadata mSelectedFile;
 
-    public static Intent getIntent(Context context, int albumId) {
+    public static Intent getIntent(Context context, int albumId, String albumTitle) {
         Intent filesIntent = new Intent(context, ListPhoto.class);
         filesIntent.putExtra("album", albumId);
+        filesIntent.putExtra("albumTitle", albumTitle);
         return filesIntent;
     }
 
@@ -54,11 +60,58 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_photo);
         Log.i(TAG, "Setted content view!");
+
         this.albumId = getIntent().getExtras().getInt("album");
+        this.albumTitle = getIntent().getExtras().getString("albumTitle");
+
         Log.i(TAG, "Album: " + albumId);
 
         catalogFile = getIntent().getStringExtra("catalog");
-        new FetchAllCatalogs().execute();
+
+        try {
+            List<String> catalogsURL = new FetchAllCatalogs().execute().get();
+
+
+
+            //Already fetch all catalogs from server now lets download it
+            Log.i(TAG, "Downloaded catalogs path from server " + catalogsURL.size());
+
+            int i = 1;
+
+            List<String> picsURLs = new ArrayList<>();
+            //Download album catalogs from server's link
+            for (String url : catalogsURL) {
+                picsURLs.addAll(downloadFile(url, "Loading catalogs", "", "tmp" + i++ + "_catalog.txt", 1));
+            }
+            Log.i(TAG, "Finished downloading and parsing catalogs! I've " + picsURLs.size() + " picture(s)!");
+
+            String tmpFolderPath = albumId + " "
+                    + albumTitle;
+
+            //Download all pics from all album catalogs that were previously downloaded
+            for (String pictureURL : picsURLs) {
+                downloadFile(pictureURL, "Loading pictures", tmpFolderPath, null, 0);
+            }
+
+            Log.i(TAG, "Finished downloading pictures!");
+
+
+
+
+
+            GridView gridView = (GridView) findViewById(R.id.grid_thumbnails);
+
+            String path2Album = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + MainActivity.username + "/" + tmpFolderPath;
+
+            adapter = new ListPhotoAdapter(this, path2Album);
+            gridView.setAdapter(adapter);
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -120,27 +173,22 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
         dialog.dismiss();
     }
 
-    class FetchAllCatalogs extends AsyncTask {
+    class FetchAllCatalogs extends AsyncTask<Object, List<String>, List<String>> {
         private ServerConnector sv = MainActivity.sv;
         @Override
         protected List<String> doInBackground(Object [] objects) {
             try {
-                return sv.listUserAlbumSlices(albumId);
+                List<String> result;
+                result = sv.listUserAlbumSlices(albumId);
+                return result;
+
             } catch (P2PhotoException e) {
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(Object result) {
-            List<String> urls = (List<String>) result;
-            //Already fetch all catalogs from server now lets download it
-            Log.i(TAG, "Downloaded catalogs path from server " + urls.size());
-
-            int i = 1;
-            for (String url : urls) {
-                downloadFile(url, "Loading catalogs", "", "tmp" + i++ + "_catalog.txt", 1);
-            }
+        protected void onPostExecute(List<String> result) {
 
         }
 
@@ -149,9 +197,8 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
     /**
      * Download catalogs or albuns
      * @param url
-     * @param option
      */
-    private void downloadFile(String url, String description, String folderPath, String fileName, final int option) {
+    private List<String> downloadFile(String url, String description, String folderPath, String fileName, int option) {
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCancelable(false);
@@ -167,56 +214,10 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
 
         Log.i(TAG, "FileName: " + fileName);
 
-        new DownloadFileFromLinkTask(ListPhoto.this, DropboxClientFactory.getClient(), new DownloadFileFromLinkTask.Callback() {
+        DownloadFileFromLinkTask dft = new DownloadFileFromLinkTask(ListPhoto.this, DropboxClientFactory.getClient(), new DownloadFileFromLinkTask.Callback() {
             @Override
             public void onDownloadComplete(File result) {
                 dialog.dismiss();
-
-                try {
-                    //DOWNLOAD CATALOGS
-                    if (option == 1) {
-                        FileReader fr = new FileReader(result);
-                        BufferedReader br = new BufferedReader(fr);
-
-                        String line, catalog = "";
-
-                        while ((line = br.readLine()) != null) {
-                            catalog += line + "\n";
-                        }
-                        Log.i(TAG, "Catalog content: " + catalog);
-
-                        AlbumCatalog albumCatalog = AlbumCatalog.parseToAlbumCatalog(catalog);
-                        List<String> pURL = albumCatalog.getPaths2Pics();
-
-                        //Downloading photos (invoke same function with different option to prevent
-                        //useful infinite recursions
-
-                        //Create folder with albumId and title
-
-
-                        Log.i(TAG, "Catalog #urls: " + pURL.size());
-                        String tmpFolderPath = albumCatalog.getAlbumId() + " "
-                                + albumCatalog.getAlbumTitle();
-
-                        //Create temporary folder
-                        File folder = Environment.getExternalStoragePublicDirectory(
-                                Environment.DIRECTORY_DOWNLOADS + "/" + MainActivity.username + "/" + tmpFolderPath);
-                        folder.mkdir();
-
-                        Log.i(TAG, "Ready for download " + pURL.size() + " photo(s)!");
-                        for (String photoURL : pURL) {
-                            downloadFile(photoURL, "Loading photo", tmpFolderPath, null, 0);
-                        }
-                        Log.i(TAG, "Successfully added path of pictures to array!");
-                    }
-
-
-                    } catch(FileNotFoundException e){
-                        Log.i(TAG, "FileNotFound!");
-                    } catch(IOException e){
-                        Log.i(TAG, "IOException!");
-                    }
-
 
             }
 
@@ -230,7 +231,39 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
                         Toast.LENGTH_SHORT)
                         .show();
             }
-        }).execute(url, folderPath, fileName);
+        });
+
+        File result = null;
+        try {
+            result = dft.execute(url, folderPath, fileName).get();
+
+            //DOWNLOAD CATALOGS
+
+            if (option == 1) {
+                FileReader fr = new FileReader(result);
+                BufferedReader br = new BufferedReader(fr);
+
+                String line, catalog = "";
+
+                while ((line = br.readLine()) != null) {
+                    catalog += line + "\n";
+                }
+                Log.i(TAG, "Catalog content: " + catalog);
+
+                AlbumCatalog albumCatalog = AlbumCatalog.parseToAlbumCatalog(catalog);
+                return albumCatalog.getPaths2Pics();
+            }
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
 
     }
 }

@@ -30,6 +30,9 @@ public class ListPhotoAdapter extends BaseAdapter {
     public ListPhotoAdapter(Context context, String pathToDirectory) {
         this.context = context;
         this.directory = new File(pathToDirectory);
+        //if album is empty then create folder just to display empty content
+        if (!this.directory.exists())
+            this.directory.mkdir();
     }
 
     @Override

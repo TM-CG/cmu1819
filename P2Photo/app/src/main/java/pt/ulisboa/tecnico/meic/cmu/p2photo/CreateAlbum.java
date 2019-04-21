@@ -207,6 +207,7 @@ class CreateFolderTask extends AsyncTask<Object,Object,Object[]> {
             Cache.getInstance().ownedAndPartAlbums.add(splited[1]);
             Cache.getInstance().ownedAlbumsIDs.add(Integer.parseInt(splited[0]));
             Cache.getInstance().ownedAlbums.add(splited[1]);
+            Cache.getInstance().ownedAlbumWithIDs.add(splited[0] + " " + splited[1]);
             result[1] = "OK";
             return result;
         } catch (DbxException e1) {

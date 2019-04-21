@@ -86,10 +86,12 @@ public class CreateAlbum extends AppCompatActivity {
     }
 
     public void create(View view){
+        EditText albumTitle = (EditText) findViewById(R.id.nameInput);
 
-
-        //creates album on the server
-        new CreateAlbumOnServer().execute(items2);
+        if ((!albumTitle.getText().toString().matches("\\s+")) && (!albumTitle.getText().toString().equals(""))) {
+            //creates album on the server
+            new CreateAlbumOnServer().execute(items2);
+        }
 
         /*CloudStorage cs = new CloudStorage(CreateAlbum.this, 1, StorageProvider.Operation.READ);
         new Thread(cs, "ReadingThread").start();*/

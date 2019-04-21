@@ -164,7 +164,16 @@ public class CreateAlbum extends AppCompatActivity {
             try {
                 t1.join();
                 //create a new folder
-                new CreateFolderTask().execute(albumId + " " + albumTitle, getApplicationContext());
+                String albumName = albumId + " " + albumTitle;
+                new CreateFolderTask().execute(albumName, getApplicationContext());
+                String[] splited = albumName.split(" ");
+                Cache.getInstance().albumsIDs.add(Integer.parseInt(splited[0]));
+                Cache.getInstance().albums.add(splited[1]);
+                Cache.getInstance().ownedAndPartAlbumsIDs.add(Integer.parseInt(splited[0]));
+                Cache.getInstance().ownedAndPartAlbums.add(splited[1]);
+                Cache.getInstance().ownedAlbumsIDs.add(Integer.parseInt(splited[0]));
+                Cache.getInstance().ownedAlbums.add(splited[1]);
+                Cache.getInstance().ownedAlbumWithIDs.add(splited[0] + " " + splited[1]);
                 //add users to albums
                 new AddUsersToAlbum().execute(o);
 
@@ -202,14 +211,7 @@ class CreateFolderTask extends AsyncTask<Object,Object,Object[]> {
         result[0] = objects[1];
         try {
             CreateFolderResult res = DropboxClientFactory.getClient().files().createFolderV2("/" + MainActivity.username + "/" + albumName);
-            String[] splited = albumName.split(" ");
-            Cache.getInstance().albumsIDs.add(Integer.parseInt(splited[0]));
-            Cache.getInstance().albums.add(splited[1]);
-            Cache.getInstance().ownedAndPartAlbumsIDs.add(Integer.parseInt(splited[0]));
-            Cache.getInstance().ownedAndPartAlbums.add(splited[1]);
-            Cache.getInstance().ownedAlbumsIDs.add(Integer.parseInt(splited[0]));
-            Cache.getInstance().ownedAlbums.add(splited[1]);
-            Cache.getInstance().ownedAlbumWithIDs.add(splited[0] + " " + splited[1]);
+
             result[1] = "OK";
             return result;
         } catch (DbxException e1) {

@@ -1,6 +1,8 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,12 +50,17 @@ public class ListPhotoAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        File[] files = directory.listFiles();
+
+        Bitmap myBitmap = BitmapFactory.decodeFile(files[position].getAbsolutePath());
+
         //vitor: just for debug
-        ImageView dummyImageView = new ImageView(context);
-        dummyImageView.setImageResource(R.drawable.baseline_photo_album_black_48);
+        ImageView myImage = new ImageView(context);
+        myImage.setImageBitmap(myBitmap);
 
         //define the thumbnail size
-        dummyImageView.setLayoutParams(new LinearLayout.LayoutParams(THUMBNAIL_SIZE,THUMBNAIL_SIZE));
-        return dummyImageView;
+        myImage.setLayoutParams(new LinearLayout.LayoutParams(THUMBNAIL_SIZE,THUMBNAIL_SIZE));
+        return myImage;
     }
 }

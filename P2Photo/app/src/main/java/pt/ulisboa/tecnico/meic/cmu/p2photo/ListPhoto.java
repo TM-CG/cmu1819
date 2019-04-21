@@ -137,8 +137,9 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
             //Already fetch all catalogs from server now lets download it
             Log.i(TAG, "Downloaded catalogs path from server " + urls.size());
 
+            int i = 1;
             for (String url : urls) {
-                downloadFile(url, "Loading catalogs", "", "tmp_catalog.txt", 1);
+                downloadFile(url, "Loading catalogs", "", "tmp" + i++ + "_catalog.txt", 1);
             }
 
         }

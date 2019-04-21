@@ -68,6 +68,7 @@ class DownloadFileFromLinkTask extends AsyncTask<String, Void, File> {
             if (!path.exists()) {
                 if (!path.mkdirs()) {
                     mException = new RuntimeException("Unable to create directory: " + path);
+                    return null;
                 }
             } else if (!path.isDirectory()) {
                 mException = new IllegalStateException("Download path is not a directory: " + path);

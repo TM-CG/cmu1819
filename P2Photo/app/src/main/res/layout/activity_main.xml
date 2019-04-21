@@ -12,7 +12,7 @@
         android:layout_width="175dp"
         android:layout_height="175dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="40dp"
         android:layout_alignParentTop="true"
         android:src="@drawable/ist"
         tools:srcCompat="@drawable/ist"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/imageView"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:text="@string/app_name"
         android:textSize="35sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
         android:layout_below="@id/textview"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="46dp"
+        android:layout_marginTop="20dp"
         android:focusable="true"
         android:inputType="text"
         android:hint="@string/input_name"
@@ -114,13 +114,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textPass"
-        android:layout_marginTop="8dp"
         android:onClick="signUp"
         android:text="@string/signup"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/signinButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/port" />
+        app:layout_constraintTop_toBottomOf="@+id/port"
+        app:layout_constraintVertical_bias="0.241" />
 
     <Button
         android:id="@+id/signinButton"
@@ -129,13 +129,13 @@
         android:layout_below="@id/textPass"
         android:layout_alignStart="@id/signupButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
         android:onClick="signIn"
         android:text="@string/signin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/signupButton"
-        app:layout_constraintTop_toBottomOf="@+id/port" />
+        app:layout_constraintTop_toBottomOf="@+id/port"
+        app:layout_constraintVertical_bias="0.241" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -70,7 +70,15 @@ public class ActionOnPendingActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        new CreateFolderTask().execute(id + " " + name, getApplicationContext());
+        String albumName = id + " " + name;
+        new CreateFolderTask().execute(albumName, getApplicationContext());
+        String[] splited = albumName.split(" ");
+        Cache.getInstance().albumsIDs.add(Integer.parseInt(splited[0]));
+        Cache.getInstance().albums.add(splited[1]);
+        Cache.getInstance().ownedAndPartAlbumsIDs.add(Integer.parseInt(splited[0]));
+        Cache.getInstance().ownedAndPartAlbums.add(splited[1]);
+        Cache.getInstance().ownedAlbumWithIDs.add(splited[0] + " " + splited[1]);
+        Cache.getInstance().notifyAdapters();
         Intent intent = getIntent();
         setResult(RESULT_OK,intent);
         finish();

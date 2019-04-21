@@ -34,7 +34,7 @@ public class ListPhotoAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        Log.i("ListPhotoAdapter", new Boolean(directory == null).toString());
+        //Log.i("ListPhotoAdapter", new Boolean(directory == null).toString());
         return directory.listFiles().length;
     }
 

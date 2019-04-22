@@ -66,13 +66,15 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
         });
         cacheInstance = Cache.getInstance();
         cacheInstance.albumsList = (ListView) findViewById(R.id.lst_albums);
-        cacheInstance.adapterTitle = new ArrayAdapter<String>(getApplicationContext(), R.layout.your_albums_list_layout, R.id.albumTitle, cacheInstance.ownedAndPartAlbums);
+        cacheInstance.adapterTitle = new ArrayAdapter<String>(getApplicationContext(), R.layout.your_albums_list_layout, R.id.albumTitle, cacheInstance.ownedAlbumWithIDs);
         cacheInstance.albumsList.setAdapter(cacheInstance.adapterTitle);
         cacheInstance.albumsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int albumId = cacheInstance.ownedAndPartAlbumsIDs.get(position);
-                String albumTitle = cacheInstance.ownedAndPartAlbums.get(position);
+                String selectedItem = parent.getItemAtPosition(position).toString();
+
+                int albumId = Integer.parseInt(selectedItem.split(" ")[0]);
+                String albumTitle = selectedItem.substring(selectedItem.indexOf(' '));
                 startActivity(ListPhoto.getIntent(YourAlbums.this, albumId, albumTitle));
             }
         });

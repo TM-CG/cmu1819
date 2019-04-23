@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.tasks;
 
 import android.content.Context;
 import android.net.Uri;
@@ -14,6 +14,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.UriHelpers;
 
 /**
  * Async task to upload a file to a directory

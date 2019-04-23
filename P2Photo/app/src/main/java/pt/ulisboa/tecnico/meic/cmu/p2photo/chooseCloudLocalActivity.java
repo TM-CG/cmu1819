@@ -20,6 +20,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetCurrentAccountTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolderTask;
+
 
 public class chooseCloudLocalActivity extends DropboxActivity {
     private Cache cacheInstance = Cache.getInstance();

@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.tasks;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,10 +16,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
+
 /**
  * Task to download a file from Dropbox and put it in the Downloads folder
  */
-class DownloadFileTask extends AsyncTask<FileMetadata, Void, File> {
+public class DownloadFileFromLinkTask extends AsyncTask<String, Void, File> {
 
     private final Context mContext;
     private final DbxClientV2 mDbxClient;
@@ -31,7 +33,7 @@ class DownloadFileTask extends AsyncTask<FileMetadata, Void, File> {
         void onError(Exception e);
     }
 
-    DownloadFileTask(Context context, DbxClientV2 dbxClient, Callback callback) {
+    public DownloadFileFromLinkTask(Context context, DbxClientV2 dbxClient, Callback callback) {
         mContext = context;
         mDbxClient = dbxClient;
         mCallback = callback;
@@ -48,38 +50,42 @@ class DownloadFileTask extends AsyncTask<FileMetadata, Void, File> {
     }
 
     @Override
-    protected File doInBackground(FileMetadata... params) {
-        FileMetadata metadata = params[0];
+    protected File doInBackground(String... params) {
+        String url = params[0];
+        String folderPath = params[1];
+        String fileName = params[2];
+
         try {
-            Log.i("DownloadFileTask", Environment.DIRECTORY_DOWNLOADS + "/" + MainActivity.username);
-            File path = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS + "/" + MainActivity.username);
-            File file = new File(path, metadata.getName());
+            File path;
+            if (folderPath == "") {
+                path = Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOWNLOADS + "/" + MainActivity.username);
+            } else {
+                path = Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOWNLOADS + "/" + MainActivity.username + "/" + folderPath);
+            }
+            File file = new File(path, fileName);
 
             // Make sure the Downloads directory exists.
             if (!path.exists()) {
-                path.mkdir();
-
+                if (!path.mkdirs()) {
+                    mException = new RuntimeException("Unable to create directory: " + path);
+                    return null;
+                }
             } else if (!path.isDirectory()) {
                 mException = new IllegalStateException("Download path is not a directory: " + path);
                 return null;
             }
 
-
             // Download the file.
             try (OutputStream outputStream = new FileOutputStream(file)) {
-                mDbxClient.files().download(metadata.getPathLower(), metadata.getRev())
-                    .download(outputStream);
-            }
+                mDbxClient.sharing().getSharedLinkFile(url).download(outputStream);
 
-            // Tell android about the file
-            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            intent.setData(Uri.fromFile(file));
-            mContext.sendBroadcast(intent);
+
+            }
 
             return file;
         } catch (DbxException | IOException e) {
-            e.printStackTrace();
             mException = e;
         }
 

@@ -127,23 +127,6 @@ public class ActionsMenu extends DropboxActivity {
         }
     }
 
-    public class SignOut extends AsyncTask {
-        @Override
-        protected String doInBackground(Object[] objects) {
-            try {
-                sv.logOut();
-                return "OK";
-            } catch (P2PhotoException e) {
-                return e.getMessage();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Object result) {
-
-        }
-    }
-
     @Override
     protected void loadData() {
 

@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -10,7 +10,7 @@ import com.dropbox.core.v2.files.ListFolderResult;
 /**
  * Async task to list items in a folder
  */
-class ListFolderTask extends AsyncTask<String, Void, ListFolderResult> {
+public class ListFolderTask extends AsyncTask<String, Void, ListFolderResult> {
 
     private final DbxClientV2 mDbxClient;
     private final Callback mCallback;

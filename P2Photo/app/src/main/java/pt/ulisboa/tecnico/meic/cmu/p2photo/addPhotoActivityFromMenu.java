@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -16,14 +15,14 @@ import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.sharing.SharedLinkMetadata;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
-
-import static pt.ulisboa.tecnico.meic.cmu.p2photo.api.CloudStorage.CATALOG_SUFFIX;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolderTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ShareLinkTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFileTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UpdateAlbumCatalog;
 
 public class addPhotoActivityFromMenu extends DropboxActivity {
     private static final String TAG = addPhotoActivityFromMenu.class.getName();
@@ -135,7 +134,7 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
                                     }).execute(filePath, "");
                                 }
                             }
-                        }.execute(albumId, result.getUrl());
+                        }.execute(catalogFile, albumId, result.getUrl());
                     }
 
                     @Override
@@ -250,54 +249,4 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
 
     }
 
-    class UpdateAlbumCatalog extends AsyncTask {
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            Integer albumId = (Integer) objects[0];
-            Log.i(TAG, "UpdateAlbumCatalog: AlbumID: " + albumId);
-            String photoURL = (String) objects[1];
-            Log.i(TAG, "UpdateAlbumCatalog: photoURL: " + photoURL);
-            String fileName = String.format(CATALOG_SUFFIX, albumId);
-
-
-            FileWriter fileWriter = null;
-            BufferedWriter bufferedWriter = null;
-
-            if (catalogFile != null) {
-                //append new photoURL
-                try {
-                    fileWriter = new FileWriter(catalogFile.getAbsoluteFile(), true);
-                    bufferedWriter = new BufferedWriter(fileWriter);
-                    Log.i(TAG, "UpdateAlbumCatalog: Writing URL to catalog: " + photoURL);
-                    bufferedWriter.write(photoURL + "\n");
-
-                } catch (IOException e) {
-                    Log.i(TAG, "UpdateAlbumCatalog: IOException");
-                } finally {
-
-                    try {
-
-                        if (bufferedWriter != null)
-                            bufferedWriter.close();
-
-                        if (fileWriter != null)
-                            fileWriter.close();
-
-                    } catch (IOException ex) {
-
-                        Log.i(TAG, "UpdateAlbumCatalog: IOException when closing");
-
-                    }
-                }
-            }
-            else {
-                Log.i(TAG, "UpdateAlbumCatalog: catalogFile is null!");
-            }
-
-            if (catalogFile == null)
-                return null;
-            return catalogFile.getAbsolutePath();
-        }
-    }
 }

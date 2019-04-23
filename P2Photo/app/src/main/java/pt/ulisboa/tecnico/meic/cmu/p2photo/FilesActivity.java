@@ -17,12 +17,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.Button;
 import android.widget.Toast;
 
-import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.FolderMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
@@ -30,6 +27,10 @@ import com.dropbox.core.v2.files.ListFolderResult;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.List;
+
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolderTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFileTask;
 
 
 /**

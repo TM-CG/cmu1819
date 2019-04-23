@@ -1,9 +1,7 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo.api;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.sharing.SharedLinkMetadata;
@@ -12,8 +10,8 @@ import java.text.DateFormat;
 import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.ShareLinkTask;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.UploadFileTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ShareLinkTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFileTask;
 
 /**
  * Support for storing catalog files in the cloud

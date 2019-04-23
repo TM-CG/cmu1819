@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LogOut;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.SignIn;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.SocketConnect;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -100,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     public void signIn(View view) {
         if(checkConnectionParameters()){
             intent = new Intent(this, chooseCloudLocalActivity.class);
-            new SocketConnect().execute("signIn");
+            new SocketConnect().execute("signIn", getApplicationContext(), ip, port);
         }
     }
 
@@ -115,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(checkConnectionParameters()){
             intent = new Intent(this, chooseCloudLocalActivity.class);
-            new SocketConnect().execute("signUp");
+            new SocketConnect().execute("signUp", getApplicationContext(), ip, port, user.getText().toString(), pass.getText().toString());
         }
     }
 
@@ -128,25 +131,9 @@ public class MainActivity extends AppCompatActivity {
             case 1:
                 /*Sign Up*/
             case 2:
-                new LogOut().execute(resultCode,data);
+                new LogOut().execute(getApplicationContext(), user.getText().toString(), resultCode,data);
                 break;
         }
-    }
-
-    public boolean checkArguments(){
-        user = (EditText) findViewById(R.id.textUser);
-        pass = (EditText) findViewById(R.id.textPass);
-        intent.putExtra("name", user.getText().toString());
-        intent.putExtra("pass", pass.getText().toString());
-
-        setResult(RESULT_OK, intent);
-
-        if((user.getText().toString().matches("")) || pass.getText().toString().matches("")) {
-            Toast.makeText(getApplicationContext(), "Name or password invalid",
-                    Toast.LENGTH_LONG).show();
-            return false;
-        }
-        return true;
     }
 
     public boolean checkConnectionParameters(){
@@ -169,133 +156,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    public class SocketConnect extends AsyncTask<Object,Void,Object[]> {
-        @Override
-        protected Object[] doInBackground(Object [] objects) {
-            Object[] result = new Object[2];
-            result[0] = objects[0];
-            try {
-                ServerConnector tmp = new ServerConnector(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
-                result[1] =  tmp;
-                return result;
-            } catch (P2PhotoException e) {
-                result[1] =  null;
-                return result;
-            }
-        }
 
-        @Override
-        protected void onPostExecute(Object[] result) {
-            if(result[1] == null) {
-                sv = null;
-                Toast.makeText(getApplicationContext(), "Connection not established",
-                        Toast.LENGTH_LONG).show();
-            }
-            else{
-                sv = (ServerConnector) result[1];
-                if(result[0] == "signIn"){
-                    if (checkArguments()) {
-                        new SignIn().execute();
-                    }
-                }
-                else if(result[0] == "signUp"){
-                    if (checkArguments()) {
-                        new SignUp().execute();
-                    }
-                }
-            }
-        }
-    }
 
-    public class LogOut extends AsyncTask<Object,Void,Object[]> {
-        @Override
-        protected Object[] doInBackground(Object [] objects) {
-            try {
-                sv.logOut();
-            } catch (P2PhotoException e) {
-                Toast.makeText(getApplicationContext(), "Server side problem logging out",
-                        Toast.LENGTH_LONG).show();
-            }
-            return objects;
-        }
-
-        @Override
-        protected void onPostExecute(Object[] result) {
-            Integer res = (Integer) result[0];
-            if(result != null) {
-                Intent data = (Intent) result[1];
-                if(res==RESULT_OK){
-                    try {
-                        sv.logOut();
-                        Toast.makeText(getApplicationContext(), "User "
-                                        + data.getStringExtra("name") + " logged out",
-                                Toast.LENGTH_LONG).show();
-                    } catch (P2PhotoException e) {
-                        Toast.makeText(getApplicationContext(), "User "
-                                        + data.getStringExtra("name") + " logged out",
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-                else if(res==RESULT_CANCELED){
-                    try {
-                        sv.logOut();
-                        Toast.makeText(getApplicationContext(), "User "
-                                        + data.getStringExtra("name") + " logged out",
-                                Toast.LENGTH_LONG).show();
-                    } catch (P2PhotoException e) {
-                        Toast.makeText(getApplicationContext(), "User " + user.getText().toString() + " logged out abruptly",
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-                //user.setText("");
-                //pass.setText("");
-            }
-
-        }
-    }
-
-    public class SignUp extends AsyncTask {
-        @Override
-        protected String doInBackground(Object [] objects) {
-            try {
-                sv.signUp(user.getText().toString(), pass.getText().toString());
-                new SignIn().execute();
-                return "OK";
-            } catch (P2PhotoException e) {
-                return e.getMessage();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Object result) {
-            String msg = (String) result;
-            doToast(msg);
-
-        }
-
-    }
-
-    public class SignIn extends AsyncTask {
-        @Override
-        protected String doInBackground(Object [] objects) {
-            try {
-                sv.logIn(user.getText().toString(), pass.getText().toString());
-                username = user.getText().toString();
-                startActivityForResult(intent, 2);
-                return "OK";
-            } catch (P2PhotoException e) {
-                return e.getMessage();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Object result) {
-            String msg = (String) result;
-            doToast(msg);
-
-        }
-
-    }
 
     public void doToast(String data){
         switch (data){

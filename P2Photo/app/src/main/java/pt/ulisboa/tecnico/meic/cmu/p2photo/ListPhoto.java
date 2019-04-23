@@ -7,19 +7,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dropbox.core.v2.files.FileMetadata;
-import com.dropbox.core.v2.files.ListFolderResult;
-import com.dropbox.core.v2.files.Metadata;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,13 +24,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.ListPhotoAdapter;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileFromLinkTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.FetchAllCatalogs;
 
 public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClickListener {
     private static final String TAG = ListPhoto.class.getName();
@@ -71,7 +66,7 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
         catalogFile = getIntent().getStringExtra("catalog");
 
         try {
-            List<String> catalogsURL = new FetchAllCatalogs().execute().get();
+            List<String> catalogsURL = new FetchAllCatalogs().execute(albumId).get();
 
 
 
@@ -175,26 +170,7 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
         dialog.dismiss();
     }
 
-    class FetchAllCatalogs extends AsyncTask<Object, List<String>, List<String>> {
-        private ServerConnector sv = MainActivity.sv;
-        @Override
-        protected List<String> doInBackground(Object [] objects) {
-            try {
-                List<String> result;
-                result = sv.listUserAlbumSlices(albumId);
-                return result;
 
-            } catch (P2PhotoException e) {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<String> result) {
-
-        }
-
-    }
 
     /**
      * Download catalogs or albuns

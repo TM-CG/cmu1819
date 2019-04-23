@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.tasks;
 
 import android.os.AsyncTask;
 
@@ -18,7 +18,7 @@ public class GetCurrentAccountTask extends AsyncTask<Void, Void, FullAccount> {
         void onError(Exception e);
     }
 
-    GetCurrentAccountTask(DbxClientV2 dbxClient, Callback callback) {
+    public GetCurrentAccountTask(DbxClientV2 dbxClient, Callback callback) {
         mDbxClient = dbxClient;
         mCallback = callback;
     }

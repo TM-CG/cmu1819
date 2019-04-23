@@ -10,6 +10,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.FindUsers;
+
 
 public class AddUser extends AppCompatActivity {
     private ArrayList<String> items;

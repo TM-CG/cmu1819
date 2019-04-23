@@ -28,6 +28,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.util.List;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.FilesAdapter;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileTask;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolderTask;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFileTask;

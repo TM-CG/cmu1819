@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +17,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import pt.ulisboa.tecnico.meic.cmu.p2photo.handlers.FileThumbnailRequestHandler;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
 /**
  * Adapter for file list

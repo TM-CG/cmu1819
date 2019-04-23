@@ -3,7 +3,6 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -25,10 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.FilesAdapter;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.ListPhotoAdapter;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileFromLinkTask;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.FetchAllCatalogs;
 

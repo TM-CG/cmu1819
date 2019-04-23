@@ -22,6 +22,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AddUsersToAlbum;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.FindUsers;
+
 public class addUserFromMainMenu extends AppCompatActivity {
     private ArrayList<String> items;
     private ArrayAdapter<String> itemsAdapter;

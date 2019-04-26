@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-public class addPhotoActivity extends AppCompatActivity {
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
+
+public class AddPhoto extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +30,7 @@ public class addPhotoActivity extends AppCompatActivity {
     }
 
     public void selectPhoto(View view) {
-        Intent intent = new Intent(this, selectPhotoActivity.class);
+        Intent intent = new Intent(this, SelectPhoto.class);
         startActivityForResult(intent, 10);
     }
 

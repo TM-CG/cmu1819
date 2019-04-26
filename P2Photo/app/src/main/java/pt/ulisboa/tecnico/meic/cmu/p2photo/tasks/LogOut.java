@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 
@@ -23,7 +23,7 @@ public class LogOut extends AsyncTask<Object,Void,Object[]> {
         try {
             context = (Context) objects[0];
             user = (String) objects[1];
-            sv = MainActivity.sv;
+            sv = Main.sv;
 
             sv.logOut();
         } catch (P2PhotoException e) {

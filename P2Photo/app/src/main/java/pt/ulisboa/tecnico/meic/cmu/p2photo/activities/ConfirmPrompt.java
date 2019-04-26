@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
-public class ConfirmPromptActivity extends Activity {
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
+
+public class ConfirmPrompt extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +25,7 @@ public class ConfirmPromptActivity extends Activity {
      */
     public void btnConfirm(View v) {
         setResult(RESULT_OK);
-        ConfirmPromptActivity.this.finish();
+        ConfirmPrompt.this.finish();
     }
 
     /**
@@ -32,6 +34,6 @@ public class ConfirmPromptActivity extends Activity {
      */
     public void btnCancel(View v) {
         setResult(RESULT_CANCELED);
-        ConfirmPromptActivity.this.finish();
+        ConfirmPrompt.this.finish();
     }
 }

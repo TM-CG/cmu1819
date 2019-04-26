@@ -2,7 +2,7 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.tasks;
 
 import android.os.AsyncTask;
 
-import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 
@@ -15,7 +15,7 @@ public class SignIn extends AsyncTask<String, String[], String> {
     @Override
     protected String doInBackground(String [] objects) {
         try {
-            sv = MainActivity.sv;
+            sv = Main.sv;
             user = objects[0];
             pass = objects[1];
 

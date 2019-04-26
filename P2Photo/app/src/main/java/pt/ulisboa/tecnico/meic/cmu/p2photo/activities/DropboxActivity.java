@@ -1,10 +1,13 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.dropbox.core.android.Auth;
+
+import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.PicassoClient;
 
 public abstract class DropboxActivity extends AppCompatActivity {
     private static String accessToken;

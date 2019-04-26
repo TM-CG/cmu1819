@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -20,12 +20,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AllAlbums;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.OwningAlbums;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileTask;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetCurrentAccountTask;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolderTask;
 
 
-public class chooseCloudLocalActivity extends DropboxActivity {
+public class ChooseCloudOrLocal extends DropboxActivity {
     private Cache cacheInstance = Cache.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +45,7 @@ public class chooseCloudLocalActivity extends DropboxActivity {
     }
 
     public void selectAuthCloud(View view){
-        Auth.startOAuth2Authentication(chooseCloudLocalActivity.this, getString(R.string.app_key));
+        Auth.startOAuth2Authentication(ChooseCloudOrLocal.this, getString(R.string.app_key));
 
         Button cloudButton = (Button) findViewById(R.id.cloudButton);
         cloudButton.setEnabled(true);
@@ -114,9 +119,9 @@ public class chooseCloudLocalActivity extends DropboxActivity {
                     try {
                         Log.d("entradas", result.getEntries().toString());
                         //get my albums
-                        Thread t1 = new Thread(new allAlbumsThread());
+                        Thread t1 = new Thread(new AllAlbums());
                         t1.start();
-                        Thread t2 = new Thread(new owningAlbumsThread());
+                        Thread t2 = new Thread(new OwningAlbums());
                         t2.start();
                         t1.join();
                         t2.join();
@@ -154,7 +159,7 @@ public class chooseCloudLocalActivity extends DropboxActivity {
 
 
             }
-        }).execute("/" + MainActivity.username);
+        }).execute("/" + Main.username);
 
     }
 

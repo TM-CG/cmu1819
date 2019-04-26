@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -9,7 +9,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class settingsActivity extends AppCompatActivity {
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
+
+public class Settings extends AppCompatActivity {
 
     private SeekBar seekBarStorage;
     private SeekBar seekBarCache;
@@ -79,7 +81,7 @@ public class settingsActivity extends AppCompatActivity {
     }
 
     public void showLog(View view){
-        Intent intent = new Intent(this, LogActivity.class);
+        Intent intent = new Intent(this, Log.class);
         startActivityForResult(intent, 5);
     }
 

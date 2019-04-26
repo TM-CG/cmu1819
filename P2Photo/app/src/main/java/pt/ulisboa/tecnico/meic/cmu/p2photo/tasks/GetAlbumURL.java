@@ -17,12 +17,12 @@ import java.io.OutputStream;
 import java.util.List;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 
 public class GetAlbumURL extends AsyncTask<Object, Object, Object[]> {
-    private ServerConnector sv = MainActivity.sv;
+    private ServerConnector sv = Main.sv;
 
     @Override
     protected void onPostExecute(Object[] o) {
@@ -58,7 +58,7 @@ public class GetAlbumURL extends AsyncTask<Object, Object, Object[]> {
                     try {
                         File path;
                         path = Environment.getExternalStoragePublicDirectory(
-                                Environment.DIRECTORY_DOWNLOADS + "/" + MainActivity.username);
+                                Environment.DIRECTORY_DOWNLOADS + "/" + Main.username);
                         File file = new File(path, "albumName.txt");
 
                         // Download the file.

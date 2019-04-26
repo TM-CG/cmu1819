@@ -3,7 +3,7 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.tasks;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
-import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 
@@ -11,7 +11,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
  * Async call to discover the owner of an album
  */
 public class GetAlbumOwner extends AsyncTask<Object, Object, Object[]> {
-    private ServerConnector sv = MainActivity.sv;
+    private ServerConnector sv = Main.sv;
 
     @Override
     protected void onPostExecute(Object[] o) {

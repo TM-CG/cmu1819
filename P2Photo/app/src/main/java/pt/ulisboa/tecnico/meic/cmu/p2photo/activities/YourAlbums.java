@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +12,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.FilesAdapter;
 
-import static pt.ulisboa.tecnico.meic.cmu.p2photo.FilesActivity.EXTRA_PATH;
+import static pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Files.EXTRA_PATH;
 
 
 public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemClickListener {

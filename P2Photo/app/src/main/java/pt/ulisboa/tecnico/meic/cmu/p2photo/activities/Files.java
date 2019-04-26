@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -28,6 +28,9 @@ import java.io.File;
 import java.text.DateFormat;
 import java.util.List;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.PicassoClient;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.FilesAdapter;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileTask;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolderTask;
@@ -38,8 +41,8 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFileTask;
  * Activity that displays the content of a path in dropbox and lets users navigate folders,
  * and upload/download files
  */
-public class FilesActivity extends DropboxActivity {
-    private static final String TAG = FilesActivity.class.getName();
+public class Files extends DropboxActivity {
+    private static final String TAG = Files.class.getName();
 
     public final static String EXTRA_PATH = "albumFolder_path";
     private static final int PICKFILE_REQUEST_CODE = 1;
@@ -49,8 +52,8 @@ public class FilesActivity extends DropboxActivity {
     private FileMetadata mSelectedFile;
 
     public static Intent getIntent(Context context, String path) {
-        Intent filesIntent = new Intent(context, FilesActivity.class);
-        filesIntent.putExtra(FilesActivity.EXTRA_PATH, path);
+        Intent filesIntent = new Intent(context, Files.class);
+        filesIntent.putExtra(Files.EXTRA_PATH, path);
         return filesIntent;
     }
 
@@ -68,12 +71,12 @@ public class FilesActivity extends DropboxActivity {
 
 
         //init picaso client
-        PicassoClient.init(this,DropboxClientFactory.getClient());
+        PicassoClient.init(this, DropboxClientFactory.getClient());
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.files_list);
         mFilesAdapter = new FilesAdapter(PicassoClient.getPicasso(), new FilesAdapter.Callback() {
             @Override
             public void onFolderClicked(FolderMetadata folder) {
-                startActivity(FilesActivity.getIntent(FilesActivity.this, folder.getPathLower()));
+                startActivity(Files.getIntent(Files.this, folder.getPathLower()));
             }
 
             @Override
@@ -185,12 +188,12 @@ public class FilesActivity extends DropboxActivity {
                 dialog.dismiss();
 
                 Log.i(TAG, "Failed to list folder.", e);
-                Toast.makeText(FilesActivity.this,
+                Toast.makeText(Files.this,
                         "An error has occurred",
                         Toast.LENGTH_SHORT)
                         .show();
             }
-        }).execute("/" + MainActivity.username);
+        }).execute("/" + Main.username);
     }
 
     private void downloadFile(FileMetadata file) {
@@ -200,7 +203,7 @@ public class FilesActivity extends DropboxActivity {
         dialog.setMessage("Downloading");
         dialog.show();
 
-        new DownloadFileTask(FilesActivity.this, DropboxClientFactory.getClient(), new DownloadFileTask.Callback() {
+        new DownloadFileTask(Files.this, DropboxClientFactory.getClient(), new DownloadFileTask.Callback() {
             @Override
             public void onDownloadComplete(File result) {
                 dialog.dismiss();
@@ -215,7 +218,7 @@ public class FilesActivity extends DropboxActivity {
                 dialog.dismiss();
 
                 Log.i(TAG, "Failed to download file.", e);
-                Toast.makeText(FilesActivity.this,
+                Toast.makeText(Files.this,
                         "An error has occurred",
                         Toast.LENGTH_SHORT)
                         .show();
@@ -254,7 +257,7 @@ public class FilesActivity extends DropboxActivity {
 
                 String message = result.getName() + " size " + result.getSize() + " modified " +
                         DateFormat.getDateTimeInstance().format(result.getClientModified());
-                Toast.makeText(FilesActivity.this, message, Toast.LENGTH_SHORT)
+                Toast.makeText(Files.this, message, Toast.LENGTH_SHORT)
                         .show();
 
                 // Reload the folder
@@ -266,7 +269,7 @@ public class FilesActivity extends DropboxActivity {
                 dialog.dismiss();
 
                 Log.i(TAG, "Failed to upload file.", e);
-                Toast.makeText(FilesActivity.this,
+                Toast.makeText(Files.this,
                         "An error has occurred",
                         Toast.LENGTH_SHORT)
                         .show();

@@ -9,7 +9,7 @@ import com.dropbox.core.v2.files.CreateFolderResult;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 
 public class CreateFolderTask extends AsyncTask<Object,Object,Object[]> {
 
@@ -19,7 +19,7 @@ public class CreateFolderTask extends AsyncTask<Object,Object,Object[]> {
         Object[] result = new Object[2];
         result[0] = objects[1];
         try {
-            CreateFolderResult res = DropboxClientFactory.getClient().files().createFolderV2("/" + MainActivity.username + "/" + albumName);
+            CreateFolderResult res = DropboxClientFactory.getClient().files().createFolderV2("/" + Main.username + "/" + albumName);
 
             result[1] = "OK";
             return result;

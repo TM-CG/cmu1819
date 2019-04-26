@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 
-import static pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity.sv;
+import static pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main.sv;
 
 public class SignOut extends AsyncTask {
     @Override

@@ -15,7 +15,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.UriHelpers;
 
 /**
@@ -79,8 +79,8 @@ public class UploadFileTask extends AsyncTask<String, Void, FileMetadata> {
 
                 //support for uploading files in sub folders
                 if (remoteFolderPath == "")
-                    path = "/" + MainActivity.username + "/" + remoteFileName;
-                else path = "/" + MainActivity.username + "/" + remoteFolderPath + "/" + remoteFileName;
+                    path = "/" + Main.username + "/" + remoteFileName;
+                else path = "/" + Main.username + "/" + remoteFolderPath + "/" + remoteFileName;
 
                 return mDbxClient.files().uploadBuilder(path)
                         .withMode(WriteMode.OVERWRITE)

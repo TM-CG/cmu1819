@@ -1,31 +1,21 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-
-import com.dropbox.core.v2.files.FileMetadata;
-import com.dropbox.core.v2.files.ListFolderResult;
-import com.dropbox.core.v2.files.Metadata;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AddUsersToAlbum;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.FindUsers;
 
-public class addUserFromMainMenu extends AppCompatActivity {
+public class AddUserFromMainMenu extends AppCompatActivity {
     private ArrayList<String> items;
     private ArrayAdapter<String> itemsAdapter;
     private ListView lvItems;
@@ -113,7 +103,7 @@ public class addUserFromMainMenu extends AppCompatActivity {
     }
 
     /*public void confirmAddUsers(View view) {
-        Intent intent = new Intent(addUserFromMainMenu.this, ConfirmPromptActivity.class);
+        Intent intent = new Intent(AddUserFromMainMenu.this, ConfirmPrompt.class);
         intent.putExtra("message", "Are you sure?");
         startActivityForResult(intent, CONFIRMATION_REQUEST);
     }*/

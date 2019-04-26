@@ -4,12 +4,12 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
-import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 
 public class FetchAllCatalogs extends AsyncTask<Object, List<String>, List<String>> {
-    private ServerConnector sv = MainActivity.sv;
+    private ServerConnector sv = Main.sv;
     @Override
     protected List<String> doInBackground(Object [] objects) {
         try {

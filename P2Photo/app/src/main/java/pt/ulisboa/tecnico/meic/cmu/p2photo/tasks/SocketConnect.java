@@ -5,8 +5,7 @@ import android.os.AsyncTask;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 
@@ -23,7 +22,7 @@ public class SocketConnect extends AsyncTask<Object,Void,Object[]> {
         result[0] = objects[0];
 
         context = (Context) objects[1];
-        sv = MainActivity.sv;
+        sv = Main.sv;
         EditText ip = (EditText) objects[2];
         EditText port = (EditText) objects[3];
         user = (String) objects[4];

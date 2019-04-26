@@ -1,12 +1,13 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class signuplocalstorageactivity extends AppCompatActivity {
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
+
+public class SignUpLocalStorage extends AppCompatActivity {
 
     private SeekBar seekBarStorage;
     private SeekBar seekBarCache;

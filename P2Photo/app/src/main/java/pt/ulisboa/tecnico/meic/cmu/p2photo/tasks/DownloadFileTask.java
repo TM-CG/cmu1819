@@ -16,7 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 
 /**
  * Task to download a file from Dropbox and put it in the Downloads folder
@@ -53,9 +53,9 @@ public class DownloadFileTask extends AsyncTask<FileMetadata, Void, File> {
     protected File doInBackground(FileMetadata... params) {
         FileMetadata metadata = params[0];
         try {
-            Log.i("DownloadFileTask", Environment.DIRECTORY_DOWNLOADS + "/" + MainActivity.username);
+            Log.i("DownloadFileTask", Environment.DIRECTORY_DOWNLOADS + "/" + Main.username);
             File path = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS + "/" + MainActivity.username);
+                    Environment.DIRECTORY_DOWNLOADS + "/" + Main.username);
             File file = new File(path, metadata.getName());
 
             // Make sure the Downloads directory exists.

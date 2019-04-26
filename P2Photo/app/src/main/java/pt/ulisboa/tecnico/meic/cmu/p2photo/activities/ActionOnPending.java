@@ -1,7 +1,6 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,16 +8,17 @@ import android.widget.TextView;
 
 import java.util.concurrent.ExecutionException;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.CloudStorage;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.StorageProvider;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.CreateFolderTask;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetAlbumOwner;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetAlbumURL;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.RejectPendingInvitation;
 
-public class ActionOnPendingActivity extends AppCompatActivity {
+public class ActionOnPending extends AppCompatActivity {
     private TextView albumIDtv;
     private TextView ownerNametv;
     private TextView albumNametv;

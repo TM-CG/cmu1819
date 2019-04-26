@@ -10,9 +10,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
-import pt.ulisboa.tecnico.meic.cmu.p2photo.CreateAlbum;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxActivity;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.DropboxActivity;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 
 /**
  * Abstract class for describing generic StorageProvider
@@ -134,7 +133,7 @@ public abstract class StorageProvider extends DropboxActivity implements Runnabl
 
     public class AddAlbumSliceCatalogURL extends AsyncTask {
 
-        private ServerConnector sv = MainActivity.sv;
+        private ServerConnector sv = Main.sv;
 
         @Override
         protected void onPreExecute() {

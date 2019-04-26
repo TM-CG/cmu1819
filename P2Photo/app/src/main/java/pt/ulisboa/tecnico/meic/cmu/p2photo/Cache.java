@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -8,7 +7,7 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cache extends AppCompatActivity {
+public class Cache {
 
     //all about the albums
     public static List<Integer> ownedAlbumsIDs; /*just the owned albums*/

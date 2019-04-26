@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.FilesAdapter;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.ListPhotoAdapter;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
@@ -96,7 +98,7 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
 
             GridView gridView = (GridView) findViewById(R.id.grid_thumbnails);
 
-            String path2Album = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + MainActivity.username + "/" + tmpFolderPath;
+            String path2Album = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + Main.username + "/" + tmpFolderPath;
 
             adapter = new ListPhotoAdapter(this, path2Album);
             gridView.setAdapter(adapter);
@@ -114,7 +116,7 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
         Intent intent;
         switch (menuItem.getItemId()) {
             case R.id.addPhoto:
-                intent = new Intent(this, addPhotoActivity.class);
+                intent = new Intent(this, AddPhoto.class);
                 startActivityForResult(intent, 12);
                 return true;
             case R.id.addUser:

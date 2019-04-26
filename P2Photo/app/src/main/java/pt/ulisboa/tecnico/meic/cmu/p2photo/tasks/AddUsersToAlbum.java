@@ -5,7 +5,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 
 public class AddUsersToAlbum extends AsyncTask<Object,Void,Object[]> {
@@ -22,7 +22,7 @@ public class AddUsersToAlbum extends AsyncTask<Object,Void,Object[]> {
                 for (String item : items2) {
                     try {
                         Log.d("inviteAlbum", item);
-                        MainActivity.getSv().updateAlbum(albumId, item);
+                        Main.getSv().updateAlbum(albumId, item);
                     } catch (P2PhotoException e) {
                         e.printStackTrace();
                     }

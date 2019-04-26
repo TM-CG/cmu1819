@@ -1,16 +1,12 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
-
-import static pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity.sv;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
 public class ActionsMenu extends DropboxActivity {
 
@@ -30,7 +26,7 @@ public class ActionsMenu extends DropboxActivity {
     }
 
     public void selectSettings(View view) {
-        Intent intent = new Intent(this, settingsActivity.class);
+        Intent intent = new Intent(this, Settings.class);
         startActivityForResult(intent, 4);
     }
 
@@ -45,17 +41,17 @@ public class ActionsMenu extends DropboxActivity {
     }
 
     public void addPhoto(View view){
-        Intent intent = new Intent(this, addPhotoActivityFromMenu.class);
+        Intent intent = new Intent(this, AddPhotoFromMainMenu.class);
         startActivityForResult(intent, 8);
     }
 
     public void addUsersToAlbum(View view){
-        Intent intent = new Intent(this, addUserFromMainMenu.class);
+        Intent intent = new Intent(this, AddUserFromMainMenu.class);
         startActivityForResult(intent, 9);
     }
 
     public void watchPending(View view){
-        Intent intent = new Intent(this, PendingRequestsActivity.class);
+        Intent intent = new Intent(this, PendingRequests.class);
         startActivityForResult(intent, 10);
     }
 

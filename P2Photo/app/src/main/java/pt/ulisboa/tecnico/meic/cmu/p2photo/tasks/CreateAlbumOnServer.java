@@ -8,7 +8,7 @@ import android.widget.EditText;
 import java.util.ArrayList;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.MainActivity;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.CloudStorage;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
@@ -17,7 +17,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.api.StorageProvider;
 
 public class CreateAlbumOnServer extends AsyncTask<Object,Object,Object[]> {
 
-    private ServerConnector sv = MainActivity.sv;
+    private ServerConnector sv = Main.sv;
 
     @Override
     protected void onPreExecute() {

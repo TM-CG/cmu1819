@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.GridView;
 
-import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.ListPhotoAdapter;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
-public class selectPhotoActivity extends AppCompatActivity {
+public class SelectPhoto extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

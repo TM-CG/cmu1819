@@ -1,10 +1,9 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -16,13 +15,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LogOut;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.SignIn;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.SocketConnect;
 
-public class MainActivity extends AppCompatActivity {
+public class Main extends AppCompatActivity {
 
     private static final int WRITE_PERMISSION = 1;
 
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            MainActivity.this.finish();
+                            Main.this.finish();
                         }
                     });
 
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void signIn(View view) {
         if(checkConnectionParameters()){
-            intent = new Intent(this, chooseCloudLocalActivity.class);
+            intent = new Intent(this, ChooseCloudOrLocal.class);
             new SocketConnect().execute("signIn", getApplicationContext(), ip, port);
         }
     }
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(cs, "ReadingThread").start();*/
 
         if(checkConnectionParameters()){
-            intent = new Intent(this, chooseCloudLocalActivity.class);
+            intent = new Intent(this, ChooseCloudOrLocal.class);
             new SocketConnect().execute("signUp", getApplicationContext(), ip, port, user.getText().toString(), pass.getText().toString());
         }
     }

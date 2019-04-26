@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.meic.cmu.p2photo;
+package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -17,6 +17,9 @@ import com.dropbox.core.v2.sharing.SharedLinkMetadata;
 
 import java.io.File;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileTask;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolderTask;
@@ -24,8 +27,8 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ShareLinkTask;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFileTask;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UpdateAlbumCatalog;
 
-public class addPhotoActivityFromMenu extends DropboxActivity {
-    private static final String TAG = addPhotoActivityFromMenu.class.getName();
+public class AddPhotoFromMainMenu extends DropboxActivity {
+    private static final String TAG = AddPhotoFromMainMenu.class.getName();
 
     private static final int PICKFILE_REQUEST_CODE = 1;
 
@@ -67,7 +70,7 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
     }
 
     public void selectPhoto(View view) {
-        Intent intent = new Intent(this, selectPhotoActivity.class);
+        Intent intent = new Intent(this, SelectPhoto.class);
         startActivityForResult(intent, 14);
     }
 
@@ -97,13 +100,13 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
                 dialog.dismiss();
 
                 String message = "Successfully uploaded " + result.getName() + ": size " + result.getSize();
-                Toast.makeText(addPhotoActivityFromMenu.this, message, Toast.LENGTH_SHORT)
+                Toast.makeText(AddPhotoFromMainMenu.this, message, Toast.LENGTH_SHORT)
                         .show();
 
                 Log.i(TAG, "UploadFileTask: Album: " + albumId);
 
                 //Generate link for that photo
-                new ShareLinkTask(addPhotoActivityFromMenu.this, DropboxClientFactory.getClient(), new ShareLinkTask.Callback() {
+                new ShareLinkTask(AddPhotoFromMainMenu.this, DropboxClientFactory.getClient(), new ShareLinkTask.Callback() {
                     @Override
                     public void onShareComplete(SharedLinkMetadata result) {
                         //File uploaded so lets add it to the catalog
@@ -121,7 +124,7 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
                                     filePath = (String) o;
 
                                     //After updating the local Album Catalog it is necessary to upload it again
-                                    new UploadFileTask(addPhotoActivityFromMenu.this, DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
+                                    new UploadFileTask(AddPhotoFromMainMenu.this, DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
                                         @Override
                                         public void onUploadComplete(FileMetadata result) {
                                             Log.i(TAG, "Uploading catalog after update: success");
@@ -151,7 +154,7 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
                 dialog.dismiss();
 
                 Log.i(TAG, "Failed to upload file.", e);
-                Toast.makeText(addPhotoActivityFromMenu.this,
+                Toast.makeText(AddPhotoFromMainMenu.this,
                         "An error has occurred",
                         Toast.LENGTH_SHORT)
                         .show();
@@ -218,7 +221,7 @@ public class addPhotoActivityFromMenu extends DropboxActivity {
 
 
             }
-        }).execute("/" + MainActivity.username);
+        }).execute("/" + Main.username);
     }
 
     private void downloadFile(FileMetadata file) {

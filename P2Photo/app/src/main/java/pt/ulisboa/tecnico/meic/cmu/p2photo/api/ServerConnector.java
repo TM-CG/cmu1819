@@ -61,17 +61,6 @@ public class ServerConnector implements Connector{
     public static final String OK      = "OK"   ;
     public static final String SHUT_OK = "SHUT OK";
 
-    /** Options for List Album **/
-    public enum ListAlbumOption {
-        VIEW_ALL("ALL"),
-        VIEW_PAR("PAR"),
-        VIEW_OWN("OWN");
-
-        private final String stringValue;
-        ListAlbumOption(final String s) { stringValue = s; }
-        public String toString() { return stringValue; }
-    }
-
     private String serverPath;
 
     private int serverPort;

@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * A Client API for P2PhotoServer connection
  */
-public class ServerConnector {
+public class ServerConnector implements Connector{
 
     private static final String CLI_API_VERSION = "0.8";
 

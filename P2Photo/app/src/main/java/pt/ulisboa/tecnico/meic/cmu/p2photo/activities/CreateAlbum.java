@@ -68,7 +68,7 @@ public class CreateAlbum extends AppCompatActivity {
 
         if ((!albumTitle.getText().toString().matches("\\s+")) && (!albumTitle.getText().toString().equals(""))) {
             //creates album on the server
-            new CreateAlbumOnServer().execute(album, getApplicationContext(), items2);
+            new CreateAlbumOnServer().execute(album.getText().toString(), getApplicationContext(), items2);
         }
 
         /*CloudStorage cs = new CloudStorage(CreateAlbum.this, 1, StorageProvider.Operation.READ);

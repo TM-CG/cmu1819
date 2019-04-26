@@ -23,14 +23,14 @@ public class SocketConnect extends AsyncTask<Object,Void,Object[]> {
 
         context = (Context) objects[1];
         sv = Main.sv;
-        EditText ip = (EditText) objects[2];
-        EditText port = (EditText) objects[3];
+        String ip = (String) objects[2];
+        String port = (String) objects[3];
         user = (String) objects[4];
         pass = (String) objects[5];
 
         try {
-            ServerConnector tmp = new ServerConnector(ip.getText().toString(), Integer.parseInt(port.getText().toString()));
-            result[1] =  tmp;
+            Main.sv = new ServerConnector(ip, Integer.parseInt(port));
+            result[1] =  Main.sv;
             return result;
         } catch (P2PhotoException e) {
             result[1] =  null;
@@ -54,7 +54,7 @@ public class SocketConnect extends AsyncTask<Object,Void,Object[]> {
             }
             else if(result[0] == "signUp"){
                 //if (checkArguments()) {
-                    new SignUp().execute();
+                    new SignUp().execute(user, pass);
                // }
             }
         }

@@ -3,9 +3,6 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.EditText;
-
-import java.util.ArrayList;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
@@ -18,6 +15,9 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.api.StorageProvider;
 public class CreateAlbumOnServer extends AsyncTask<Object,Object,Object[]> {
 
     private ServerConnector sv = Main.sv;
+    private String albumTitle;
+    private Context context;
+    private Integer albumId;
 
     @Override
     protected void onPreExecute() {
@@ -26,19 +26,7 @@ public class CreateAlbumOnServer extends AsyncTask<Object,Object,Object[]> {
 
     @Override
     protected void onPostExecute(Object[] o) {
-        EditText album = (EditText) o[0];
-        Context context = (Context) o[1];
-        Integer albumId = null;
-        ArrayList<String> items2 = null;
 
-        if (o != null) {
-            albumId = (Integer) o[2];
-        } else {
-            Log.i("CreateAlbumOnServer", "albumId is null");
-            return;
-        }
-
-        String albumTitle = album.getText().toString();
 
         //create album catalog for new album
         AlbumCatalog catalog = new AlbumCatalog(albumId, albumTitle);
@@ -71,10 +59,16 @@ public class CreateAlbumOnServer extends AsyncTask<Object,Object,Object[]> {
     @Override
     protected Object[] doInBackground(Object[] objects) {
         Object[] result = new Object[2];
-        //adds the array of users (names)
-        result[0] = objects[0];
+        //just to pass the list of users to add to this album
+        result[1] = objects[2];
+
+        albumTitle = (String) objects[0];
+        context = (Context) objects[1];
+
+
         try {
-            result[1] = sv.createAlbum();
+            albumId = sv.createAlbum();
+            result[0] = albumId;
             return result;
         } catch (P2PhotoException e) {
             e.printStackTrace();

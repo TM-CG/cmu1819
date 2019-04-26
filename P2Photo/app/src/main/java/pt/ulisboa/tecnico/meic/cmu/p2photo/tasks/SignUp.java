@@ -20,7 +20,7 @@ public class SignUp extends AsyncTask {
             pass = (String) objects[1];
 
             sv.signUp(user, pass);
-            new SignIn().execute();
+            new SignIn().execute(user, pass);
             return "OK";
         } catch (P2PhotoException e) {
             return e.getMessage();

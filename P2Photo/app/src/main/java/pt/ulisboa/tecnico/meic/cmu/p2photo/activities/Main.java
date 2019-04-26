@@ -27,7 +27,7 @@ public class Main extends AppCompatActivity {
 
 
     private Intent  intent;
-    private static EditText user;
+    private EditText user;
     private EditText pass;
     private EditText ip;
     private EditText port;
@@ -37,7 +37,7 @@ public class Main extends AppCompatActivity {
     public static String username;
 
     public static String getUser() {
-        return user.getText().toString();
+        return username;
     }
 
     @Override
@@ -53,6 +53,8 @@ public class Main extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     WRITE_PERMISSION);
         }
+        user = findViewById(R.id.textUser);
+        pass = findViewById(R.id.textPass);
     }
 
     @Override
@@ -101,8 +103,13 @@ public class Main extends AppCompatActivity {
 
     public void signIn(View view) {
         if(checkConnectionParameters()){
+            //store the username globally
+            username = user.getText().toString();
+
             intent = new Intent(this, ChooseCloudOrLocal.class);
-            new SocketConnect().execute("signIn", getApplicationContext(), ip, port);
+            new SocketConnect().execute("signIn", getApplicationContext(), ip.getText().toString(),
+                    port.getText().toString(), user.getText().toString(), pass.getText().toString());
+            startActivity(intent);
         }
     }
 
@@ -116,8 +123,13 @@ public class Main extends AppCompatActivity {
         new Thread(cs, "ReadingThread").start();*/
 
         if(checkConnectionParameters()){
+            //store the username globally
+            username = user.getText().toString();
+
             intent = new Intent(this, ChooseCloudOrLocal.class);
-            new SocketConnect().execute("signUp", getApplicationContext(), ip, port, user.getText().toString(), pass.getText().toString());
+            new SocketConnect().execute("signUp", getApplicationContext(), ip.getText().toString(),
+                    port.getText().toString(), user.getText().toString(), pass.getText().toString());
+            startActivity(intent);
         }
     }
 

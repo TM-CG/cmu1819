@@ -59,14 +59,13 @@ public class ActionOnPending extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        String albumName = id + " " + name;
-        new CreateFolderTask().execute(albumName, getApplicationContext());
-        String[] splited = albumName.split(" ");
-        Cache.getInstance().albumsIDs.add(Integer.parseInt(splited[0]));
-        Cache.getInstance().albums.add(splited[1]);
-        Cache.getInstance().ownedAndPartAlbumsIDs.add(Integer.parseInt(splited[0]));
-        Cache.getInstance().ownedAndPartAlbums.add(splited[1]);
-        Cache.getInstance().ownedAlbumWithIDs.add(splited[0] + " " + splited[1]);
+        String albumDescription = id + " " + name;
+        new CreateFolderTask().execute(albumDescription, getApplicationContext());
+        Cache.getInstance().albumsIDs.add(Integer.parseInt(id));
+        Cache.getInstance().albums.add(name);
+        Cache.getInstance().ownedAndPartAlbumsIDs.add(Integer.parseInt(id));
+        Cache.getInstance().ownedAndPartAlbums.add(name);
+        Cache.getInstance().ownedAlbumWithIDs.add(albumDescription);
         Cache.getInstance().notifyAdapters();
         Intent intent = getIntent();
         setResult(RESULT_OK,intent);

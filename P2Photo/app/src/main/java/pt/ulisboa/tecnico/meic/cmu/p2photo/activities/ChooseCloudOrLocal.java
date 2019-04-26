@@ -48,7 +48,7 @@ public class ChooseCloudOrLocal extends DropboxActivity {
         Auth.startOAuth2Authentication(ChooseCloudOrLocal.this, getString(R.string.app_key));
 
         Button cloudButton = (Button) findViewById(R.id.cloudButton);
-        cloudButton.setEnabled(true);
+        //cloudButton.setEnabled(true);
     }
 
     public void selectCloud(View view){

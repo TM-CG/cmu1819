@@ -14,6 +14,8 @@ import java.io.OutputStream;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 
+import static pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileTask.TMP_FOLDER;
+
 /**
  * Task to download a file from Dropbox and put it in the Downloads folder
  */
@@ -55,10 +57,10 @@ public class DownloadFileFromLinkTask extends AsyncTask<String, Void, File> {
             File path;
             if (folderPath == "") {
                 path = Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOWNLOADS + "/" + Main.username);
+                        TMP_FOLDER + "/" + Main.username);
             } else {
                 path = Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOWNLOADS + "/" + Main.username + "/" + folderPath);
+                        TMP_FOLDER + "/" + Main.username + "/" + folderPath);
             }
             File file = new File(path, fileName);
 

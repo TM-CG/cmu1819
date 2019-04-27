@@ -2,8 +2,11 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.CloudStorage;
@@ -47,6 +50,7 @@ public class CreateAlbumOnServer extends AsyncTask<Object,Object,Object[]> {
             Cache.getInstance().ownedAlbumWithIDs.add(splited[0] + " " + splited[1]);
             //add users to albums
             new AddUsersToAlbum().execute(o);
+            loadingSpinner(false);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -74,5 +78,19 @@ public class CreateAlbumOnServer extends AsyncTask<Object,Object,Object[]> {
         }
 
         return null;
+    }
+
+    /**
+     * Shows or hides loading spinner
+     * @param action
+     */
+    private void loadingSpinner(boolean action) {
+        try {
+            ProgressBar loadingBar = Cache.getInstance().progressBar;
+            loadingBar.setVisibility((action ? View.VISIBLE : View.INVISIBLE));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

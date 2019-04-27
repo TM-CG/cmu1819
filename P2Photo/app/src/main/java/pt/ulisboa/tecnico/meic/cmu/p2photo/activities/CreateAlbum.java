@@ -8,8 +8,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+
 import java.util.ArrayList;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.CreateAlbumOnServer;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.FindUsers;
@@ -65,11 +68,15 @@ public class CreateAlbum extends AppCompatActivity {
 
     public void create(View view){
         EditText albumTitle = (EditText) findViewById(R.id.nameInput);
+        Cache.getInstance().progressBar = (ProgressBar) findViewById(R.id.loading);
+        loadingSpinner(true);
 
         if ((!albumTitle.getText().toString().matches("\\s+")) && (!albumTitle.getText().toString().equals(""))) {
+
             //creates album on the server
             new CreateAlbumOnServer().execute(album.getText().toString(), getApplicationContext(), items2);
         }
+
 
         /*CloudStorage cs = new CloudStorage(CreateAlbum.this, 1, StorageProvider.Operation.READ);
         new Thread(cs, "ReadingThread").start();*/
@@ -109,6 +116,16 @@ public class CreateAlbum extends AppCompatActivity {
             // Return true consumes the long click event (marks it handled)
         }
     }
+
+    /**
+     * Shows or hides loading spinner
+     * @param action
+     */
+    private void loadingSpinner(boolean action) {
+        ProgressBar loadingBar = findViewById(R.id.loading);
+        loadingBar.setVisibility((action ? View.VISIBLE : View.INVISIBLE));
+    }
+
 
 }
 

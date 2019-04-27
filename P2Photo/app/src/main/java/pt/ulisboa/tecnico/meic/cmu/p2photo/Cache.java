@@ -1,7 +1,9 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -26,6 +28,8 @@ public class Cache {
     public static Spinner sel_album;
 
     private static Cache single_instance = null;
+
+    public static ProgressBar progressBar;
 
     private Cache(){
         albums = new ArrayList<String>();

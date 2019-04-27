@@ -21,10 +21,10 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileTask;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolderTask;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ShareLinkTask;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFileTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFile;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolder;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ShareLink;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFile;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UpdateAlbumCatalog;
 
 public class AddPhotoFromMainMenu extends DropboxActivity {
@@ -94,7 +94,7 @@ public class AddPhotoFromMainMenu extends DropboxActivity {
 
         Log.i(TAG, "Path to remote folder to upload: " + folderPath);
 
-        new UploadFileTask(this, DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
+        new UploadFile(this, DropboxClientFactory.getClient(), new UploadFile.Callback() {
             @Override
             public void onUploadComplete(FileMetadata result) {
                 dialog.dismiss();
@@ -103,14 +103,14 @@ public class AddPhotoFromMainMenu extends DropboxActivity {
                 Toast.makeText(AddPhotoFromMainMenu.this, message, Toast.LENGTH_SHORT)
                         .show();
 
-                Log.i(TAG, "UploadFileTask: Album: " + albumId);
+                Log.i(TAG, "UploadFile: Album: " + albumId);
 
                 //Generate link for that photo
-                new ShareLinkTask(AddPhotoFromMainMenu.this, DropboxClientFactory.getClient(), new ShareLinkTask.Callback() {
+                new ShareLink(AddPhotoFromMainMenu.this, DropboxClientFactory.getClient(), new ShareLink.Callback() {
                     @Override
                     public void onShareComplete(SharedLinkMetadata result) {
                         //File uploaded so lets add it to the catalog
-                        Log.i(TAG, "UploadFileTask: URL 4 pic: " + result.getUrl());
+                        Log.i(TAG, "UploadFile: URL 4 pic: " + result.getUrl());
                         Log.i(TAG, "Successfully generated link for new picture");
 
                         //vitor: bah :)
@@ -124,7 +124,7 @@ public class AddPhotoFromMainMenu extends DropboxActivity {
                                     filePath = (String) o;
 
                                     //After updating the local Album Catalog it is necessary to upload it again
-                                    new UploadFileTask(AddPhotoFromMainMenu.this, DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
+                                    new UploadFile(AddPhotoFromMainMenu.this, DropboxClientFactory.getClient(), new UploadFile.Callback() {
                                         @Override
                                         public void onUploadComplete(FileMetadata result) {
                                             Log.i(TAG, "Uploading catalog after update: success");
@@ -195,7 +195,7 @@ public class AddPhotoFromMainMenu extends DropboxActivity {
         dialog.setMessage("Please wait");
         dialog.show();
 
-        new ListFolderTask(DropboxClientFactory.getClient(), new ListFolderTask.Callback() {
+        new ListFolder(DropboxClientFactory.getClient(), new ListFolder.Callback() {
             @Override
             public void onDataLoaded(ListFolderResult result) {
                 dialog.dismiss();
@@ -231,7 +231,7 @@ public class AddPhotoFromMainMenu extends DropboxActivity {
         dialog.setMessage("Reading catalogs");
         dialog.show();
 
-        new DownloadFileTask(this, DropboxClientFactory.getClient(), new DownloadFileTask.Callback() {
+        new DownloadFile(this, DropboxClientFactory.getClient(), new DownloadFile.Callback() {
             @Override
             public void onDownloadComplete(File result) {
                 dialog.dismiss();

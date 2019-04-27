@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * A task for creating shared links of a file
  */
-public class ShareLinkTask extends AsyncTask<FileMetadata, Void, SharedLinkMetadata> {
+public class ShareLink extends AsyncTask<FileMetadata, Void, SharedLinkMetadata> {
     private final Context mContext;
     private final DbxClientV2 mDbxClient;
     private final Callback mCallback;
@@ -26,7 +26,7 @@ public class ShareLinkTask extends AsyncTask<FileMetadata, Void, SharedLinkMetad
         void onError(Exception e);
     }
 
-    public ShareLinkTask(Context context, DbxClientV2 dbxClient, Callback callback) {
+    public ShareLink(Context context, DbxClientV2 dbxClient, Callback callback) {
         mContext = context;
         mDbxClient = dbxClient;
         mCallback = callback;
@@ -48,11 +48,11 @@ public class ShareLinkTask extends AsyncTask<FileMetadata, Void, SharedLinkMetad
     protected SharedLinkMetadata doInBackground(FileMetadata... params) {
         FileMetadata metadata = params[0];
 
-        Log.i("CloudStorage", "ShareLinkTask metadata: " + new Boolean(metadata == null).toString());
+        Log.i("CloudStorage", "ShareLink metadata: " + new Boolean(metadata == null).toString());
 
         if (metadata != null) {
             // Note - this is not ensuring the name is a valid dropbox file name
-            Log.i("CloudStorage", "ShareLinkTask remoteFileName: " + metadata.getPathLower());
+            Log.i("CloudStorage", "ShareLink remoteFileName: " + metadata.getPathLower());
 
             try {
 
@@ -76,7 +76,7 @@ public class ShareLinkTask extends AsyncTask<FileMetadata, Void, SharedLinkMetad
 
             } catch (DbxException e) {
                 mException = e;
-                Log.i("CloudStorage", "ShareLinkTask doInBack: got exception!" + e.getMessage());
+                Log.i("CloudStorage", "ShareLink doInBack: got exception!" + e.getMessage());
             }
 
         }

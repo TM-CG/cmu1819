@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
@@ -37,7 +36,7 @@ public class CreateAlbumOnServer extends AsyncTask<Object,Object,Object[]> {
             t1.join();
             //create a new folder
             String albumName = albumId + " " + albumTitle;
-            new CreateFolderTask().execute(albumName, context);
+            new CreateFolder().execute(albumName, context);
             String[] splited = albumName.split(" ");
             Cache.getInstance().albumsIDs.add(Integer.parseInt(splited[0]));
             Cache.getInstance().albums.add(splited[1]);

@@ -24,10 +24,10 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AllAlbums;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFile;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolder;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.OwningAlbums;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileTask;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetCurrentAccountTask;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolderTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetCurrentAccount;
 
 
 public class ChooseCloudOrLocal extends DropboxActivity {
@@ -60,7 +60,7 @@ public class ChooseCloudOrLocal extends DropboxActivity {
 
     @Override
     protected void loadData() {
-        new GetCurrentAccountTask(DropboxClientFactory.getClient(), new GetCurrentAccountTask.Callback() {
+        new GetCurrentAccount(DropboxClientFactory.getClient(), new GetCurrentAccount.Callback() {
             @Override
             public void onComplete(FullAccount result) {
                 Log.i("DROPBOX", result.getEmail());
@@ -111,7 +111,7 @@ public class ChooseCloudOrLocal extends DropboxActivity {
 
 
 
-        new ListFolderTask(DropboxClientFactory.getClient(), new ListFolderTask.Callback() {
+        new ListFolder(DropboxClientFactory.getClient(), new ListFolder.Callback() {
             @Override
             public void onDataLoaded(ListFolderResult result) {
                 dialog.dismiss();
@@ -170,7 +170,7 @@ public class ChooseCloudOrLocal extends DropboxActivity {
         dialog.setMessage("Reading catalogs");
         dialog.show();
 
-        new DownloadFileTask(this, DropboxClientFactory.getClient(), new DownloadFileTask.Callback() {
+        new DownloadFile(this, DropboxClientFactory.getClient(), new DownloadFile.Callback() {
             @Override
             public void onDownloadComplete(File result) {
                 dialog.dismiss();

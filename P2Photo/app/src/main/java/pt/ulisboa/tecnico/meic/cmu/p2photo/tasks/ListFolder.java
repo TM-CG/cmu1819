@@ -10,7 +10,7 @@ import com.dropbox.core.v2.files.ListFolderResult;
 /**
  * Async task to list items in a folder
  */
-public class ListFolderTask extends AsyncTask<String, Void, ListFolderResult> {
+public class ListFolder extends AsyncTask<String, Void, ListFolderResult> {
 
     private final DbxClientV2 mDbxClient;
     private final Callback mCallback;
@@ -22,7 +22,7 @@ public class ListFolderTask extends AsyncTask<String, Void, ListFolderResult> {
         void onError(Exception e);
     }
 
-    public ListFolderTask(DbxClientV2 dbxClient, Callback callback) {
+    public ListFolder(DbxClientV2 dbxClient, Callback callback) {
         mDbxClient = dbxClient;
         mCallback = callback;
     }
@@ -41,7 +41,7 @@ public class ListFolderTask extends AsyncTask<String, Void, ListFolderResult> {
     @Override
     protected ListFolderResult doInBackground(String... params) {
         try {
-            Log.i("ListFolderTask", "Path param: " + params[0]);
+            Log.i("ListFolder", "Path param: " + params[0]);
             return mDbxClient.files().listFolder(params[0]);
         } catch (DbxException e) {
             mException = e;

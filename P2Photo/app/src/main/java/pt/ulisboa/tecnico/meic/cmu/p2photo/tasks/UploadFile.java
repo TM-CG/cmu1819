@@ -21,7 +21,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.UriHelpers;
 /**
  * Async task to upload a file to a directory
  */
-public class UploadFileTask extends AsyncTask<String, Void, FileMetadata> {
+public class UploadFile extends AsyncTask<String, Void, FileMetadata> {
 
     private final Context mContext;
     private final DbxClientV2 mDbxClient;
@@ -33,7 +33,7 @@ public class UploadFileTask extends AsyncTask<String, Void, FileMetadata> {
         void onError(Exception e);
     }
 
-    public UploadFileTask(Context context, DbxClientV2 dbxClient, Callback callback) {
+    public UploadFile(Context context, DbxClientV2 dbxClient, Callback callback) {
         mContext = context;
         mDbxClient = dbxClient;
         mCallback = callback;
@@ -72,8 +72,8 @@ public class UploadFileTask extends AsyncTask<String, Void, FileMetadata> {
 
             // Note - this is not ensuring the name is a valid dropbox file name
             String remoteFileName = localFile.getName();
-            Log.i("CloudStorage", "UploadFileTask remoteFolderPath: " + remoteFolderPath);
-            Log.i("CloudStorage", "UploadFileTask remoteFileName: " + remoteFileName);
+            Log.i("CloudStorage", "UploadFile remoteFolderPath: " + remoteFolderPath);
+            Log.i("CloudStorage", "UploadFile remoteFileName: " + remoteFileName);
             try (InputStream inputStream = new FileInputStream(localFile)) {
                 String path;
 
@@ -87,7 +87,7 @@ public class UploadFileTask extends AsyncTask<String, Void, FileMetadata> {
                         .uploadAndFinish(inputStream);
             } catch (DbxException | IOException e) {
                 mException = e;
-                Log.i("CloudStorage", "UploadFileTask doInBack: got exception!");
+                Log.i("CloudStorage", "UploadFile doInBack: got exception!");
             }
         }
 

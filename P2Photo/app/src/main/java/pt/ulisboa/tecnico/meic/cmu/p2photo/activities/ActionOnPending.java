@@ -13,7 +13,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.CloudStorage;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.StorageProvider;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.CreateFolderTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.CreateFolder;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetAlbumOwner;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetAlbumURL;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.RejectPendingInvitation;
@@ -60,7 +60,7 @@ public class ActionOnPending extends AppCompatActivity {
             e.printStackTrace();
         }
         String albumDescription = id + " " + name;
-        new CreateFolderTask().execute(albumDescription, getApplicationContext());
+        new CreateFolder().execute(albumDescription, getApplicationContext());
         Cache.getInstance().albumsIDs.add(Integer.parseInt(id));
         Cache.getInstance().albums.add(name);
         Cache.getInstance().ownedAndPartAlbumsIDs.add(Integer.parseInt(id));

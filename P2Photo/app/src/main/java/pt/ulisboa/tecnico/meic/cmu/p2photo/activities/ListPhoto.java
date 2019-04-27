@@ -29,7 +29,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.FilesAdapter;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.ListPhotoAdapter;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileFromLinkTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileFromLink;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.FetchAllCatalogs;
 
 public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClickListener {
@@ -192,7 +192,7 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
 
         Log.i(TAG, "FileName: " + fileName);
 
-        DownloadFileFromLinkTask dft = new DownloadFileFromLinkTask(ListPhoto.this, DropboxClientFactory.getClient(), new DownloadFileFromLinkTask.Callback() {
+        DownloadFileFromLink dft = new DownloadFileFromLink(ListPhoto.this, DropboxClientFactory.getClient(), new DownloadFileFromLink.Callback() {
             @Override
             public void onDownloadComplete(File result) {
                 dialog.dismiss();

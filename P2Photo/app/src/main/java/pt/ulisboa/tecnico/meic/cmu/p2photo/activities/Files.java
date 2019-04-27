@@ -32,9 +32,9 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.PicassoClient;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.FilesAdapter;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileTask;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolderTask;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFileTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFile;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolder;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFile;
 
 
 /**
@@ -175,7 +175,7 @@ public class Files extends DropboxActivity {
         dialog.setMessage("Loading");
         dialog.show();
 
-        new ListFolderTask(DropboxClientFactory.getClient(), new ListFolderTask.Callback() {
+        new ListFolder(DropboxClientFactory.getClient(), new ListFolder.Callback() {
             @Override
             public void onDataLoaded(ListFolderResult result) {
                 dialog.dismiss();
@@ -203,7 +203,7 @@ public class Files extends DropboxActivity {
         dialog.setMessage("Downloading");
         dialog.show();
 
-        new DownloadFileTask(Files.this, DropboxClientFactory.getClient(), new DownloadFileTask.Callback() {
+        new DownloadFile(Files.this, DropboxClientFactory.getClient(), new DownloadFile.Callback() {
             @Override
             public void onDownloadComplete(File result) {
                 dialog.dismiss();
@@ -250,7 +250,7 @@ public class Files extends DropboxActivity {
         dialog.setMessage("Uploading");
         dialog.show();
 
-        new UploadFileTask(this, DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
+        new UploadFile(this, DropboxClientFactory.getClient(), new UploadFile.Callback() {
             @Override
             public void onUploadComplete(FileMetadata result) {
                 dialog.dismiss();

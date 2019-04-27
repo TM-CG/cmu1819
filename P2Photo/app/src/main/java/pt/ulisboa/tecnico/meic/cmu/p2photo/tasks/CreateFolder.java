@@ -11,7 +11,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 
-public class CreateFolderTask extends AsyncTask<Object,Object,Object[]> {
+public class CreateFolder extends AsyncTask<Object,Object,Object[]> {
 
     @Override
     protected Object[] doInBackground(Object[] objects) {

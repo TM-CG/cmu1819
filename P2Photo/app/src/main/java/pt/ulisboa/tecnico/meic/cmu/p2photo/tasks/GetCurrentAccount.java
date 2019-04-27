@@ -7,7 +7,7 @@ import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.users.FullAccount;
 
 
-public class GetCurrentAccountTask extends AsyncTask<Void, Void, FullAccount> {
+public class GetCurrentAccount extends AsyncTask<Void, Void, FullAccount> {
 
     private final DbxClientV2 mDbxClient;
     private final Callback mCallback;
@@ -18,7 +18,7 @@ public class GetCurrentAccountTask extends AsyncTask<Void, Void, FullAccount> {
         void onError(Exception e);
     }
 
-    public GetCurrentAccountTask(DbxClientV2 dbxClient, Callback callback) {
+    public GetCurrentAccount(DbxClientV2 dbxClient, Callback callback) {
         mDbxClient = dbxClient;
         mCallback = callback;
     }

@@ -40,7 +40,7 @@ public class ActionOnPending extends AppCompatActivity {
         position = cacheInstance.albumsIDs.indexOf(Integer.parseInt(id));
         new GetAlbumOwner().execute(ownerNametv,id);
         try {
-            new GetAlbumURL().execute(albumNametv, Integer.parseInt(id), getApplicationContext()).get();
+            new GetAlbumURL().execute(albumNametv, Integer.parseInt(id)).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

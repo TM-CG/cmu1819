@@ -104,7 +104,7 @@ public class AddUser extends AppCompatActivity {
     }
 
     /*public void confirmAddUsers(View view) {
-        Intent intent = new Intent(AddUser.this, ConfirmPrompt.class);
+        Intent intent = new Intent(AddUser.this, P2PhotoAlert.class);
         intent.putExtra("message", "Are you sure?");
         startActivityForResult(intent, CONFIRMATION_REQUEST);
     }*/

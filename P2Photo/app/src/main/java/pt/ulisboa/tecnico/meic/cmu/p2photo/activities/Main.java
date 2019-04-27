@@ -13,13 +13,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LogOut;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LogIn;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.SignUp;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.SocketConnect;
+
+import static pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector.*;
 
 public class Main extends AppCompatActivity {
 
@@ -107,15 +112,32 @@ public class Main extends AppCompatActivity {
     }
 
 
-    public void signIn(View view) {
+    public void logIn(View view) {
         if(checkConnectionParameters()){
             //store the username globally
             username = user.getText().toString();
 
             intent = new Intent(this, ChooseCloudOrLocal.class);
-            new SocketConnect().execute("signIn", getApplicationContext(), ip.getText().toString(),
+            new SocketConnect().execute("logIn", getApplicationContext(), ip.getText().toString(),
                     port.getText().toString(), user.getText().toString(), pass.getText().toString());
-            startActivity(intent);
+
+
+            try {
+                String loginResult = new LogIn().execute(user.getText().toString(), pass.getText().toString()).get();
+
+                if (loginResult.equals("OK"))
+                    startActivity(intent);
+                else {
+                    processErrors(loginResult);
+                }
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+
         }
     }
 
@@ -135,7 +157,21 @@ public class Main extends AppCompatActivity {
             intent = new Intent(this, ChooseCloudOrLocal.class);
             new SocketConnect().execute("signUp", getApplicationContext(), ip.getText().toString(),
                     port.getText().toString(), user.getText().toString(), pass.getText().toString());
-            startActivity(intent);
+
+
+            try {
+                String signUpResult = new SignUp().execute(user.getText().toString(), pass.getText().toString()).get();
+
+                if (signUpResult.equals("OK"))
+                    startActivity(intent);
+                else {
+                    processErrors(signUpResult);
+                }
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -157,9 +193,14 @@ public class Main extends AppCompatActivity {
         /*try connection to server*/
         ip = findViewById(R.id.ip);
         port = findViewById(R.id.port);
+
+        Intent alertIntent = new Intent(this, P2PhotoAlert.class);
+
         if(ip.getText().toString().matches("") || port.getText().toString().matches("")) {
-            Toast.makeText(getApplicationContext(), "Ip and Port cannot be empty",
-                    Toast.LENGTH_LONG).show();
+
+            alertIntent.putExtra("message", "IP and Port cannot be empty");
+            alertIntent.putExtra("options", "onlyOK");
+            startActivity(alertIntent);
             return false;
         }
         else {
@@ -167,33 +208,24 @@ public class Main extends AppCompatActivity {
                 Integer.parseInt(port.getText().toString());
                 return true;
             } catch(NumberFormatException e){
-                Toast.makeText(getApplicationContext(), "Port must be an integer",
-                        Toast.LENGTH_LONG).show();
+                alertIntent.putExtra("message", "Port must be an integer");
+                alertIntent.putExtra("options", "onlyOK");
+                startActivity(alertIntent);
                 return false;
             }
         }
     }
 
-
-
-    public void doToast(String data){
-        switch (data){
-            case "OK":
-                break;
-            case "NOK 1":
-                Toast.makeText(getApplicationContext(), "User name not found",
-                        Toast.LENGTH_LONG).show();
-                break;
-            case "NOK 2":
-                Toast.makeText(getApplicationContext(), "User name and password don't match",
-                        Toast.LENGTH_LONG).show();
-                break;
-            case "NOK 3":
-                Toast.makeText(getApplicationContext(), "User name already in use",
-                        Toast.LENGTH_LONG).show();
-                break;
-
-        }
+    /**
+     * Proccess servers errors
+     * @param data
+     */
+    public void processErrors(String data){
+        String verbose = getVerboseOfNOK(data);
+        Intent alertIntent = new Intent(this, P2PhotoAlert.class);
+        alertIntent.putExtra("message", verbose);
+        alertIntent.putExtra("options", "onlyOK");
+        startActivity(alertIntent);
     }
 
     public static ServerConnector getSv(){

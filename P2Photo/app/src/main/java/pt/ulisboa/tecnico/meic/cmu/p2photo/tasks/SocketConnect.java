@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
@@ -47,32 +46,12 @@ public class SocketConnect extends AsyncTask<Object,Void,Object[]> {
         }
         else{
             sv = (ServerConnector) result[1];
-            if(result[0] == "signIn"){
-                //if (checkArguments()) {
-                    new SignIn().execute(user, pass);
-               // }
+            if(result[0] == "logIn"){
+                new LogIn().execute(user, pass);
             }
             else if(result[0] == "signUp"){
-                //if (checkArguments()) {
-                    new SignUp().execute(user, pass);
-               // }
+                new SignUp().execute(user, pass);
             }
         }
     }
-
-    /*private boolean checkArguments(){
-        user = (EditText) findViewById(R.id.textUser);
-        pass = (EditText) findViewById(R.id.textPass);
-        intent.putExtra("name", user.getText().toString());
-        intent.putExtra("pass", pass.getText().toString());
-
-        setResult(RESULT_OK, intent);
-
-        if((user.getText().toString().matches("")) || pass.getText().toString().matches("")) {
-            Toast.makeText(getApplicationContext(), "Name or password invalid",
-                    Toast.LENGTH_LONG).show();
-            return false;
-        }
-        return true;
-    }*/
 }

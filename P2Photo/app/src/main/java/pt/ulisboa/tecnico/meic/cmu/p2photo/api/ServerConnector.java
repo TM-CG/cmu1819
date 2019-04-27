@@ -61,6 +61,15 @@ public class ServerConnector implements Connector{
     public static final String OK      = "OK"   ;
     public static final String SHUT_OK = "SHUT OK";
 
+    //verbose of servers Not OK messages
+    public static final String NOK_1_VERBOSE = "Username does not exist!";
+    public static final String NOK_2_VERBOSE = "Login has failed! Please check username and password and try again";
+    public static final String NOK_3_VERBOSE = "Username already signed up";
+    public static final String NOK_4_VERBOSE = "You session has expired! You must login again to perform this action";
+    public static final String NOK_5_VERBOSE = "This album does not exits nor you are the owner";
+    public static final String NOK_6_VERBOSE = "Invalid username";
+    public static final String NOK_7_VERBOSE = "The URL that you entered is invalid";
+
     private String serverPath;
 
     private int serverPort;
@@ -684,6 +693,24 @@ public class ServerConnector implements Connector{
         } catch (NullPointerException e) {
             throw new P2PhotoException(WRONG_ARGS + e.getMessage());
         }
+    }
+
+    /**
+     * Given a NOKX return the verbose of that error
+     * @param nok the nok reply from the server
+     * @return description of nok problem
+     */
+    public static String getVerboseOfNOK(String nok) {
+        switch(nok) {
+            case NOK_1: return NOK_1_VERBOSE;
+            case NOK_2: return NOK_2_VERBOSE;
+            case NOK_3: return NOK_3_VERBOSE;
+            case NOK_4: return NOK_4_VERBOSE;
+            case NOK_5: return NOK_5_VERBOSE;
+            case NOK_6: return NOK_6_VERBOSE;
+            case NOK_7: return NOK_7_VERBOSE;
+        }
+        return "";
     }
 
 

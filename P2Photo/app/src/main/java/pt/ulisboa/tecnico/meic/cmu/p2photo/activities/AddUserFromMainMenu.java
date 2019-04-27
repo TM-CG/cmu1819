@@ -103,7 +103,7 @@ public class AddUserFromMainMenu extends AppCompatActivity {
     }
 
     /*public void confirmAddUsers(View view) {
-        Intent intent = new Intent(AddUserFromMainMenu.this, ConfirmPrompt.class);
+        Intent intent = new Intent(AddUserFromMainMenu.this, P2PhotoAlert.class);
         intent.putExtra("message", "Are you sure?");
         startActivityForResult(intent, CONFIRMATION_REQUEST);
     }*/

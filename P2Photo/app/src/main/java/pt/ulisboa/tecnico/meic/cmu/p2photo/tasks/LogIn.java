@@ -6,18 +6,18 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 
-public class SignIn extends AsyncTask<String, String[], String> {
+public class LogIn extends AsyncTask<String, String[], String> {
 
     private ServerConnector sv;
     private String user;
     private String pass;
 
     @Override
-    protected String doInBackground(String [] objects) {
+    protected String doInBackground(String [] params) {
         try {
             sv = Main.sv;
-            user = objects[0];
-            pass = objects[1];
+            user = params[0];
+            pass = params[1];
 
             sv.logIn(user, pass);
 
@@ -26,13 +26,6 @@ public class SignIn extends AsyncTask<String, String[], String> {
         } catch (P2PhotoException e) {
             return e.getMessage();
         }
-    }
-
-    @Override
-    protected void onPostExecute(String result) {
-        String msg = result;
-        //doToast(msg);
-
     }
 
 }

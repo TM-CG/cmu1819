@@ -23,9 +23,6 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
  */
 public class DownloadFile extends AsyncTask<FileMetadata, Void, File> {
 
-    /** The path for the temporary folder to store slices and catalogs **/
-    public static final String TMP_FOLDER = Environment.DIRECTORY_DOWNLOADS;
-
     private final Context mContext;
     private final DbxClientV2 mDbxClient;
     private final Callback mCallback;
@@ -56,9 +53,9 @@ public class DownloadFile extends AsyncTask<FileMetadata, Void, File> {
     protected File doInBackground(FileMetadata... params) {
         FileMetadata metadata = params[0];
         try {
-            Log.i("DownloadFile", TMP_FOLDER + "/" + Main.username);
+            Log.i("DownloadFile", Main.CACHE_FOLDER + "/" + Main.username);
             File path = Environment.getExternalStoragePublicDirectory(
-                    TMP_FOLDER + "/" + Main.username);
+                    Main.CACHE_FOLDER + "/" + Main.username);
             File file = new File(path, metadata.getName());
 
             // Make sure the Downloads directory exists.

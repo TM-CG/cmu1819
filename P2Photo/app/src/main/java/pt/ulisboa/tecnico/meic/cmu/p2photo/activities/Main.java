@@ -36,6 +36,9 @@ public class Main extends AppCompatActivity {
     /** The username of the current user **/
     public static String username;
 
+    /** Temporary location to store catalogs and pictures **/
+    public static String CACHE_FOLDER;
+
     public static String getUser() {
         return username;
     }
@@ -55,6 +58,9 @@ public class Main extends AppCompatActivity {
         }
         user = findViewById(R.id.textUser);
         pass = findViewById(R.id.textPass);
+
+        //initialize cache folder
+        CACHE_FOLDER = getApplicationContext().getCacheDir().getAbsolutePath();
     }
 
     @Override

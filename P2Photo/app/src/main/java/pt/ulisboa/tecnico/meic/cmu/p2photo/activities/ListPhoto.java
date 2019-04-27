@@ -92,13 +92,9 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
 
             Log.i(TAG, "Finished downloading pictures!");
 
-
-
-
-
             GridView gridView = (GridView) findViewById(R.id.grid_thumbnails);
 
-            String path2Album = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + Main.username + "/" + tmpFolderPath;
+            String path2Album = Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER) + "/" + Main.username + "/" + tmpFolderPath;
 
             adapter = new ListPhotoAdapter(this, path2Album);
             gridView.setAdapter(adapter);

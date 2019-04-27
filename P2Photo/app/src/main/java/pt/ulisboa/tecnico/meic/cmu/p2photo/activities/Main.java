@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -113,30 +114,58 @@ public class Main extends AppCompatActivity {
 
 
     public void logIn(View view) {
+
+
         if(checkConnectionParameters()){
             //store the username globally
             username = user.getText().toString();
 
             intent = new Intent(this, ChooseCloudOrLocal.class);
-            new SocketConnect().execute("logIn", getApplicationContext(), ip.getText().toString(),
-                    port.getText().toString(), user.getText().toString(), pass.getText().toString());
 
+            final ProgressDialog dialog = new ProgressDialog(this);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setCancelable(false);
+            dialog.setMessage("Contacting the server");
+            dialog.show();
 
-            try {
-                String loginResult = new LogIn().execute(user.getText().toString(), pass.getText().toString()).get();
+            final ProgressDialog logIndialog = new ProgressDialog(this);
+            logIndialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            logIndialog.setCancelable(false);
+            logIndialog.setMessage("Checking your credentials");
+            logIndialog.show();
 
-                if (loginResult.equals("OK"))
-                    startActivity(intent);
-                else {
-                    processErrors(loginResult);
+            SocketConnect socketConnect = new SocketConnect(){
+                @Override
+                protected void onPostExecute(Object[] result) {
+                    dialog.dismiss();
+                    super.onPostExecute(result);
+                    try {
+                        LogIn logIn = new LogIn(){
+                            @Override
+                            protected void onPostExecute(String s) {
+                                super.onPostExecute(s);
+                                logIndialog.dismiss();
+                            }
+                        };
+
+                        String loginResult = logIn.execute(user.getText().toString(), pass.getText().toString()).get();
+
+                        if (loginResult.equals("OK"))
+                            startActivity(intent);
+                        else {
+                            processErrors(loginResult);
+                        }
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
                 }
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            };
 
-
+            socketConnect.execute("logIn", getApplicationContext(), ip.getText().toString(),
+                    port.getText().toString(), user.getText().toString(), pass.getText().toString());
 
         }
     }
@@ -150,28 +179,59 @@ public class Main extends AppCompatActivity {
         CloudStorage cs = new CloudStorage(this, null, StorageProvider.Operation.READ);
         new Thread(cs, "ReadingThread").start();*/
 
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setCancelable(false);
+        dialog.setMessage("Contacting the server");
+        dialog.show();
+
+        final ProgressDialog signUpdialog = new ProgressDialog(this);
+        signUpdialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        signUpdialog.setCancelable(false);
+        signUpdialog.setMessage("Signing up");
+        signUpdialog.show();
+
         if(checkConnectionParameters()){
             //store the username globally
             username = user.getText().toString();
 
             intent = new Intent(this, ChooseCloudOrLocal.class);
-            new SocketConnect().execute("signUp", getApplicationContext(), ip.getText().toString(),
+
+            SocketConnect socketConnect = new SocketConnect(){
+                @Override
+                protected void onPostExecute(Object[] result) {
+                    dialog.dismiss();
+                    super.onPostExecute(result);
+                    try {
+                        LogIn logIn = new LogIn(){
+                            @Override
+                            protected void onPostExecute(String s) {
+                                super.onPostExecute(s);
+                                signUpdialog.dismiss();
+                            }
+                        };
+
+
+                        String signUpResult = new SignUp().execute(user.getText().toString(), pass.getText().toString()).get();
+
+                        if (signUpResult.equals("OK"))
+                            startActivity(intent);
+                        else {
+                            processErrors(signUpResult);
+                        }
+
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            };
+
+            socketConnect.execute("signUp", getApplicationContext(), ip.getText().toString(),
                     port.getText().toString(), user.getText().toString(), pass.getText().toString());
 
-
-            try {
-                String signUpResult = new SignUp().execute(user.getText().toString(), pass.getText().toString()).get();
-
-                if (signUpResult.equals("OK"))
-                    startActivity(intent);
-                else {
-                    processErrors(signUpResult);
-                }
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 

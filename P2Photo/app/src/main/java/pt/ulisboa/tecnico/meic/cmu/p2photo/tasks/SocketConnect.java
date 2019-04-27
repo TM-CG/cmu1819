@@ -37,7 +37,7 @@ public class SocketConnect extends AsyncTask<Object,Void,Object[]> {
         }
     }
 
-    @Override
+    /*@Override
     protected void onPostExecute(Object[] result) {
         if(result[1] == null) {
             sv = null;
@@ -53,5 +53,5 @@ public class SocketConnect extends AsyncTask<Object,Void,Object[]> {
                 new SignUp().execute(user, pass);
             }
         }
-    }
+    }*/
 }

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import java.util.concurrent.ExecutionException;
 
@@ -122,29 +123,18 @@ public class Main extends AppCompatActivity {
 
             intent = new Intent(this, ChooseCloudOrLocal.class);
 
-            final ProgressDialog dialog = new ProgressDialog(this);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setCancelable(false);
-            dialog.setMessage("Contacting the server");
-            dialog.show();
-
-            final ProgressDialog logIndialog = new ProgressDialog(this);
-            logIndialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            logIndialog.setCancelable(false);
-            logIndialog.setMessage("Checking your credentials");
-            logIndialog.show();
-
+            loadingSpinner(true);
             SocketConnect socketConnect = new SocketConnect(){
                 @Override
                 protected void onPostExecute(Object[] result) {
-                    dialog.dismiss();
                     super.onPostExecute(result);
+
                     try {
                         LogIn logIn = new LogIn(){
                             @Override
                             protected void onPostExecute(String s) {
                                 super.onPostExecute(s);
-                                logIndialog.dismiss();
+                                loadingSpinner(false);
                             }
                         };
 
@@ -179,40 +169,27 @@ public class Main extends AppCompatActivity {
         CloudStorage cs = new CloudStorage(this, null, StorageProvider.Operation.READ);
         new Thread(cs, "ReadingThread").start();*/
 
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setCancelable(false);
-        dialog.setMessage("Contacting the server");
-        dialog.show();
-
-        final ProgressDialog signUpdialog = new ProgressDialog(this);
-        signUpdialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        signUpdialog.setCancelable(false);
-        signUpdialog.setMessage("Signing up");
-        signUpdialog.show();
-
         if(checkConnectionParameters()){
             //store the username globally
             username = user.getText().toString();
 
             intent = new Intent(this, ChooseCloudOrLocal.class);
-
+            loadingSpinner(true);
             SocketConnect socketConnect = new SocketConnect(){
                 @Override
                 protected void onPostExecute(Object[] result) {
-                    dialog.dismiss();
+
                     super.onPostExecute(result);
                     try {
-                        LogIn logIn = new LogIn(){
+                        SignUp signUp = new SignUp(){
                             @Override
                             protected void onPostExecute(String s) {
                                 super.onPostExecute(s);
-                                signUpdialog.dismiss();
+                                loadingSpinner(false);
                             }
                         };
 
-
-                        String signUpResult = new SignUp().execute(user.getText().toString(), pass.getText().toString()).get();
+                        String signUpResult = signUp.execute(user.getText().toString(), pass.getText().toString()).get();
 
                         if (signUpResult.equals("OK"))
                             startActivity(intent);
@@ -290,5 +267,14 @@ public class Main extends AppCompatActivity {
 
     public static ServerConnector getSv(){
         return sv;
+    }
+
+    /**
+     * Shows or hides loading spinner
+     * @param action
+     */
+    private void loadingSpinner(boolean action) {
+        ProgressBar loadingBar = findViewById(R.id.loading);
+        loadingBar.setVisibility((action ? View.VISIBLE : View.INVISIBLE));
     }
 }

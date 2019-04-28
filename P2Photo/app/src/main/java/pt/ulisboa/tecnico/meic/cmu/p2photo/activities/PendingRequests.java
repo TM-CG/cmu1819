@@ -8,10 +8,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
 public class PendingRequests extends AppCompatActivity {
@@ -38,6 +40,8 @@ public class PendingRequests extends AppCompatActivity {
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cache.getInstance().progressBar = (ProgressBar) findViewById(R.id.loading);
+                Cache.getInstance().loadingSpinner(true);
                 Intent intent = new Intent(PendingRequests.this, ActionOnPending.class);
                 pos = items.get(position);
                 intent.putExtra("albumID", items.get(position));

@@ -50,7 +50,6 @@ public class CreateAlbumOnServer extends AsyncTask<Object,Object,Object[]> {
             Cache.getInstance().ownedAlbumWithIDs.add(splited[0] + " " + splited[1]);
             //add users to albums
             new AddUsersToAlbum().execute(o);
-            loadingSpinner(false);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -80,17 +79,4 @@ public class CreateAlbumOnServer extends AsyncTask<Object,Object,Object[]> {
         return null;
     }
 
-    /**
-     * Shows or hides loading spinner
-     * @param action
-     */
-    private void loadingSpinner(boolean action) {
-        try {
-            ProgressBar loadingBar = Cache.getInstance().progressBar;
-            loadingBar.setVisibility((action ? View.VISIBLE : View.INVISIBLE));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

@@ -69,7 +69,7 @@ public class CreateAlbum extends AppCompatActivity {
     public void create(View view){
         EditText albumTitle = (EditText) findViewById(R.id.nameInput);
         Cache.getInstance().progressBar = (ProgressBar) findViewById(R.id.loading);
-        loadingSpinner(true);
+        Cache.getInstance().loadingSpinner(true);
 
         if ((!albumTitle.getText().toString().matches("\\s+")) && (!albumTitle.getText().toString().equals(""))) {
 
@@ -116,16 +116,6 @@ public class CreateAlbum extends AppCompatActivity {
             // Return true consumes the long click event (marks it handled)
         }
     }
-
-    /**
-     * Shows or hides loading spinner
-     * @param action
-     */
-    private void loadingSpinner(boolean action) {
-        ProgressBar loadingBar = findViewById(R.id.loading);
-        loadingBar.setVisibility((action ? View.VISIBLE : View.INVISIBLE));
-    }
-
 
 }
 

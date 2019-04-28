@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import java.util.ArrayList;
 
@@ -115,6 +116,8 @@ public class AddUserFromMainMenu extends AppCompatActivity {
     }
 
     public void create(View view){
+        Cache.getInstance().progressBar = (ProgressBar) findViewById(R.id.loading);
+        Cache.getInstance().loadingSpinner(true);
         Intent intent = getIntent();
         setResult(RESULT_OK,intent);
         String name = cacheInstance.lvItemsSpinner.getSelectedItem().toString();

@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 
 import java.util.concurrent.ExecutionException;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
@@ -122,8 +123,8 @@ public class Main extends AppCompatActivity {
             username = user.getText().toString();
 
             intent = new Intent(this, ChooseCloudOrLocal.class);
-
-            loadingSpinner(true);
+            Cache.getInstance().progressBar = (ProgressBar) findViewById(R.id.loading);
+            Cache.getInstance().loadingSpinner(true);
             SocketConnect socketConnect = new SocketConnect(){
                 @Override
                 protected void onPostExecute(Object[] result) {
@@ -134,7 +135,7 @@ public class Main extends AppCompatActivity {
                             @Override
                             protected void onPostExecute(String s) {
                                 super.onPostExecute(s);
-                                loadingSpinner(false);
+                                Cache.getInstance().loadingSpinner(false);
                             }
                         };
 
@@ -174,7 +175,8 @@ public class Main extends AppCompatActivity {
             username = user.getText().toString();
 
             intent = new Intent(this, ChooseCloudOrLocal.class);
-            loadingSpinner(true);
+            Cache.getInstance().progressBar = (ProgressBar) findViewById(R.id.loading);
+            Cache.getInstance().loadingSpinner(true);
             SocketConnect socketConnect = new SocketConnect(){
                 @Override
                 protected void onPostExecute(Object[] result) {
@@ -185,7 +187,7 @@ public class Main extends AppCompatActivity {
                             @Override
                             protected void onPostExecute(String s) {
                                 super.onPostExecute(s);
-                                loadingSpinner(false);
+                                Cache.getInstance().loadingSpinner(false);
                             }
                         };
 
@@ -269,12 +271,5 @@ public class Main extends AppCompatActivity {
         return sv;
     }
 
-    /**
-     * Shows or hides loading spinner
-     * @param action
-     */
-    private void loadingSpinner(boolean action) {
-        ProgressBar loadingBar = findViewById(R.id.loading);
-        loadingBar.setVisibility((action ? View.VISIBLE : View.INVISIBLE));
-    }
+
 }

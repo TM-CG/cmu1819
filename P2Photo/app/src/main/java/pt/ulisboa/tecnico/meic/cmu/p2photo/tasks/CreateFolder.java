@@ -40,5 +40,6 @@ public class CreateFolder extends AsyncTask<Object,Object,Object[]> {
             Toast.makeText((Context) result[0], "Album NOT created in your dropbox",
                     Toast.LENGTH_LONG).show();
         }
+        Cache.getInstance().loadingSpinner(false);
     }
 }

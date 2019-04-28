@@ -78,5 +78,13 @@ public class Cache {
         ownedAlbumWithIDs = new ArrayList<>();
     }
 
+    /**
+     * Shows or hides loading spinner
+     * @param action
+     */
+    public void loadingSpinner(boolean action) {
+        progressBar.setVisibility((action ? View.VISIBLE : View.INVISIBLE));
+    }
+
 
 }

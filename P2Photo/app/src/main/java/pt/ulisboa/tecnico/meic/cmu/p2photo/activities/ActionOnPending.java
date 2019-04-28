@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.util.Log;
 
 import java.util.concurrent.ExecutionException;
 
@@ -47,9 +49,12 @@ public class ActionOnPending extends AppCompatActivity {
             e.printStackTrace();
         }
         albumIDtv.setText(id);
+        cacheInstance.loadingSpinner(false);
     }
 
     public void acceptInvitation(View view) {
+        Cache.getInstance().progressBar = (ProgressBar) findViewById(R.id.loading);
+        Cache.getInstance().loadingSpinner(true);
         name = albumNametv.getText().toString();
         AlbumCatalog catalog = new AlbumCatalog(Integer.parseInt(id), name);
         Thread t1 = new Thread(new CloudStorage(getApplicationContext(), catalog, StorageProvider.Operation.WRITE), "WritingThread");

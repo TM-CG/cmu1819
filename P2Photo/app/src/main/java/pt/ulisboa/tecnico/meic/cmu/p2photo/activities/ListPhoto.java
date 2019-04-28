@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.FilesAdapter;
@@ -98,7 +99,7 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
 
             adapter = new ListPhotoAdapter(this, path2Album);
             gridView.setAdapter(adapter);
-
+            Cache.getInstance().loadingSpinner(false);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

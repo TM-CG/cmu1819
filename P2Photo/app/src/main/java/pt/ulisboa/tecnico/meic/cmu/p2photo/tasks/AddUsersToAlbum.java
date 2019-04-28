@@ -2,9 +2,12 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 
@@ -29,6 +32,7 @@ public class AddUsersToAlbum extends AsyncTask<Object,Void,Object[]> {
                 }
             }
         }
+        Cache.getInstance().loadingSpinner(false);
         //TODO
         return null;
     }

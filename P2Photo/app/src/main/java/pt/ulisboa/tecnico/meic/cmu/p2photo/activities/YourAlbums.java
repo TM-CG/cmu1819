@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
@@ -60,6 +61,8 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
         cacheInstance.albumsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                cacheInstance.progressBar = (ProgressBar) findViewById(R.id.loading);
+                cacheInstance.loadingSpinner(true);
                 String selectedItem = parent.getItemAtPosition(position).toString();
 
                 int albumId = Integer.parseInt(selectedItem.split(" ")[0]);

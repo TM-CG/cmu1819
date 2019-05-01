@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".chooseCloudLocalActivity">
+    tools:context=".activities.ChooseCloudOrLocal">
 
     <Button
         android:id="@+id/cloudButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
-        android:enabled="false"
+        android:enabled="true"
         android:onClick="selectCloud"
         android:text="@string/cloud"
-        app:layout_constraintEnd_toEndOf="parent"
 
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toEndOf="@id/localButton"
         app:layout_constraintTop_toBottomOf="@id/cloud" />

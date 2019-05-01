@@ -1,9 +1,7 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo.api;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.sharing.SharedLinkMetadata;
@@ -12,8 +10,8 @@ import java.text.DateFormat;
 import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.ShareLinkTask;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.UploadFileTask;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ShareLink;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFile;
 
 /**
  * Support for storing catalog files in the cloud
@@ -51,7 +49,7 @@ public class CloudStorage extends StorageProvider {
 
         FileMetadata result = null;
         try {
-            result = new UploadFileTask(getContext(), DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
+            result = new UploadFile(getContext(), DropboxClientFactory.getClient(), new UploadFile.Callback() {
 
                 @Override
                 public void onUploadComplete(FileMetadata result) {
@@ -90,7 +88,7 @@ public class CloudStorage extends StorageProvider {
 
         SharedLinkMetadata linkMetadata = null;
         try {
-            linkMetadata = new ShareLinkTask(getContext(), DropboxClientFactory.getClient(), new ShareLinkTask.Callback() {
+            linkMetadata = new ShareLink(getContext(), DropboxClientFactory.getClient(), new ShareLink.Callback() {
                 @Override
                 public void onShareComplete(SharedLinkMetadata result) {
                     Log.i(TAG, "Successfully generated link to shared file: " + result.getUrl());

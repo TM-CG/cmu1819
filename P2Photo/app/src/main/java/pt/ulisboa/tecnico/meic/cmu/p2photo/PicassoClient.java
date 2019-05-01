@@ -6,6 +6,8 @@ import com.dropbox.core.v2.DbxClientV2;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.handlers.FileThumbnailRequestHandler;
+
 
 public class PicassoClient {
 

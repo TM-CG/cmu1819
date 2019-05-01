@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddUser">
+    tools:context=".activities.AddUser">
 
     <TextView
         android:id="@+id/pendingTittle"
@@ -88,5 +88,19 @@
         app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toEndOf="@id/rejectButton"
         app:layout_constraintTop_toBottomOf="@id/albumID" />
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/acceptButton"
+        app:layout_constraintEnd_toStartOf="@+id/acceptButton"
+        app:layout_constraintStart_toEndOf="@+id/rejectButton"
+        app:layout_constraintTop_toTopOf="@+id/rejectButton" />
 
 </android.support.constraint.ConstraintLayout>

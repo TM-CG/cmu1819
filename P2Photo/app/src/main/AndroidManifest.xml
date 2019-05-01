@@ -16,25 +16,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ActionOnPendingActivity"></activity>
-        <activity android:name=".PendingRequestsActivity" />
-        <activity android:name=".selectPhotoActivity" />
-        <activity android:name=".settingsActivity" />
-        <activity android:name=".chooseCloudLocalActivity" />
-        <activity android:name=".AddUser" />
-        <activity android:name=".CreateAlbum" />
-        <activity android:name=".ActionsMenu" />
-        <activity android:name=".addPhotoActivity" />
-        <activity android:name=".YourAlbums" />
-        <activity android:name=".ListPhoto" />
-        <activity android:name=".FilesActivity" />
-        <activity android:name=".addUserFromMainMenu" />
-        <activity android:name=".addPhotoActivityFromMenu" />
-        <activity android:name=".LogActivity" />
+        <activity android:name=".activities.ActionOnPending"></activity>
+        <activity android:name=".activities.PendingRequests" />
+        <activity android:name=".activities.SelectPhoto" />
+        <activity android:name=".activities.Settings" />
+        <activity android:name=".activities.ChooseCloudOrLocal" />
+        <activity android:name=".activities.AddUser" />
+        <activity android:name=".activities.CreateAlbum" />
+        <activity android:name=".activities.ActionsMenu" />
+        <activity android:name=".activities.AddPhoto" />
+        <activity android:name=".activities.YourAlbums" />
+        <activity android:name=".activities.ListPhoto" />
+        <activity android:name=".activities.Files" />
+        <activity android:name=".activities.AddUserFromMainMenu" />
+        <activity android:name=".activities.AddPhotoFromMainMenu" />
+        <activity android:name=".activities.Log" />
         <activity
-            android:name=".ConfirmPromptActivity"
+            android:name=".activities.P2PhotoAlert"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

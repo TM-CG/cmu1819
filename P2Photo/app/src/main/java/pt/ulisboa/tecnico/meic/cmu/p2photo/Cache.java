@@ -1,14 +1,15 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo;
 
-import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cache extends AppCompatActivity {
+public class Cache {
 
     //all about the albums
     public static List<Integer> ownedAlbumsIDs; /*just the owned albums*/
@@ -27,6 +28,8 @@ public class Cache extends AppCompatActivity {
     public static Spinner sel_album;
 
     private static Cache single_instance = null;
+
+    public static ProgressBar progressBar;
 
     private Cache(){
         albums = new ArrayList<String>();
@@ -73,6 +76,14 @@ public class Cache extends AppCompatActivity {
         ownedAlbumsIDs = new ArrayList<Integer>();
         ownedAndPartAlbumsIDs = new ArrayList<Integer>();
         ownedAlbumWithIDs = new ArrayList<>();
+    }
+
+    /**
+     * Shows or hides loading spinner
+     * @param action
+     */
+    public void loadingSpinner(boolean action) {
+        progressBar.setVisibility((action ? View.VISIBLE : View.INVISIBLE));
     }
 
 

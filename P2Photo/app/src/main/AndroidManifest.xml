@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning"
-        tools:replace="android:icon">
+        tools:replace="android:icon,android:theme"
+        android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".activities.ActionOnPending"></activity>
         <activity android:name=".activities.PendingRequests" />
         <activity android:name=".activities.SelectPhoto" />

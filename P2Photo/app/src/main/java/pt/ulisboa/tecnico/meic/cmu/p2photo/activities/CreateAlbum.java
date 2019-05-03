@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
-import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.CreateAlbumOnServer;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.FindUsers;
@@ -68,13 +67,22 @@ public class CreateAlbum extends AppCompatActivity {
 
     public void create(View view){
         EditText albumTitle = (EditText) findViewById(R.id.nameInput);
-        Cache.getInstance().progressBar = (ProgressBar) findViewById(R.id.loading);
-        Cache.getInstance().loadingSpinner(true);
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.loading);
+        progressBar.setVisibility(View.VISIBLE);
 
         if ((!albumTitle.getText().toString().matches("\\s+")) && (!albumTitle.getText().toString().equals(""))) {
 
             //creates album on the server
-            new CreateAlbumOnServer().execute(album.getText().toString(), getApplicationContext(), items2);
+            CreateAlbumOnServer createAlbumOnServer = new CreateAlbumOnServer() {
+                @Override
+                protected void onPostExecute(Object[] o) {
+                    super.onPostExecute(o);
+                    //Hides the progressBar
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            };
+
+            createAlbumOnServer.execute(album.getText().toString(), getApplicationContext(), items2);
         }
 
 

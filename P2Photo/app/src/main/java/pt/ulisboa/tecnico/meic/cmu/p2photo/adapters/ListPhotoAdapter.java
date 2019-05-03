@@ -61,7 +61,8 @@ public class ListPhotoAdapter extends BaseAdapter {
         //vitor: just for debug
         ImageView myImage = new ImageView(context);
         myImage.setImageBitmap(myBitmap);
-
+        Log.i("ListPhotoAdapter", "Path2Pic: " + files[position].getAbsolutePath());
+        myImage.setTag(files[position].getAbsolutePath());
         //define the thumbnail size
         myImage.setLayoutParams(new LinearLayout.LayoutParams(THUMBNAIL_SIZE,THUMBNAIL_SIZE));
         return myImage;

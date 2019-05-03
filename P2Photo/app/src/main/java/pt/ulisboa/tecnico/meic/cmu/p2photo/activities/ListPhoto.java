@@ -3,13 +3,17 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,6 +109,19 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        //Define onclick to preview the photo using external app
+        GridView gridView = findViewById(R.id.grid_thumbnails);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ImageView imageView = (ImageView) view;
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse((String) imageView.getTag()), "image/*");
+                startActivity(intent);
+            }
+        });
 
     }
 

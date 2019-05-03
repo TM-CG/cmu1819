@@ -60,6 +60,7 @@ public class DownloadFile extends AsyncTask<FileMetadata, Void, File> {
 
             // Make sure the Downloads directory exists.
             if (!path.exists()) {
+                Log.i("DownloadFile", "Im about to create the user's folder");
                 path.mkdir();
 
             } else if (!path.isDirectory()) {
@@ -67,6 +68,7 @@ public class DownloadFile extends AsyncTask<FileMetadata, Void, File> {
                 return null;
             }
 
+            file.createNewFile();
 
             // Download the file.
             try (OutputStream outputStream = new FileOutputStream(file)) {

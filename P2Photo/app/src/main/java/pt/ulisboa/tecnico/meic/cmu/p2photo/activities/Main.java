@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -69,6 +70,7 @@ public class Main extends AppCompatActivity {
 
         //initialize cache folder
         CACHE_FOLDER = getApplicationContext().getCacheDir().getAbsolutePath();
+        //CACHE_FOLDER = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
     }
 
     @Override

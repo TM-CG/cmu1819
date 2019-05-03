@@ -33,29 +33,8 @@ public class CreateAlbumOnServer extends AsyncTask<Object,Object,Object[]> {
         //create album catalog for new album
         AlbumCatalog catalog = new AlbumCatalog(albumId, albumTitle);
 
-        Thread t1 = new Thread(new CloudStorage(context, catalog, StorageProvider.Operation.WRITE), "WritingThread");
+        Thread t1 = new Thread(new CloudStorage(context, catalog, StorageProvider.Operation.WRITE, o), "WritingThread");
         t1.start();
-        try {
-            t1.join();
-            //create a new folder
-            String albumName = albumId + " " + albumTitle;
-            new CreateFolder().execute(albumName, context);
-            String[] splited = albumName.split(" ");
-            Cache.getInstance().albumsIDs.add(Integer.parseInt(splited[0]));
-            Cache.getInstance().albums.add(splited[1]);
-            Cache.getInstance().ownedAndPartAlbumsIDs.add(Integer.parseInt(splited[0]));
-            Cache.getInstance().ownedAndPartAlbums.add(splited[1]);
-            Cache.getInstance().ownedAlbumsIDs.add(Integer.parseInt(splited[0]));
-            Cache.getInstance().ownedAlbums.add(splited[1]);
-            Cache.getInstance().ownedAlbumWithIDs.add(splited[0] + " " + splited[1]);
-            //add users to albums
-            new AddUsersToAlbum().execute(o);
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
     }
 
     @Override

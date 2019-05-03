@@ -12,8 +12,14 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.CloudStorage;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.StorageProvider;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AddUsersToAlbum;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.CreateAlbumOnServer;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.CreateFolder;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.FindUsers;
 
 public class CreateAlbum extends AppCompatActivity {

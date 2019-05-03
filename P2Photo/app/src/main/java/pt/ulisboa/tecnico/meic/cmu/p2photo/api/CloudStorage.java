@@ -9,7 +9,10 @@ import com.dropbox.core.v2.sharing.SharedLinkMetadata;
 import java.text.DateFormat;
 import java.util.concurrent.ExecutionException;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AddUsersToAlbum;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.CreateFolder;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ShareLink;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFile;
 
@@ -23,6 +26,9 @@ public class CloudStorage extends StorageProvider {
 
     private static final String TAG = CloudStorage.class.getName();
 
+    //arguments for some operations
+    private Object[] args;
+
     public CloudStorage(Context context, AlbumCatalog catalog, Operation operation) {
         super(context, catalog, operation);
     }
@@ -31,10 +37,16 @@ public class CloudStorage extends StorageProvider {
         super(context, albumId, operation);
     }
 
+    public CloudStorage(Context context, AlbumCatalog catalog, Operation operation, Object[] args) {
+        super(context, catalog, operation);
+        this.args = args;
+    }
+
     @Override
     void writeFile(final String fileURL) {
 
         final int albumId = getCatalog().getAlbumId();
+        final String albumTitle = getCatalog().getAlbumTitle();
         //Writing file to a cloud provider is equivalent to upload it
 
         //vitor: i just remove the dialog because CreateAlbum closes so fast that dialog is running
@@ -113,6 +125,27 @@ public class CloudStorage extends StorageProvider {
 
         try {
             new AddAlbumSliceCatalogURL().execute(albumId, linkMetadata.getUrl()).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //create a new folder
+        String albumName = albumId + " " + albumTitle;
+        new CreateFolder().execute(albumName, getContext());
+        String[] splited = albumName.split(" ");
+        Cache.getInstance().albumsIDs.add(Integer.parseInt(splited[0]));
+        Cache.getInstance().albums.add(splited[1]);
+        Cache.getInstance().ownedAndPartAlbumsIDs.add(Integer.parseInt(splited[0]));
+        Cache.getInstance().ownedAndPartAlbums.add(splited[1]);
+        Cache.getInstance().ownedAlbumsIDs.add(Integer.parseInt(splited[0]));
+        Cache.getInstance().ownedAlbums.add(splited[1]);
+        Cache.getInstance().ownedAlbumWithIDs.add(splited[0] + " " + splited[1]);
+        //add users to albums
+        try {
+            new AddUsersToAlbum().execute(args).get();
+
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
 import pt.inesc.termite.wifidirect.SimWifiP2pDevice;
 import pt.inesc.termite.wifidirect.SimWifiP2pDeviceList;
@@ -139,7 +141,13 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
     public void sendMessage(String message) {
         Log.i(TAG, "Sending message through Wi-FiD: " + message);
-        new WiFiDSendMsg().execute(simWifiP2pSocket, message);
+        try {
+            simWifiP2pSocket = new SimWifiP2pSocket("192.168.0.2", 10001);
+            new WiFiDSendMsg().execute(simWifiP2pSocket, message);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void stopBackgroundTask() {

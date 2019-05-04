@@ -1,10 +1,15 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo.api;
 
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.os.Messenger;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
 import pt.inesc.termite.wifidirect.SimWifiP2pDevice;
@@ -17,6 +22,7 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.bcastreceivers.P2PhotoWiFiDBroadcastReceiver;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.PeerListListener;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.GroupInfoListener;
+import pt.inesc.termite.wifidirect.SimWifiP2pManager.Channel;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDIncommingMsg;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDSendMsg;
 
@@ -34,6 +40,10 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
     private P2PhotoWiFiDBroadcastReceiver p2PhotoWiFiDBroadcastReceiver;
 
     private AppCompatActivity activity;
+
+    private Channel channelService;
+    private Messenger messengerService;
+    private boolean mBound = false;
 
     public WiFiDConnector(AppCompatActivity activity) {
         this.activity = activity;
@@ -94,6 +104,26 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
                 .show();
     }
 
+    private ServiceConnection mConnection = new ServiceConnection() {
+        // callbacks for service binding, passed to bindService()
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            messengerService = new Messenger(service);
+            simWifiP2pManager = new SimWifiP2pManager(messengerService);
+            channelService = simWifiP2pManager.initialize(activity.getApplication(), activity.getMainLooper(), null);
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            messengerService = null;
+            simWifiP2pManager = null;
+            channelService = null;
+            mBound = false;
+        }
+    };
+
     public void startBackgroundTask() {
         Log.i(TAG, "Started Background Task");
         new WiFiDIncommingMsg().execute(simWifiP2pSocketServer);
@@ -106,5 +136,23 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
     public void stopBackgroundTask() {
         activity.unregisterReceiver(p2PhotoWiFiDBroadcastReceiver);
+    }
+
+    public void requestPeersInRange() {
+        if (mBound) {
+            simWifiP2pManager.requestPeers(channelService, this);
+        } else {
+            Toast.makeText(activity, "Service not bound",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void requestGroupInfo() {
+        if (mBound) {
+            simWifiP2pManager.requestGroupInfo(channelService, this);
+        } else {
+            Toast.makeText(activity, "Service not bound",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }

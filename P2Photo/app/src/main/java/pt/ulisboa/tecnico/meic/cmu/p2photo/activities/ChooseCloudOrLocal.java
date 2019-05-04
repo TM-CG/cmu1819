@@ -23,6 +23,7 @@ import java.io.IOException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.WiFiDConnector;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AllAlbums;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFile;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolder;
@@ -31,11 +32,24 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetCurrentAccount;
 
 
 public class ChooseCloudOrLocal extends DropboxActivity {
+    private static final String TAG = ChooseCloudOrLocal.class.getName();
+
     private Cache cacheInstance = Cache.getInstance();
+
+    public static WiFiDConnector wifiConnector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_cloud_local);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (wifiConnector != null) {
+            wifiConnector.stopBackgroundTask();
+        }
     }
 
     public void goBack(View view){
@@ -55,6 +69,16 @@ public class ChooseCloudOrLocal extends DropboxActivity {
         Intent intent = new Intent(this, ActionsMenu.class);
         cacheInstance.cleanArrays();
         loadCache();
+        startActivityForResult(intent, 4);
+    }
+
+    public void selectLocalWiFi(View view) {
+        wifiConnector = new WiFiDConnector(this);
+        Log.i(TAG, "Already constructed Wi-Fi direct object!");
+
+        wifiConnector.startBackgroundTask();
+
+        Intent intent = new Intent(this, ActionsMenu.class);
         startActivityForResult(intent, 4);
     }
 

@@ -64,6 +64,11 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
         p2PhotoWiFiDBroadcastReceiver = new P2PhotoWiFiDBroadcastReceiver(this.activity);
         this.activity.registerReceiver(p2PhotoWiFiDBroadcastReceiver, filter);
+        try {
+            simWifiP2pSocket = new SimWifiP2pSocket("192.168.0.1", 10001);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -141,13 +146,9 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
     public void sendMessage(String message) {
         Log.i(TAG, "Sending message through Wi-FiD: " + message);
-        try {
-            simWifiP2pSocket = new SimWifiP2pSocket("192.168.0.2", 10001);
-            new WiFiDSendMsg().execute(simWifiP2pSocket, message);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new WiFiDSendMsg().execute(simWifiP2pSocket, message);
+
     }
 
     public void stopBackgroundTask() {

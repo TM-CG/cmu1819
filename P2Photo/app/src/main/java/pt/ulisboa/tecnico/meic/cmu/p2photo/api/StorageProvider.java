@@ -8,6 +8,7 @@ import android.util.Log;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.DropboxActivity;
@@ -32,10 +33,12 @@ public abstract class StorageProvider extends DropboxActivity implements Runnabl
 
     private Operation operation;
 
+    protected Object[] args;
+
     //Generic write and read methods
     //This methods are executed AFTER temp file is created!
     abstract void writeFile(String fileURL);
-    abstract String readFile(String fileURL);
+    abstract AlbumCatalog readFile(String fileURL, String description, String folderPath, String fileName, int option);
 
     private StorageProvider(Context context, AlbumCatalog catalog) {
         this.context = context;
@@ -50,6 +53,12 @@ public abstract class StorageProvider extends DropboxActivity implements Runnabl
     public StorageProvider(Context context, AlbumCatalog catalog, Operation operation) {
         this(context, catalog);
         this.operation = operation;
+    }
+
+    public StorageProvider(Context context, AlbumCatalog catalog, Operation operation, Object[] args) {
+        this(context, catalog);
+        this.operation = operation;
+        this.args = args;
     }
 
     public StorageProvider(Context context, int albumId, Operation operation) {
@@ -76,31 +85,8 @@ public abstract class StorageProvider extends DropboxActivity implements Runnabl
 
         switch (operation) {
             case READ:
-                Scanner scanner = null;
-                StringBuilder sb = new StringBuilder();
-
-                //Creates a temporary file
-                FileInputStream fis = null;
-                try {
-                    fis = context.openFileInput(albumId + CATALOG_TMP_FILE);
-                    // scanner does mean one more object, but it's easier to work with
-                    scanner = new Scanner(fis);
-                    while (scanner.hasNextLine()) {
-                        sb.append(scanner.nextLine() + LINE_SEP);
-                    }
-
-                    //parse to Object
-                    catalog = AlbumCatalog.parseToAlbumCatalog(sb.toString());
-                } catch (IOException e) {
-                    Log.i("StorageProvider", "Failed to read temp file");
-                } finally {
-                    try {
-                        if (fis != null)
-                            fis.close();
-                    } catch (IOException e) {
-                        Log.i("StorageProvider", "Close error");
-                    }
-                }
+                catalog = readFile((String) args[0], (String) args[1], (String) args[2], (String) args[3], (Integer) args[4]);
+                
 
                 break;
 
@@ -131,36 +117,6 @@ public abstract class StorageProvider extends DropboxActivity implements Runnabl
 
     }
 
-    public class AddAlbumSliceCatalogURL extends AsyncTask {
 
-        private ServerConnector sv = Main.sv;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            Log.i(TAG, "Starting doInBackground");
-            try {
-                int albumId = (int) objects[0];
-                String sliceURL = (String) objects[1];
-
-                sv.acceptIncomingRequest(albumId, sliceURL);
-                Log.i(TAG, "Accepted my own request!");
-
-            } catch (P2PhotoException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-    }
 
 }

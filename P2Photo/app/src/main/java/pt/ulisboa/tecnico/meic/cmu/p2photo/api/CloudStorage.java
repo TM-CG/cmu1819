@@ -2,17 +2,27 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.api;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.sharing.SharedLinkMetadata;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DateFormat;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.ListPhoto;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AddAlbumSliceCatalogURL;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AddUsersToAlbum;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.CreateFolder;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileFromLink;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ShareLink;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFile;
 
@@ -26,9 +36,6 @@ public class CloudStorage extends StorageProvider {
 
     private static final String TAG = CloudStorage.class.getName();
 
-    //arguments for some operations
-    private Object[] args;
-
     public CloudStorage(Context context, AlbumCatalog catalog, Operation operation) {
         super(context, catalog, operation);
     }
@@ -38,8 +45,7 @@ public class CloudStorage extends StorageProvider {
     }
 
     public CloudStorage(Context context, AlbumCatalog catalog, Operation operation, Object[] args) {
-        super(context, catalog, operation);
-        this.args = args;
+        super(context, catalog, operation, args);
     }
 
     @Override
@@ -156,7 +162,67 @@ public class CloudStorage extends StorageProvider {
     }
 
     @Override
-    String readFile(String fileURL) {
+    AlbumCatalog readFile(String fileURL, String description, String folderPath, String fileName, int option) {
+
+
+        if (fileName == null) //get name from url
+        {
+            if (fileURL.contains("?"))
+                fileName = fileURL.substring(fileURL.lastIndexOf('/'), fileURL.indexOf('?'));
+            else fileName = fileURL.substring(fileURL.lastIndexOf('/'));
+        }
+
+        Log.i(TAG, "FileName: " + fileName);
+
+        DownloadFileFromLink dft = new DownloadFileFromLink(getContext(), DropboxClientFactory.getClient(), new DownloadFileFromLink.Callback() {
+            @Override
+            public void onDownloadComplete(File result) {
+                //dialog.dismiss();
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                //dialog.dismiss();
+
+                Log.i(TAG, "Failed to download file.", e);
+                Toast.makeText(getContext(),
+                        "An error has occurred",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
+        File result = null;
+        try {
+            result = dft.execute(fileURL, folderPath, fileName).get();
+
+            //DOWNLOAD CATALOGS
+
+            if (option == 1) {
+                FileReader fr = new FileReader(result);
+                BufferedReader br = new BufferedReader(fr);
+
+                String line, catalog = "";
+
+                while ((line = br.readLine()) != null) {
+                    catalog += line + "\n";
+                }
+                Log.i(TAG, "Catalog content: " + catalog);
+
+                AlbumCatalog albumCatalog = AlbumCatalog.parseToAlbumCatalog(catalog);
+                return albumCatalog;
+            }
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

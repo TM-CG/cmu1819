@@ -2,7 +2,9 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.api;
 
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
@@ -16,6 +18,7 @@ import pt.inesc.termite.wifidirect.SimWifiP2pDevice;
 import pt.inesc.termite.wifidirect.SimWifiP2pDeviceList;
 import pt.inesc.termite.wifidirect.SimWifiP2pInfo;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager;
+import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
@@ -126,6 +129,11 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
     public void startBackgroundTask() {
         Log.i(TAG, "Started Background Task");
+
+        Intent intent = new Intent(activity, SimWifiP2pService.class);
+        activity.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+        mBound = true;
         new WiFiDIncommingMsg().execute(simWifiP2pSocketServer);
     }
 

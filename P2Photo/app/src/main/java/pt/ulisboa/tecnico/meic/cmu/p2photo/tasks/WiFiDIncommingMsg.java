@@ -33,6 +33,7 @@ public class WiFiDIncommingMsg extends AsyncTask<SimWifiP2pSocketServer, String,
                     BufferedReader sockIn = new BufferedReader(
                             new InputStreamReader(sock.getInputStream()));
                     String st = sockIn.readLine();
+                    Log.d(TAG, "Received a message: " + st);
                     publishProgress(st);
                     sock.getOutputStream().write(("\n").getBytes());
                 } catch (IOException e) {

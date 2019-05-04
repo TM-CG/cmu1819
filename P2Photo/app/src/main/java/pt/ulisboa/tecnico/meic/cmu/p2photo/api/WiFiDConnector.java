@@ -60,8 +60,8 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION);
         filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION);
 
-        p2PhotoWiFiDBroadcastReceiver = new P2PhotoWiFiDBroadcastReceiver(activity);
-        activity.registerReceiver(p2PhotoWiFiDBroadcastReceiver, filter);
+        p2PhotoWiFiDBroadcastReceiver = new P2PhotoWiFiDBroadcastReceiver(this.activity);
+        this.activity.registerReceiver(p2PhotoWiFiDBroadcastReceiver, filter);
     }
 
     @Override
@@ -143,7 +143,11 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
     }
 
     public void stopBackgroundTask() {
-        activity.unregisterReceiver(p2PhotoWiFiDBroadcastReceiver);
+        if (mBound) {
+            activity.unbindService(mConnection);
+            mBound = false;
+            activity.unregisterReceiver(p2PhotoWiFiDBroadcastReceiver);
+        }
     }
 
     public void requestPeersInRange() {

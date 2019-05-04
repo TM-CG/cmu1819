@@ -29,6 +29,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFile;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolder;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.OwningAlbums;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetCurrentAccount;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDOutgoingMsg;
 
 
 public class ChooseCloudOrLocal extends DropboxActivity {
@@ -78,8 +79,12 @@ public class ChooseCloudOrLocal extends DropboxActivity {
 
         wifiConnector.startBackgroundTask();
 
-        Intent intent = new Intent(this, ActionsMenu.class);
-        startActivityForResult(intent, 4);
+        /*Intent intent = new Intent(this, ActionsMenu.class);
+        startActivityForResult(intent, 4);*/
+    }
+
+    public void debugSendMessage(View view) {
+        wifiConnector.sendMessage("Eureka");
     }
 
     @Override

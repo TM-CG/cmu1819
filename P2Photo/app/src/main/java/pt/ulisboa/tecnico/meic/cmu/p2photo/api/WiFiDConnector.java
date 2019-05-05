@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.os.Messenger;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.bcastreceivers.P2PhotoWiFiDBroadcastReceiver;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.PeerListListener;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.GroupInfoListener;
@@ -147,7 +149,8 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
     public void sendMessage(String message) {
         Log.i(TAG, "Sending message through Wi-FiD: " + message);
         try {
-            simWifiP2pSocket = new SimWifiP2pSocket("192.168.0.1", 10001);
+            EditText debugIP = activity.findViewById(R.id.debugIP);
+            simWifiP2pSocket = new SimWifiP2pSocket(debugIP.getText().toString(), 10001);
             new WiFiDSendMsg().execute(simWifiP2pSocket, message);
         } catch (IOException e) {
             Log.e(TAG, "Cannot create client socket: " + e.getMessage());

@@ -21,11 +21,6 @@ public class WiFiDIncommingMsg extends AsyncTask<SimWifiP2pSocketServer, String,
 
         Log.d(TAG, "IncommingCommTask started (" + this.hashCode() + ").");
 
-        try {
-            mSrvSocket = new SimWifiP2pSocketServer(PORT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 SimWifiP2pSocket sock = mSrvSocket.accept();

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.support.v7.app.AppCompatActivity;
@@ -55,7 +56,7 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
     public WiFiDConnector(AppCompatActivity activity) {
         this.activity = activity;
         //Init the WDSim API
-        SimWifiP2pSocketManager.Init(activity);
+        SimWifiP2pSocketManager.Init(activity.getApplicationContext());
 
         //Init the Broadcast receiver
         IntentFilter filter = new IntentFilter();
@@ -143,20 +144,13 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         activity.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         mBound = true;
-        new WiFiDIncommingMsg().execute(simWifiP2pSocketServer);
+        new WiFiDIncommingMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, simWifiP2pSocketServer);
     }
 
     public void sendMessage(String message) {
         Log.i(TAG, "Sending message through Wi-FiD: " + message);
-        try {
-            EditText debugIP = activity.findViewById(R.id.debugIP);
-            simWifiP2pSocket = new SimWifiP2pSocket(debugIP.getText().toString(), 10001);
-            new WiFiDSendMsg().execute(simWifiP2pSocket, message);
-        } catch (IOException e) {
-            Log.e(TAG, "Cannot create client socket: " + e.getMessage());
-        }
-
-
+        EditText debugIP = activity.findViewById(R.id.debugIP);
+        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, debugIP.getText().toString(), message);
     }
 
     public void stopBackgroundTask() {

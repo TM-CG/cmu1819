@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo.tasks;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,8 +15,14 @@ public class WiFiDSendMsg extends AsyncTask<Object, String, Void> {
 
     @Override
     protected Void doInBackground(Object... params) {
+        SimWifiP2pSocket mCliSocket = null;
+        try {
+            mCliSocket = new SimWifiP2pSocket((String) params[0], 10001);
+        } catch (IOException e) {
+            Log.e(TAG, "Cannot create client socket: " + e.getMessage());
+        }
 
-        SimWifiP2pSocket mCliSocket = (SimWifiP2pSocket) params[0];
+        //SimWifiP2pSocket mCliSocket = (SimWifiP2pSocket) params[0];
         String message = (String) params[1];
 
         try {

@@ -175,12 +175,28 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         else prefix = "";
 
 
-        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, debugIP.getText().toString(), prefix + message);
+        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, debugIP.getText().toString(), prefix + "tmp_file.bin " + message);
+    }
+
+    public void sendMessage(String message, String fileName, MsgType type) {
+        Log.i(TAG, "Sending message through Wi-FiD: " + message);
+        EditText debugIP = activity.findViewById(R.id.debugIP);
+        String prefix;
+
+        if (type == MsgType.TEXT)
+            prefix = "MSG ";
+        else if (type == MsgType.B64FILE)
+            prefix = "B64F ";
+        else prefix = "";
+
+
+        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, debugIP.getText().toString(), prefix + fileName + " " + message);
     }
 
     public void sendFile(String path2File) {
         try {
             File file = new File(path2File);
+            String fileName = file.getName();
             FileInputStream fis = new FileInputStream(file);
 
             byte[] bytes = new byte[(int) file.length()];
@@ -190,7 +206,7 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
             String base64Encode = Base64.encodeToString(bytes, Base64.NO_WRAP);
 
-            sendMessage(base64Encode, MsgType.B64FILE);
+            sendMessage(base64Encode, fileName, MsgType.B64FILE);
 
 
         } catch (FileNotFoundException e) {

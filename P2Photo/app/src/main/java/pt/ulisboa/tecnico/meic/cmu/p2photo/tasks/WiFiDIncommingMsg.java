@@ -39,27 +39,29 @@ public class WiFiDIncommingMsg extends AsyncTask<SimWifiP2pSocketServer, String,
                     String[] receivedContent;
                     String prefix = null;
                     String content;
+                    String fileName;
 
                     line = sockIn.readLine();
 
                     receivedContent = line.split(" ");
 
                     prefix = receivedContent[0];
-                    content = line.substring(line.indexOf(' ') + 1);
+                    fileName = receivedContent[1];
+                    content = line.substring(line.indexOf(' ',line.indexOf(' ') + 1) + 1);
 
                     if (prefix.equals("MSG")) {
                         Log.d(TAG, "Received a message: " + content);
 
                     } else if (prefix.equals("B64F")) {
-                        Log.d(TAG, "Received a file: " + content);
+                        Log.d(TAG, "Received a file with name: " + fileName + " with content: " + content);
 
                         //Write received bytes to a file
                         byte[] receivedBytes = Base64.decode(content, Base64.NO_WRAP);
-                        Log.d(TAG,Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER) + "/" + Main.username + "/tmp_file.bin");
-                        File path = Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER + "/" + "titi");
+                        Log.d(TAG,Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER + "/" + Main.username) + "/" + fileName);
+                        File path = Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER + "/" + Main.username);
                         path.mkdir();
 
-                        File file = new File(path, "tmp_file.bin");
+                        File file = new File(path, fileName);
 
                         FileOutputStream fos = new FileOutputStream(file);
 

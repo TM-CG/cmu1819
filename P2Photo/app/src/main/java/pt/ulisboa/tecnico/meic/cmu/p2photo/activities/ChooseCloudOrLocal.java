@@ -67,6 +67,7 @@ public class ChooseCloudOrLocal extends DropboxActivity {
     }
 
     public void selectCloud(View view){
+        Main.STORAGE_TYPE = Main.StorageType.CLOUD;
         Intent intent = new Intent(this, ActionsMenu.class);
         cacheInstance.cleanArrays();
         loadCache();
@@ -74,6 +75,7 @@ public class ChooseCloudOrLocal extends DropboxActivity {
     }
 
     public void selectLocalWiFi(View view) {
+        Main.STORAGE_TYPE = Main.StorageType.LOCAL;
         wifiConnector = new WiFiDConnector(this, Main.sv);
         Log.i(TAG, "Already constructed Wi-Fi direct object!");
 
@@ -85,7 +87,7 @@ public class ChooseCloudOrLocal extends DropboxActivity {
 
     public void debugSendMessage(View view) {
         //wifiConnector.sendMessage("Eureka", WiFiDConnector.MsgType.TEXT);
-        wifiConnector.sendFile("/sdcard/Download/download.jpg");
+        wifiConnector.sendFile("pasta do vitor", "/sdcard/Download/download.jpg");
     }
 
     @Override

@@ -45,6 +45,8 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
     private static final String TAG = WiFiDConnector.class.getName();
 
+    private static final String CLI_API_VERSION = "0.1";
+
     public enum MsgType {TEXT, B64FILE}
 
     private SimWifiP2pManager simWifiP2pManager;
@@ -61,6 +63,14 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
     /** Connector to P2PhotoServer **/
     private ServerConnector serverConnector;
+
+    public enum WiFiDP2PhotoOperation {GET_CATALOG, GET_PICTURE}
+
+    /** API messages **/
+    public static final String API_GET_CATALOG = "P2PHOTO GET-CATALOG %s";
+    public static final String API_GET_PICTURE = "P2PHOTO GET-PICTURE %s";
+    public static final String API_POST_CATALOG = "P2PHOTO POST-CATALOG %s %s";
+    public static final String API_POST_PICTURE = "P2PHOTO POST-PICTURE %s %s";
 
     public WiFiDConnector(AppCompatActivity activity, ServerConnector serverConnector) {
         this.activity = activity;
@@ -178,6 +188,21 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, debugIP.getText().toString(), prefix + "tmp_file.bin " + message);
     }
 
+    public void sendMessage(String message, String folderPath, String fileName, MsgType type) {
+        Log.i(TAG, "Sending message through Wi-FiD: " + message);
+        EditText debugIP = activity.findViewById(R.id.debugIP);
+        String prefix;
+
+        if (type == MsgType.TEXT)
+            prefix = "MSG ";
+        else if (type == MsgType.B64FILE)
+            prefix = "B64F ";
+        else prefix = "";
+
+
+        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, debugIP.getText().toString(), prefix + fileName + " \"" + folderPath + "\" " + message);
+    }
+
     public void sendMessage(String message, String fileName, MsgType type) {
         Log.i(TAG, "Sending message through Wi-FiD: " + message);
         EditText debugIP = activity.findViewById(R.id.debugIP);
@@ -190,10 +215,14 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         else prefix = "";
 
 
-        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, debugIP.getText().toString(), prefix + fileName + " " + message);
+        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, debugIP.getText().toString(), prefix + fileName + " \"\" " + message);
     }
 
     public void sendFile(String path2File) {
+        sendFile("", path2File);
+    }
+
+    public void sendFile(String folderPath, String path2File) {
         try {
             File file = new File(path2File);
             String fileName = file.getName();
@@ -206,7 +235,9 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
             String base64Encode = Base64.encodeToString(bytes, Base64.NO_WRAP);
 
-            sendMessage(base64Encode, fileName, MsgType.B64FILE);
+            if (folderPath == null || folderPath.equals(""))
+                sendMessage(base64Encode, fileName, MsgType.B64FILE);
+            else sendMessage(base64Encode, folderPath, fileName, MsgType.B64FILE);
 
 
         } catch (FileNotFoundException e) {
@@ -241,6 +272,22 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         } else {
             Toast.makeText(activity, "Service not bound",
                     Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Request an operation to another peer.
+     * Be aware that the operations are asynchronous, this means that you send this request and
+     * the other peer will response as soon as possible. Delays may occur.
+     * @param operation to be performed
+     * @param args the arguments to be sent to the peer
+     */
+    public void requestP2PhotoOperation(WiFiDP2PhotoOperation operation, String... args) {
+        switch (operation) {
+
+            //inform other peer that i need a catalog
+            case GET_CATALOG: sendMessage(String.format(API_GET_CATALOG, args[0]), MsgType.TEXT); break;
+            case GET_PICTURE: sendMessage(String.format(API_GET_PICTURE, args[0]), MsgType.TEXT); break;
         }
     }
 }

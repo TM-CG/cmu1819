@@ -37,17 +37,21 @@ public class WiFiDIncommingMsg extends AsyncTask<SimWifiP2pSocketServer, String,
                             new InputStreamReader(sock.getInputStream()));
                     String line;
                     String[] receivedContent;
+                    String[] folderPaths;
                     String prefix = null;
                     String content;
+                    String folderPath;
                     String fileName;
 
                     line = sockIn.readLine();
 
                     receivedContent = line.split(" ");
+                    folderPaths = line.split("\"");
 
                     prefix = receivedContent[0];
+                    folderPath = folderPaths[1];
                     fileName = receivedContent[1];
-                    content = line.substring(line.indexOf(' ',line.indexOf(' ') + 1) + 1);
+                    content = line.substring(line.lastIndexOf(' ') + 1);
 
                     if (prefix.equals("MSG")) {
                         Log.d(TAG, "Received a message: " + content);
@@ -57,8 +61,15 @@ public class WiFiDIncommingMsg extends AsyncTask<SimWifiP2pSocketServer, String,
 
                         //Write received bytes to a file
                         byte[] receivedBytes = Base64.decode(content, Base64.NO_WRAP);
-                        Log.d(TAG,Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER + "/" + Main.username) + "/" + fileName);
-                        File path = Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER + "/" + Main.username);
+
+                        File path;
+                        if (folderPath != null && !folderPath.equals(""))
+                            path = Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER + "/" + Main.username + "/" + folderPath);
+                        else path = Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER + "/" + Main.username);
+
+                        Log.d(TAG,path.getAbsolutePath());
+
+
                         path.mkdir();
 
                         File file = new File(path, fileName);

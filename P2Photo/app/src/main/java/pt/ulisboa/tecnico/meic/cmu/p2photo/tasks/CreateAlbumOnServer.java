@@ -10,6 +10,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.CloudStorage;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.LocalStorage;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.StorageProvider;
@@ -33,8 +34,13 @@ public class CreateAlbumOnServer extends AsyncTask<Object,Object,Object[]> {
         //create album catalog for new album
         AlbumCatalog catalog = new AlbumCatalog(albumId, albumTitle);
 
-        Thread t1 = new Thread(new CloudStorage(context, catalog, StorageProvider.Operation.WRITE, o), "WritingThread");
-        t1.start();
+        if (Main.STORAGE_TYPE == Main.StorageType.CLOUD) {
+            Thread t1 = new Thread(new CloudStorage(context, catalog, StorageProvider.Operation.WRITE, o), "WritingThread");
+            t1.start();
+        } else if (Main.STORAGE_TYPE == Main.StorageType.LOCAL) {
+            Thread t1 = new Thread(new LocalStorage(context, catalog, StorageProvider.Operation.WRITE, o), "WritingThread");
+            t1.start();
+        }
     }
 
     @Override

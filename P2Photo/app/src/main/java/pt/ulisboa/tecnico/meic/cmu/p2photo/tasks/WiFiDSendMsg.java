@@ -24,6 +24,7 @@ public class WiFiDSendMsg extends AsyncTask<Object, String, Void> {
 
         //SimWifiP2pSocket mCliSocket = (SimWifiP2pSocket) params[0];
         String message = (String) params[1];
+        Log.d(TAG, "Sending P2Photo Wi-FiD Communication: " + message);
 
         try {
             mCliSocket.getOutputStream().write((message + "\n").getBytes());

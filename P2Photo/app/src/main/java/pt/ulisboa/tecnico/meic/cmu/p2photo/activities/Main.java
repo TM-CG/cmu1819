@@ -48,6 +48,10 @@ public class Main extends AppCompatActivity {
     /** Temporary location to store catalogs and pictures **/
     public static String CACHE_FOLDER;
 
+    public enum StorageType {LOCAL, CLOUD}
+
+    public static StorageType STORAGE_TYPE;
+
     public static String getUser() {
         return username;
     }

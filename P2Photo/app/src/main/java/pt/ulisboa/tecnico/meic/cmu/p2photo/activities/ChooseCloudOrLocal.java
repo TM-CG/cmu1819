@@ -27,6 +27,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.api.WiFiDConnector;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AllAlbums;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFile;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolder;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LocalCacheInit;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.OwningAlbums;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetCurrentAccount;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDOutgoingMsg;
@@ -43,14 +44,6 @@ public class ChooseCloudOrLocal extends DropboxActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_cloud_local);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (wifiConnector != null) {
-            wifiConnector.stopBackgroundTask();
-        }
     }
 
     public void goBack(View view){
@@ -80,9 +73,10 @@ public class ChooseCloudOrLocal extends DropboxActivity {
         Log.i(TAG, "Already constructed Wi-Fi direct object!");
 
         wifiConnector.startBackgroundTask();
+        //loadLocalCache();
 
-        /*Intent intent = new Intent(this, ActionsMenu.class);
-        startActivityForResult(intent, 4);*/
+        Intent intent = new Intent(this, ActionsMenu.class);
+        startActivityForResult(intent, 4);
     }
 
     public void debugSendMessage(View view) {
@@ -132,6 +126,11 @@ public class ChooseCloudOrLocal extends DropboxActivity {
                 }
                 break;
         }
+    }
+
+    //Load cache from local files -> Wi-Fi Direct
+    protected void loadLocalCache() {
+        new LocalCacheInit().execute(getFilesDir(), cacheInstance);
     }
 
     protected void loadCache() {

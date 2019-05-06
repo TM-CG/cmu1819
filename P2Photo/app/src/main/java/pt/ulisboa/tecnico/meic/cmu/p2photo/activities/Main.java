@@ -48,6 +48,8 @@ public class Main extends AppCompatActivity {
     /** Temporary location to store catalogs and pictures **/
     public static String CACHE_FOLDER;
 
+    public static String DATA_FOLDER;
+
     public enum StorageType {LOCAL, CLOUD}
 
     public static StorageType STORAGE_TYPE;
@@ -74,6 +76,7 @@ public class Main extends AppCompatActivity {
 
         //initialize cache folder
         CACHE_FOLDER = getApplicationContext().getCacheDir().getAbsolutePath();
+        DATA_FOLDER = getFilesDir().getAbsolutePath();
         //CACHE_FOLDER = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
     }
 

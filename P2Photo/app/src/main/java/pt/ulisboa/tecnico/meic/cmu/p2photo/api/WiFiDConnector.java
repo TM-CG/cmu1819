@@ -188,7 +188,7 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
             fis.read(bytes);
             fis.close();
 
-            String base64Encode = Base64.encodeToString(bytes, Base64.DEFAULT);
+            String base64Encode = Base64.encodeToString(bytes, Base64.NO_WRAP);
 
             sendMessage(base64Encode, MsgType.B64FILE);
 

@@ -35,47 +35,42 @@ public class WiFiDIncommingMsg extends AsyncTask<SimWifiP2pSocketServer, String,
                 try {
                     BufferedReader sockIn = new BufferedReader(
                             new InputStreamReader(sock.getInputStream()));
-                    String st = "";
                     String line;
                     String[] receivedContent;
                     String prefix = null;
                     String content;
 
-                    while ((line = sockIn.readLine()) != null) {
+                    line = sockIn.readLine();
 
-                        receivedContent = line.split(" ");
+                    receivedContent = line.split(" ");
 
-                        if (line.indexOf(' ') == -1) {
-                            content = line;
+                    prefix = receivedContent[0];
+                    content = line.substring(line.indexOf(' ') + 1);
 
-                        } else { //if there are a space then it is the first line of a base 64 binary
-                            prefix = receivedContent[0];
-                            content = line.substring(line.indexOf(' ') + 1);
+                    if (prefix.equals("MSG")) {
+                        Log.d(TAG, "Received a message: " + content);
 
-                        }
+                    } else if (prefix.equals("B64F")) {
+                        Log.d(TAG, "Received a file: " + content);
 
-                        st += content;
+                        //Write received bytes to a file
+                        byte[] receivedBytes = Base64.decode(content, Base64.NO_WRAP);
+                        Log.d(TAG,Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER) + "/" + Main.username + "/tmp_file.bin");
+                        File path = Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER + "/" + "titi");
+                        path.mkdir();
 
-                        if (prefix.equals("MSG")) {
-                            Log.d(TAG, "Received a message: " + content);
+                        File file = new File(path, "tmp_file.bin");
 
-                        } else if (prefix.equals("B64F")) {
-                            Log.d(TAG, "Received a file: " + content);
+                        FileOutputStream fos = new FileOutputStream(file);
 
-                            //Write received bytes to a file
-                            byte[] receivedBytes = Base64.decode(content, Base64.DEFAULT);
+                        fos.write(receivedBytes);
 
-                            File file = new File(Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER) + "/" + Main.username + "/tmp_file.bin");
-                            FileOutputStream fos = new FileOutputStream(file);
-
-                            fos.write(receivedBytes);
-
-                            fos.close();
-                        }
-
-                        publishProgress(st);
-                        sock.getOutputStream().write(("\n").getBytes());
+                        fos.close();
                     }
+
+                    publishProgress(content);
+                    sock.getOutputStream().write(("\n").getBytes());
+
                 } catch (IOException e) {
                     Log.d("Error reading socket:", e.getMessage());
                 } finally {

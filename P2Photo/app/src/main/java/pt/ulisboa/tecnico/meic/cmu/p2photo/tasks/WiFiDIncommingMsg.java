@@ -31,7 +31,21 @@ public class WiFiDIncommingMsg extends AsyncTask<SimWifiP2pSocketServer, String,
                     BufferedReader sockIn = new BufferedReader(
                             new InputStreamReader(sock.getInputStream()));
                     String st = sockIn.readLine();
-                    Log.d(TAG, "Received a message: " + st);
+
+                    String[] receivedContent = st.split(" ");
+
+                    String prefix = receivedContent[0];
+                    String content = st.substring(st.indexOf(' '));
+
+                    if (prefix.equals("MSG")){
+                        Log.d(TAG, "Received a message: " + content);
+
+                    } else if (prefix.equals("B64F")) {
+                        Log.d(TAG, "Received a file: " + content);
+
+                        //TODO: Store the file somewhere in internal storage
+                    }
+
                     publishProgress(st);
                     sock.getOutputStream().write(("\n").getBytes());
                 } catch (IOException e) {

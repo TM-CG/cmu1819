@@ -11,10 +11,14 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
@@ -41,6 +45,8 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
     private static final String TAG = WiFiDConnector.class.getName();
 
+    public enum MsgType {TEXT, B64FILE}
+
     private SimWifiP2pManager simWifiP2pManager;
     private SimWifiP2pSocketServer simWifiP2pSocketServer;
     private SimWifiP2pSocket simWifiP2pSocket;
@@ -53,11 +59,26 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
     private Messenger messengerService;
     private boolean mBound = false;
 
-    public WiFiDConnector(AppCompatActivity activity) {
+    /** Connector to P2PhotoServer **/
+    private ServerConnector serverConnector;
+
+    public WiFiDConnector(AppCompatActivity activity, ServerConnector serverConnector) {
         this.activity = activity;
+        this.serverConnector = serverConnector;
+
         //Init the WDSim API
         SimWifiP2pSocketManager.Init(activity.getApplicationContext());
 
+        initBCastReceiver();
+
+        try {
+            simWifiP2pSocketServer = new SimWifiP2pSocketServer(10001);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void initBCastReceiver() {
         //Init the Broadcast receiver
         IntentFilter filter = new IntentFilter();
         filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_STATE_CHANGED_ACTION);
@@ -67,11 +88,6 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
         p2PhotoWiFiDBroadcastReceiver = new P2PhotoWiFiDBroadcastReceiver(this.activity);
         this.activity.registerReceiver(p2PhotoWiFiDBroadcastReceiver, filter);
-        try {
-            simWifiP2pSocketServer = new SimWifiP2pSocketServer(10001);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -147,10 +163,43 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         new WiFiDIncommingMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, simWifiP2pSocketServer);
     }
 
-    public void sendMessage(String message) {
+    public void sendMessage(String message, MsgType type) {
         Log.i(TAG, "Sending message through Wi-FiD: " + message);
         EditText debugIP = activity.findViewById(R.id.debugIP);
-        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, debugIP.getText().toString(), message);
+        String prefix;
+
+        if (type == MsgType.TEXT)
+            prefix = "MSG ";
+        else if (type == MsgType.B64FILE)
+            prefix = "B64F ";
+        else prefix = "";
+
+
+        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, debugIP.getText().toString(), prefix + message);
+    }
+
+    public void sendFile(String path2File) {
+        try {
+            File file = new File(path2File);
+            FileInputStream fis = new FileInputStream(file);
+
+            byte[] bytes = new byte[(int) file.length()];
+
+            fis.read(bytes);
+            fis.close();
+
+            String base64Encode = Base64.encodeToString(bytes, Base64.DEFAULT);
+
+            sendMessage(base64Encode, MsgType.B64FILE);
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public void stopBackgroundTask() {

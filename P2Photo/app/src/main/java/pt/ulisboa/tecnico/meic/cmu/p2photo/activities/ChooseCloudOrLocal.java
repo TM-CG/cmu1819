@@ -53,6 +53,13 @@ public class ChooseCloudOrLocal extends DropboxActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (wifiConnector != null)
+            wifiConnector.initBCastReceiver();
+    }
+
     public void goBack(View view){
         Intent intent = getIntent();
         setResult(RESULT_OK,intent);
@@ -74,7 +81,7 @@ public class ChooseCloudOrLocal extends DropboxActivity {
     }
 
     public void selectLocalWiFi(View view) {
-        wifiConnector = new WiFiDConnector(this);
+        wifiConnector = new WiFiDConnector(this, Main.sv);
         Log.i(TAG, "Already constructed Wi-Fi direct object!");
 
         wifiConnector.startBackgroundTask();
@@ -84,7 +91,7 @@ public class ChooseCloudOrLocal extends DropboxActivity {
     }
 
     public void debugSendMessage(View view) {
-        wifiConnector.sendMessage("Eureka");
+        wifiConnector.sendMessage("Eureka", WiFiDConnector.MsgType.TEXT);
     }
 
     @Override

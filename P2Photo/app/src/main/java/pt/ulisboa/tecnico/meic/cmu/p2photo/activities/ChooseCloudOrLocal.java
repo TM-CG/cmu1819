@@ -53,13 +53,6 @@ public class ChooseCloudOrLocal extends DropboxActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (wifiConnector != null)
-            wifiConnector.initBCastReceiver();
-    }
-
     public void goBack(View view){
         Intent intent = getIntent();
         setResult(RESULT_OK,intent);
@@ -91,7 +84,8 @@ public class ChooseCloudOrLocal extends DropboxActivity {
     }
 
     public void debugSendMessage(View view) {
-        wifiConnector.sendMessage("Eureka", WiFiDConnector.MsgType.TEXT);
+        //wifiConnector.sendMessage("Eureka", WiFiDConnector.MsgType.TEXT);
+        wifiConnector.sendFile("/sdcard/Download/download.jpg");
     }
 
     @Override

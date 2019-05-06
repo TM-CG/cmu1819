@@ -1,14 +1,19 @@
 package pt.ulisboa.tecnico.meic.cmu.p2photo.tasks;
 
 import android.os.AsyncTask;
+import android.os.Environment;
+import android.util.Base64;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 
 public class WiFiDIncommingMsg extends AsyncTask<SimWifiP2pSocketServer, String, Void> {
     private static final String TAG = WiFiDIncommingMsg.class.getName();
@@ -30,24 +35,47 @@ public class WiFiDIncommingMsg extends AsyncTask<SimWifiP2pSocketServer, String,
                 try {
                     BufferedReader sockIn = new BufferedReader(
                             new InputStreamReader(sock.getInputStream()));
-                    String st = sockIn.readLine();
+                    String st = "";
+                    String line;
+                    String[] receivedContent;
+                    String prefix = null;
+                    String content;
 
-                    String[] receivedContent = st.split(" ");
+                    while ((line = sockIn.readLine()) != null) {
 
-                    String prefix = receivedContent[0];
-                    String content = st.substring(st.indexOf(' '));
+                        receivedContent = line.split(" ");
 
-                    if (prefix.equals("MSG")){
-                        Log.d(TAG, "Received a message: " + content);
+                        if (line.indexOf(' ') == -1) {
+                            content = line;
 
-                    } else if (prefix.equals("B64F")) {
-                        Log.d(TAG, "Received a file: " + content);
+                        } else { //if there are a space then it is the first line of a base 64 binary
+                            prefix = receivedContent[0];
+                            content = line.substring(line.indexOf(' ') + 1);
 
-                        //TODO: Store the file somewhere in internal storage
+                        }
+
+                        st += content;
+
+                        if (prefix.equals("MSG")) {
+                            Log.d(TAG, "Received a message: " + content);
+
+                        } else if (prefix.equals("B64F")) {
+                            Log.d(TAG, "Received a file: " + content);
+
+                            //Write received bytes to a file
+                            byte[] receivedBytes = Base64.decode(content, Base64.DEFAULT);
+
+                            File file = new File(Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER) + "/" + Main.username + "/tmp_file.bin");
+                            FileOutputStream fos = new FileOutputStream(file);
+
+                            fos.write(receivedBytes);
+
+                            fos.close();
+                        }
+
+                        publishProgress(st);
+                        sock.getOutputStream().write(("\n").getBytes());
                     }
-
-                    publishProgress(st);
-                    sock.getOutputStream().write(("\n").getBytes());
                 } catch (IOException e) {
                     Log.d("Error reading socket:", e.getMessage());
                 } finally {

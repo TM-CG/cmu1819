@@ -43,18 +43,17 @@ public class LocalCacheInit extends AsyncTask<Object, String, String> {
                             //add to owned
                             if (cacheInstance.ownedAlbumsIDs.contains(Integer.parseInt(splited[0]))) {
                                 cacheInstance.ownedAlbums.add(splited[1]);
-                                cacheInstance.ownedAndPartAlbums.add(splited[1]);
-                                cacheInstance.ownedAlbumWithIDs.add(splited[0] + " " + splited[1]); //same but parsed
                             }
                             //add to owned and parsed
                             else if (cacheInstance.ownedAndPartAlbumsIDs.contains(Integer.parseInt(splited[0]))) {
-                                cacheInstance.ownedAndPartAlbums.add(splited[1]);
-                                cacheInstance.ownedAlbumWithIDs.add(splited[0] + " " + splited[1]); //same but parsed
+
 
                             }
-
+                            cacheInstance.ownedAndPartAlbums.add(splited[1]);
+                            cacheInstance.ownedAlbumWithIDs.add(splited[0] + " " + splited[1]); //same but parsed
 
                         }
+                        Log.d(TAG, "Cache Size: " + Cache.ownedAlbumWithIDs.size());
                         cacheInstance.notifyAdapters();
                     }
 

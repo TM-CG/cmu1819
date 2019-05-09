@@ -23,6 +23,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFile;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolder;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LocalFileCopy;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ShareLink;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFile;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UpdateAlbumCatalog;
@@ -63,7 +64,9 @@ public class AddPhotoFromMainMenu extends DropboxActivity {
 
         launchFilePicker();
 
-        selectCatalogFile(cacheInstance.sel_album.getSelectedItem().toString());
+        if (Main.STORAGE_TYPE == Main.StorageType.CLOUD) {
+            selectCatalogFile(cacheInstance.sel_album.getSelectedItem().toString());
+        }
         /*Intent intent = getIntent();
         setResult(RESULT_OK,intent);
         finish();*/
@@ -169,8 +172,18 @@ public class AddPhotoFromMainMenu extends DropboxActivity {
         if (requestCode == PICKFILE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
 
-                // This is the result of a call to launchFilePicker
-                uploadFile(data.getData().toString());
+                if (Main.STORAGE_TYPE == Main.StorageType.CLOUD) {
+                    // This is the result of a call to launchFilePicker on cloud mode
+                    uploadFile(data.getData().toString());
+                }
+                else if (Main.STORAGE_TYPE == Main.StorageType.LOCAL) {
+                    String sourceLocation = data.getData().toString();
+                    String destLocation = Main.DATA_FOLDER + "/" + cacheInstance.sel_album.getSelectedItem().toString();
+                    Log.d(TAG, "WiFiD Source Location: " + sourceLocation);
+                    Log.d(TAG, "WiFiD Dest   Location: " + destLocation);
+                    //Just copy the file to specific folder
+                    new LocalFileCopy(getApplicationContext()).execute(sourceLocation, destLocation);
+                }
             }
         }
     }

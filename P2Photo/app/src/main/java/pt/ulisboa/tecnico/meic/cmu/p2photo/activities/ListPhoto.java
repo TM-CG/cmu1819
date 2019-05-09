@@ -78,24 +78,26 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
             //Already fetch all catalogs from server now lets download it
             Log.i(TAG, "Downloaded catalogs path from server " + catalogsURL.size());
 
-            int i = 1;
-
-            List<String> picsURLs = new ArrayList<>();
-            //Download album catalogs from server's link
-            for (String url : catalogsURL) {
-                picsURLs.addAll(downloadFile(url, "Loading catalogs", "", "tmp" + i++ + "_catalog.txt", 1));
-            }
-            Log.i(TAG, "Finished downloading and parsing catalogs! I've " + picsURLs.size() + " picture(s)!");
-
             String tmpFolderPath = albumId + " "
                     + albumTitle;
 
-            //Download all pics from all album catalogs that were previously downloaded
-            for (String pictureURL : picsURLs) {
-                downloadFile(pictureURL, "Loading pictures", tmpFolderPath, null, 0);
-            }
+            if (Main.STORAGE_TYPE == Main.StorageType.CLOUD) {
 
-            Log.i(TAG, "Finished downloading pictures!");
+                int i = 1;
+
+                List<String> picsURLs = new ArrayList<>();
+                //Download album catalogs from server's link
+                for (String url : catalogsURL) {
+                    picsURLs.addAll(downloadFile(url, "Loading catalogs", "", "tmp" + i++ + "_catalog.txt", 1));
+                }
+                Log.i(TAG, "Finished downloading and parsing catalogs! I've " + picsURLs.size() + " picture(s)!");
+
+                //Download all pics from all album catalogs that were previously downloaded
+                for (String pictureURL : picsURLs) {
+                    downloadFile(pictureURL, "Loading pictures", tmpFolderPath, null, 0);
+                }
+                Log.i(TAG, "Finished downloading pictures!");
+            }
 
             GridView gridView = (GridView) findViewById(R.id.grid_thumbnails);
 

@@ -178,11 +178,11 @@ public class AddPhotoFromMainMenu extends DropboxActivity {
                 }
                 else if (Main.STORAGE_TYPE == Main.StorageType.LOCAL) {
                     String sourceLocation = data.getData().toString();
-                    String destLocation = Main.DATA_FOLDER + "/" + cacheInstance.sel_album.getSelectedItem().toString();
+                    String destLocation = Main.DATA_FOLDER + "/" + Main.username + "/" + cacheInstance.sel_album.getSelectedItem().toString();
                     Log.d(TAG, "WiFiD Source Location: " + sourceLocation);
                     Log.d(TAG, "WiFiD Dest   Location: " + destLocation);
                     //Just copy the file to specific folder
-                    new LocalFileCopy(getApplicationContext()).execute(sourceLocation, destLocation);
+                    new LocalFileCopy(getApplicationContext()).execute(sourceLocation, destLocation, "uri");
                 }
             }
         }

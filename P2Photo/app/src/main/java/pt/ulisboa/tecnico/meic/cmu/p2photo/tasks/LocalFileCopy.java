@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.UriHelpers;
@@ -33,18 +34,52 @@ public class LocalFileCopy extends AsyncTask<String, Void, Void> {
     protected Void doInBackground(String... params) {
         String sourceURI = params[0];
         String destURI = params[1];
+        String option = params[2];
 
-        File source = UriHelpers.getFileForUri(context, Uri.parse(sourceURI));
+        Log.d(TAG, "Source URI: " + sourceURI);
+        Log.d(TAG, "Dest URI: " + destURI);
 
-        File destFolder = new File(destURI);
-        destFolder.mkdir();
+        File source;
+
+        if (option.equals("uri")) {
+            source = UriHelpers.getFileForUri(context, Uri.parse(sourceURI));
+        } else {
+            source = new File(sourceURI);
+        }
 
         File dest = new File(destURI + "/" + source.getName());
 
         Log.d(TAG, "Source Path: " + source.getAbsolutePath());
         Log.d(TAG, "Dest Path: " + dest.getAbsolutePath());
 
-        InputStream is = null;
+        if (!dest.getParentFile().exists())
+            dest.getParentFile().mkdirs();
+        try {
+            if (!dest.exists()) {
+                dest.createNewFile();
+            }
+
+            FileChannel sourceChannel = null;
+            FileChannel destinationChannel = null;
+
+            try {
+                sourceChannel = new FileInputStream(source).getChannel();
+                destinationChannel = new FileOutputStream(dest).getChannel();
+                destinationChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+            } finally {
+                if (sourceChannel != null) {
+                    sourceChannel.close();
+                }
+                if (destinationChannel != null) {
+                    destinationChannel.close();
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /*InputStream is = null;
         OutputStream os = null;
         try {
             is = new FileInputStream(source);
@@ -54,6 +89,7 @@ public class LocalFileCopy extends AsyncTask<String, Void, Void> {
             while ((length = is.read(buffer)) > 0) {
                 os.write(buffer, 0, length);
             }
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -68,7 +104,7 @@ public class LocalFileCopy extends AsyncTask<String, Void, Void> {
                 e.printStackTrace();
             }
 
-        }
+        }*/
 
         return null;
     }

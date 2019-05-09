@@ -27,17 +27,18 @@ public class ListPhotoAdapter extends BaseAdapter {
     /** Size of thumbnail pictures on albums directory **/
     private static final int THUMBNAIL_SIZE = 180;
 
-    public ListPhotoAdapter(Context context, String pathToDirectory) {
+    public ListPhotoAdapter(Context context, File directory) {
         this.context = context;
-        this.directory = new File(pathToDirectory);
+        this.directory = directory;
         //if album is empty then create folder just to display empty content
-        if (!this.directory.exists())
-            this.directory.mkdir();
+
+        this.directory.mkdir();
     }
 
     @Override
     public int getCount() {
         //Log.i("ListPhotoAdapter", new Boolean(directory == null).toString());
+        Log.d("ListPhotoAdapter", "Count: " + directory.listFiles().length);
         return directory.listFiles().length;
     }
 

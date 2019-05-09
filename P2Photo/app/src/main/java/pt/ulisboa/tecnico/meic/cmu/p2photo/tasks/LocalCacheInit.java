@@ -17,10 +17,10 @@ public class LocalCacheInit extends AsyncTask<Object, String, String> {
 
     @Override
     protected String doInBackground(Object... params) {
-        File folder = new File((String) params[0]);
+        File folder = (File) params[0];
         Cache cacheInstance = (Cache) params[1];
         Log.d(TAG, "Started LocalCacheInit");
-
+        Log.d(TAG, "FolderPath: " + folder);
         File[] files = folder.listFiles();
         BufferedReader br;
         String line;
@@ -36,6 +36,8 @@ public class LocalCacheInit extends AsyncTask<Object, String, String> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "OwningAlbums Size: " + Cache.getInstance().ownedAlbumsIDs.size());
+        Log.d(TAG, "AllAlbums Size: " + Cache.getInstance().ownedAndPartAlbumsIDs.size());
 
         for (File file : files) {
             if (file.getName().endsWith("_catalog.txt")) {

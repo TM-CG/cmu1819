@@ -2,9 +2,11 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.api;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.Looper;
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -96,7 +98,13 @@ public abstract class StorageProvider extends DropboxActivity implements Runnabl
                 // === 1. Creates a temporary file ===
                 FileOutputStream fos = null;
                 try {
-                    fos = context.openFileOutput(catalog.getAlbumId() + CATALOG_TMP_FILE, Context.MODE_PRIVATE);
+                    File f = new File (context.getFilesDir(), Main.username);
+                    Log.d(TAG, "FolderPath: " + f.getAbsolutePath());
+                    f.mkdir();
+                    File file = new File(f, catalog.getAlbumId() + CATALOG_TMP_FILE);
+                    file.createNewFile();
+                    Log.d(TAG, "FilePath: " + file.getAbsolutePath());
+                    fos = new FileOutputStream(file);
                     fos.write(rep.getBytes());
                 } catch (IOException e) {
                     Log.i("StorageProvider", "Failed to write temp file");

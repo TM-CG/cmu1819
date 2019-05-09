@@ -127,12 +127,7 @@ public class ChooseCloudOrLocal extends DropboxActivity {
                 break;
         }
     }
-
-    //Load cache from local files -> Wi-Fi Direct
-    protected void loadLocalCache() {
-        new LocalCacheInit().execute(getFilesDir(), cacheInstance);
-    }
-
+    
     protected void loadCache() {
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);

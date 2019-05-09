@@ -36,6 +36,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.ListPhotoAdapter;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileFromLink;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.FetchAllCatalogs;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LocalFileCopy;
 
 public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClickListener {
     private static final String TAG = ListPhoto.class.getName();
@@ -97,13 +98,20 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
                     downloadFile(pictureURL, "Loading pictures", tmpFolderPath, null, 0);
                 }
                 Log.i(TAG, "Finished downloading pictures!");
+            } else if (Main.STORAGE_TYPE == Main.StorageType.LOCAL) {
+                localCopyCache(Main.username + "/" + tmpFolderPath);
             }
 
             GridView gridView = (GridView) findViewById(R.id.grid_thumbnails);
 
-            String path2Album = Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER) + "/" + Main.username + "/" + tmpFolderPath;
+            String path2Album = Main.CACHE_FOLDER + "/" + Main.username + "/" + tmpFolderPath;
+            File userFolder = new File(getCacheDir(), Main.username);
+            userFolder.mkdir();
+            File folder = new File(userFolder, tmpFolderPath);
+            folder.mkdir();
 
-            adapter = new ListPhotoAdapter(this, path2Album);
+            Log.d(TAG, "Path2Album: " + folder.getAbsolutePath());
+            adapter = new ListPhotoAdapter(this, folder);
             gridView.setAdapter(adapter);
             Cache.getInstance().loadingSpinner(false);
         } catch (ExecutionException e) {
@@ -144,6 +152,22 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
         return false;
     }
 
+    /**
+     * Copies a Local Album to the cache
+     * @param folderName the local path to album folder
+     */
+    private void localCopyCache(String folderName) {
+        File folder = new File(Main.DATA_FOLDER + "/" + folderName);
+        File[] files = folder.listFiles();
+
+        Log.d(TAG, "localCopyCache -> Local Data Folder path: " + Main.DATA_FOLDER + "/" + folderName);
+        Log.d(TAG, "localCopyCache -> Cache Data Folder path: " + Main.CACHE_FOLDER + "/" + folderName);
+
+        for (File file: files) {
+            new LocalFileCopy(getApplicationContext()).execute(file.getAbsolutePath(), Main.CACHE_FOLDER + "/" + folderName, "path");
+        }
+
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import java.io.File;
+
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
 import pt.inesc.termite.wifidirect.SimWifiP2pInfo;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
@@ -61,7 +63,8 @@ public class P2PhotoWiFiDBroadcastReceiver extends BroadcastReceiver {
                     SimWifiP2pBroadcast.EXTRA_GROUP_INFO);
             ginfo.print();
             Cache.getInstance().cleanArrays();
-            new LocalCacheInit().execute(Main.DATA_FOLDER, Cache.getInstance());
+            File userFolder = new File(context.getFilesDir(), Main.username);
+            new LocalCacheInit().execute(userFolder, Cache.getInstance());
             Toast.makeText(activity, "Group ownership changed",
                     Toast.LENGTH_SHORT).show();
         }

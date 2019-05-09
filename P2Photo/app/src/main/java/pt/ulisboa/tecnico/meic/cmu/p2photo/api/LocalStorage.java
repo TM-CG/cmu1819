@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.api;
 
 import android.content.Context;
 
+import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
@@ -38,9 +39,8 @@ public class LocalStorage extends StorageProvider {
             new AddAlbumSliceCatalogURL().execute(getCatalog().getAlbumId(), LOCAL_URL).get();
 
             //just to refresh the cache
-            new LocalCacheInit().execute(Main.DATA_FOLDER, Cache.getInstance()).get();
-
-            new LocalCacheInit().execute(Main.DATA_FOLDER, Cache.getInstance());
+            File userFolder = new File(getContext().getFilesDir(), Main.username);
+            new LocalCacheInit().execute(userFolder, Cache.getInstance()).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

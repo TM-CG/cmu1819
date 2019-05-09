@@ -67,7 +67,7 @@ public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemCli
                 String selectedItem = parent.getItemAtPosition(position).toString();
 
                 int albumId = Integer.parseInt(selectedItem.split(" ")[0]);
-                String albumTitle = selectedItem.substring(selectedItem.indexOf(' '));
+                String albumTitle = selectedItem.substring(selectedItem.indexOf(' ') + 1);
                 startActivity(ListPhoto.getIntent(YourAlbums.this, albumId, albumTitle));
             }
         });

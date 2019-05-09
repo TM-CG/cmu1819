@@ -25,6 +25,18 @@ public class LocalCacheInit extends AsyncTask<Object, String, String> {
         BufferedReader br;
         String line;
 
+        //get my albums
+        Thread t1 = new Thread(new AllAlbums());
+        t1.start();
+        Thread t2 = new Thread(new OwningAlbums());
+        t2.start();
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         for (File file : files) {
             if (file.getName().endsWith("_catalog.txt")) {
                 try {
@@ -43,14 +55,15 @@ public class LocalCacheInit extends AsyncTask<Object, String, String> {
                             //add to owned
                             if (cacheInstance.ownedAlbumsIDs.contains(Integer.parseInt(splited[0]))) {
                                 cacheInstance.ownedAlbums.add(splited[1]);
+                                cacheInstance.ownedAndPartAlbums.add(splited[1]);
+                                cacheInstance.ownedAlbumWithIDs.add(splited[0] + " " + splited[1]); //same but parsed
                             }
                             //add to owned and parsed
                             else if (cacheInstance.ownedAndPartAlbumsIDs.contains(Integer.parseInt(splited[0]))) {
-
-
+                                cacheInstance.ownedAndPartAlbums.add(splited[1]);
+                                cacheInstance.ownedAlbumWithIDs.add(splited[0] + " " + splited[1]); //same but parsed
                             }
-                            cacheInstance.ownedAndPartAlbums.add(splited[1]);
-                            cacheInstance.ownedAlbumWithIDs.add(splited[0] + " " + splited[1]); //same but parsed
+
 
                         }
                         Log.d(TAG, "Cache Size: " + Cache.ownedAlbumWithIDs.size());

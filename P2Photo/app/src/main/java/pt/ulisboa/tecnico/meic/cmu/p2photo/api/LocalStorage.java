@@ -4,7 +4,10 @@ import android.content.Context;
 
 import java.util.concurrent.ExecutionException;
 
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AddAlbumSliceCatalogURL;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LocalCacheInit;
 
 /**
  * Support for reading and writing files locally on the device in order to use Wi-Fi Direct file
@@ -29,9 +32,15 @@ public class LocalStorage extends StorageProvider {
 
     @Override
     void writeFile(String fileURL) {
-        //just to accept my own invitation in order to be considered as the owner of my album
+
         try {
+            //just to accept my own invitation in order to be considered as the owner of my album
             new AddAlbumSliceCatalogURL().execute(getCatalog().getAlbumId(), LOCAL_URL).get();
+
+            //just to refresh the cache
+            new LocalCacheInit().execute(Main.DATA_FOLDER, Cache.getInstance()).get();
+
+            new LocalCacheInit().execute(Main.DATA_FOLDER, Cache.getInstance());
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

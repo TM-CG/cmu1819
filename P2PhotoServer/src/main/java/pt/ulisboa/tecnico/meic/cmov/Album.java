@@ -18,15 +18,19 @@ public class Album implements Serializable {
     private List<Pair<String, String>> indexes;
 
     public Album(int ID, User owner) {
-        this.ID = ID;
-        this.indexes = new ArrayList<>();
-        this.indexes.add(new Pair(owner.getUsername(), null));
+        synchronized(this) {
+            this.ID = ID;
+            this.indexes = new ArrayList<>();
+            this.indexes.add(new Pair(owner.getUsername(), null));
+        }
     }
 
     public Album(int ID, User owner, String ownerURL) {
-        this.ID = ID;
-        this.indexes = new ArrayList<>();
-        this.indexes.add(new Pair(owner.getUsername(), ownerURL));
+        synchronized(this) {
+            this.ID = ID;
+            this.indexes = new ArrayList<>();
+            this.indexes.add(new Pair(owner.getUsername(), ownerURL));
+        }
     }
 
     public int getID() {
@@ -100,25 +104,30 @@ public class Album implements Serializable {
      * @param username
      */
     public void setIndexOfParticipant(String username, String directoryCloudURL) {
-        removeIndexOfParticipant(username);
+        int position = removeIndexOfParticipant(username);
 
-        synchronized (this) {
-                indexes.add(new Pair<>(username, directoryCloudURL));
+        synchronized (indexes) {
+            if (position != -1)
+                indexes.add(position, new Pair<>(username, directoryCloudURL));
+            else indexes.add(new Pair<>(username, directoryCloudURL));
             }
     }
 
-    public void removeIndexOfParticipant(String username) {
-        Pair<String, String> pairSelect = null;
-        synchronized (this) {
-
+    public int removeIndexOfParticipant(String username) {
+        int position = -1, i;
+        synchronized (indexes) {
+            i = 0;
             Iterator<Pair<String, String>> iterator = indexes.iterator();
             while(iterator.hasNext()) {
                 if (iterator.next().getKey().equals(username)) {
                     iterator.remove();
+                    position = i;
                     break;
                 }
+                i++;
             }
         }
+        return position;
     }
 
     /**

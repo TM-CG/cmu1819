@@ -21,6 +21,7 @@ public class LocalCacheInit extends AsyncTask<Object, String, String> {
         Cache cacheInstance = (Cache) params[1];
         Log.d(TAG, "Started LocalCacheInit");
         Log.d(TAG, "FolderPath: " + folder);
+        folder.mkdir();
         File[] files = folder.listFiles();
         BufferedReader br;
         String line;

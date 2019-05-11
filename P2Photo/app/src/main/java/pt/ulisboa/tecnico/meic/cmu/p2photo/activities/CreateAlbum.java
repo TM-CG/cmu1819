@@ -83,6 +83,8 @@ public class CreateAlbum extends AppCompatActivity {
                 @Override
                 protected void onPostExecute(Object[] o) {
                     super.onPostExecute(o);
+                    int albumId = (int) o[0];
+                    new AddUsersToAlbum().execute(albumId, items2);
                     //Hides the progressBar
                     progressBar.setVisibility(View.INVISIBLE);
                 }

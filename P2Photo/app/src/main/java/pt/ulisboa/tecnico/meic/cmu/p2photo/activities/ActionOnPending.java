@@ -14,6 +14,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.CloudStorage;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.LocalStorage;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.StorageProvider;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.CreateFolder;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetAlbumOwner;
@@ -57,7 +58,13 @@ public class ActionOnPending extends AppCompatActivity {
         Cache.getInstance().loadingSpinner(true);
         name = albumNametv.getText().toString();
         AlbumCatalog catalog = new AlbumCatalog(Integer.parseInt(id), name);
-        Thread t1 = new Thread(new CloudStorage(getApplicationContext(), catalog, StorageProvider.Operation.WRITE), "WritingThread");
+        Thread t1 = null;
+
+        if (Main.STORAGE_TYPE == Main.StorageType.CLOUD)
+            t1 = new Thread(new CloudStorage(getApplicationContext(), catalog, StorageProvider.Operation.WRITE), "WritingThread");
+        else if (Main.STORAGE_TYPE == Main.StorageType.LOCAL)
+            t1 = new Thread(new LocalStorage(getApplicationContext(), catalog, StorageProvider.Operation.WRITE), "WritingThread");
+
         t1.start();
         try {
             t1.join();

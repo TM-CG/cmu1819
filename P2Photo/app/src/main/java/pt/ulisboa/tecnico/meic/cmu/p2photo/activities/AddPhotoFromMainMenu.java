@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -16,10 +17,12 @@ import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.sharing.SharedLinkMetadata;
 
 import java.io.File;
+import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.UriHelpers;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFile;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolder;
@@ -177,12 +180,31 @@ public class AddPhotoFromMainMenu extends DropboxActivity {
                     uploadFile(data.getData().toString());
                 }
                 else if (Main.STORAGE_TYPE == Main.StorageType.LOCAL) {
-                    String sourceLocation = data.getData().toString();
+                    final String sourceLocation = data.getData().toString();
                     String destLocation = Main.DATA_FOLDER + "/" + Main.username + "/" + cacheInstance.sel_album.getSelectedItem().toString();
                     Log.d(TAG, "WiFiD Source Location: " + sourceLocation);
                     Log.d(TAG, "WiFiD Dest   Location: " + destLocation);
                     //Just copy the file to specific folder
-                    new LocalFileCopy(getApplicationContext()).execute(sourceLocation, destLocation, "uri");
+                    LocalFileCopy localFileCopy = new LocalFileCopy(getApplicationContext()) {
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            String metaData = cacheInstance.sel_album.getSelectedItem().toString();
+                            int albumId = Integer.parseInt(metaData.split(" ")[0]);
+                            File catalog = new File(Main.DATA_FOLDER + "/" + Main.username + "/" + albumId + "_catalog.txt");
+                            File photo = UriHelpers.getFileForUri(getApplicationContext(), Uri.parse(sourceLocation));
+
+                            try {
+                                new UpdateAlbumCatalog().execute(catalog, albumId, photo.getName()).get();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+
+                    localFileCopy.execute(sourceLocation, destLocation, "uri");
                 }
             }
         }

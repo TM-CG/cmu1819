@@ -9,6 +9,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AddAlbumSliceCatalogURL;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LocalCacheInit;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UpdateAlbumCatalog;
 
 /**
  * Support for reading and writing files locally on the device in order to use Wi-Fi Direct file

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDFetchAllPendingCatalogs;
 
 public class PendingRequests extends AppCompatActivity {
     private ArrayList<String> items;
@@ -49,7 +50,15 @@ public class PendingRequests extends AppCompatActivity {
             }
         });
 
-        new pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.PendingRequests().execute(itemsAdapter);
+        new pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.PendingRequests() {
+            @Override
+            protected void onPostExecute(Object[] result) {
+                super.onPostExecute(result);
+                //request and receive all catalogs from near by devices
+
+                new WiFiDFetchAllPendingCatalogs().execute(result[1]);
+            }
+        }.execute(itemsAdapter);
 
 
     }

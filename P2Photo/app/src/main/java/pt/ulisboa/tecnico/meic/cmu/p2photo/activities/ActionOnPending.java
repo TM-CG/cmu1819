@@ -20,6 +20,10 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.CreateFolder;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetAlbumOwner;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetAlbumURL;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.RejectPendingInvitation;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDGetTitleOfPending;
+
+import static pt.ulisboa.tecnico.meic.cmu.p2photo.activities.ChooseCloudOrLocal.wifiConnector;
+import static pt.ulisboa.tecnico.meic.cmu.p2photo.api.WiFiDConnector.WiFiDP2PhotoOperation.GET_CATALOG;
 
 public class ActionOnPending extends AppCompatActivity {
     private TextView albumIDtv;
@@ -43,7 +47,13 @@ public class ActionOnPending extends AppCompatActivity {
         position = cacheInstance.albumsIDs.indexOf(Integer.parseInt(id));
         new GetAlbumOwner().execute(ownerNametv,id);
         try {
-            new GetAlbumURL().execute(albumNametv, Integer.parseInt(id)).get();
+            if (Main.STORAGE_TYPE == Main.StorageType.CLOUD) {
+                new GetAlbumURL().execute(albumNametv, Integer.parseInt(id)).get();
+            }
+            else if (Main.STORAGE_TYPE == Main.StorageType.LOCAL) {
+                //I've already received all catalogs from near by devices so for this one let me get the title
+                new WiFiDGetTitleOfPending().execute(id, albumNametv);
+            }
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

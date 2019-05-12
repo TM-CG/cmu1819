@@ -185,7 +185,7 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         else prefix = "";
 
 
-        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, debugIP.getText().toString(), prefix + "tmp_file.bin " + message);
+        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "192.168.0.1", prefix + message);
     }
 
     public void sendMessage(String message, String folderPath, String fileName, MsgType type) {
@@ -200,7 +200,7 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         else prefix = "";
 
 
-        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, debugIP.getText().toString(), prefix + fileName + " \"" + folderPath + "\" " + message);
+        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "192.168.0.1", prefix + fileName + " \"" + folderPath + "\" " + message);
     }
 
     public void sendMessage(String message, String fileName, MsgType type) {
@@ -215,7 +215,7 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         else prefix = "";
 
 
-        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, debugIP.getText().toString(), prefix + fileName + " \"\" " + message);
+        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "192.168.0.1", prefix + fileName + " \"\" " + message);
     }
 
     public void sendFile(String path2File) {

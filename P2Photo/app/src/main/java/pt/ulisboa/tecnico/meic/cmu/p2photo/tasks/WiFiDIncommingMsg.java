@@ -14,15 +14,18 @@ import java.io.InputStreamReader;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.WiFiDConnector;
 
-public class WiFiDIncommingMsg extends AsyncTask<SimWifiP2pSocketServer, String, Void> {
+import static pt.ulisboa.tecnico.meic.cmu.p2photo.activities.ChooseCloudOrLocal.wifiConnector;
+
+public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
     private static final String TAG = WiFiDIncommingMsg.class.getName();
     private static final int PORT = 10001;
 
 
     @Override
-    protected Void doInBackground(SimWifiP2pSocketServer... params) {
-        SimWifiP2pSocketServer mSrvSocket = params[0];
+    protected Void doInBackground(Object... params) {
+        SimWifiP2pSocketServer mSrvSocket = (SimWifiP2pSocketServer) params[0];
 
         Log.d(TAG, "IncommingCommTask started (" + this.hashCode() + ").");
 
@@ -49,12 +52,31 @@ public class WiFiDIncommingMsg extends AsyncTask<SimWifiP2pSocketServer, String,
                     folderPaths = line.split("\"");
 
                     prefix = receivedContent[0];
-                    folderPath = folderPaths[1];
+                    if (folderPaths.length > 1)
+                        folderPath = folderPaths[1];
+                    else folderPath = "";
                     fileName = receivedContent[1];
-                    content = line.substring(line.lastIndexOf(' ') + 1);
+                    content = line.substring(line.indexOf(' ') + 1);
 
                     if (prefix.equals("MSG")) {
                         Log.d(TAG, "Received a message: " + content);
+
+                        String commandArgs[] = content.split(" ");
+                        String command = commandArgs[0];
+                        if (command.equals("P2PHOTO")) {
+                            String subCommand = commandArgs[1];
+                            String arg = commandArgs[2];
+                            if (subCommand.equals("GET-CATALOG")) {
+                                //Sends catalog of that album to another user
+                                String path2File = Main.DATA_FOLDER + "/" + Main.username + "/" +
+                                        arg + "_catalog.txt";
+                                Log.d(TAG, "P2PHOTO GET-CATALOG path: " + path2File);
+                                wifiConnector.sendFile(path2File);
+
+                            }
+
+
+                        }
 
                     } else if (prefix.equals("B64F")) {
                         Log.d(TAG, "Received a file with name: " + fileName + " with content: " + content);

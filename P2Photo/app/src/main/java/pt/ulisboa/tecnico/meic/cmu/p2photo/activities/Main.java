@@ -238,6 +238,7 @@ public class Main extends AppCompatActivity {
                 /*Sign Up*/
             case 2:
                 new LogOut().execute(getApplicationContext(), user.getText().toString(), resultCode,data);
+                Cache.getInstance().clientLog.add(Main.username + " logged out at " + new Timestamp(System.currentTimeMillis()));
                 break;
         }
     }

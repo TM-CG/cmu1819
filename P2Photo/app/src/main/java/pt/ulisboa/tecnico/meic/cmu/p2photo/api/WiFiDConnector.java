@@ -146,9 +146,9 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
             String[] args = new String[2];
             args[0] = Main.username;
-            args[1] = device.getVirtIp();
+            args[1] = "192.168.0.1";
             //Send welcome to everybody
-            this.requestP2PhotoOperation(WiFiDConnector.WiFiDP2PhotoOperation.WELCOME, args);
+            this.requestP2PhotoOperation(WiFiDConnector.WiFiDP2PhotoOperation.WELCOME, device.getVirtIp(), args);
         }
 
         // display list of devices in range
@@ -192,21 +192,6 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         new WiFiDIncommingMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, simWifiP2pSocketServer);
     }
 
-    public void sendMessage(String message, MsgType type) {
-        Log.i(TAG, "Sending message through Wi-FiD: " + message);
-        EditText debugIP = activity.findViewById(R.id.debugIP);
-        String prefix;
-
-        if (type == MsgType.TEXT)
-            prefix = "MSG ";
-        else if (type == MsgType.B64FILE)
-            prefix = "B64F ";
-        else prefix = "";
-
-
-        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "192.168.0.1", prefix + message);
-    }
-
     public void sendMessage(String message, MsgType type, String ip) {
         Log.i(TAG, "Sending message through Wi-FiD: " + message);
         EditText debugIP = activity.findViewById(R.id.debugIP);
@@ -222,7 +207,7 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ip, prefix + message);
     }
 
-    public void sendMessage(String message, String folderPath, String fileName, MsgType type) {
+    public void sendMessage(String message, String folderPath, String fileName, MsgType type, String ip) {
         Log.i(TAG, "Sending message through Wi-FiD: " + message);
         EditText debugIP = activity.findViewById(R.id.debugIP);
         String prefix;
@@ -234,10 +219,10 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         else prefix = "";
 
 
-        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "192.168.0.1", prefix + fileName + " \"" + folderPath + "\" " + message);
+        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ip, prefix + fileName + " \"" + folderPath + "\" " + message);
     }
 
-    public void sendMessage(String message, String fileName, MsgType type) {
+    public void sendMessage(String message, String fileName, MsgType type, String ip) {
         Log.i(TAG, "Sending message through Wi-FiD: " + message);
         EditText debugIP = activity.findViewById(R.id.debugIP);
         String prefix;
@@ -249,14 +234,14 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         else prefix = "";
 
 
-        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "192.168.0.1", prefix + fileName + " \"\" " + message);
+        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ip, prefix + fileName + " \"\" " + message);
     }
 
-    public void sendFile(String path2File) {
-        sendFile("", path2File);
+    public void sendFile(String path2File, String ip) {
+        sendFile("", path2File, ip);
     }
 
-    public void sendFile(String folderPath, String path2File) {
+    public void sendFile(String folderPath, String path2File, String ip) {
         try {
             File file = new File(path2File);
             String fileName = file.getName();
@@ -270,8 +255,8 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
             String base64Encode = Base64.encodeToString(bytes, Base64.NO_WRAP);
 
             if (folderPath == null || folderPath.equals(""))
-                sendMessage(base64Encode, fileName, MsgType.B64FILE);
-            else sendMessage(base64Encode, folderPath, fileName, MsgType.B64FILE);
+                sendMessage(base64Encode, fileName, MsgType.B64FILE, ip);
+            else sendMessage(base64Encode, folderPath, fileName, MsgType.B64FILE, ip);
 
 
         } catch (FileNotFoundException e) {
@@ -316,13 +301,13 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
      * @param operation to be performed
      * @param args the arguments to be sent to the peer
      */
-    public void requestP2PhotoOperation(WiFiDP2PhotoOperation operation, String... args) {
+    public void requestP2PhotoOperation(WiFiDP2PhotoOperation operation, String ip, String... args) {
         switch (operation) {
 
             //inform other peer that i need a catalog
-            case GET_CATALOG: sendMessage(String.format(API_GET_CATALOG, args[0]), MsgType.TEXT); break;
-            case GET_PICTURE: sendMessage(String.format(API_GET_PICTURE, args[0]), MsgType.TEXT); break;
-            case WELCOME: sendMessage(String.format(API_WELCOME, args[0], args[1]), MsgType.TEXT); break;
+            case GET_CATALOG: sendMessage(String.format(API_GET_CATALOG, args[0]), MsgType.TEXT, ip); break;
+            case GET_PICTURE: sendMessage(String.format(API_GET_PICTURE, args[0]), MsgType.TEXT, ip); break;
+            case WELCOME: sendMessage(String.format(API_WELCOME, args[0], args[1]), MsgType.TEXT, ip); break;
         }
     }
 }

@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.WiFiDConnector;
 
 import static pt.ulisboa.tecnico.meic.cmu.p2photo.activities.ChooseCloudOrLocal.wifiConnector;
@@ -71,7 +72,11 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                                 String path2File = Main.DATA_FOLDER + "/" + Main.username + "/" +
                                         arg + "_catalog.txt";
                                 Log.d(TAG, "P2PHOTO GET-CATALOG path: " + path2File);
-                                wifiConnector.sendFile(path2File);
+                                String ownerUsername = Main.sv.getAlbumOwner(Integer.parseInt(arg));
+
+                                String ip = wifiConnector.getArpCache().resolve(ownerUsername);
+
+                                wifiConnector.sendFile(path2File, ip);
                             } else if (subCommand.equals("WELCOME")) {
 
                                 //Store the data on P2Photo ARP cache
@@ -111,6 +116,8 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
 
                 } catch (IOException e) {
                     Log.d("Error reading socket:", e.getMessage());
+                } catch (P2PhotoException e) {
+                    e.printStackTrace();
                 } finally {
                     sock.close();
                 }

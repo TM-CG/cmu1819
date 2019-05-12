@@ -14,10 +14,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning"
-        tools:replace="android:icon,android:theme"
-        android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".activities.ActionOnPending"></activity>
+        tools:replace="android:icon,android:theme">
+        <activity android:name=".activities.clientLog"></activity>
+        <activity android:name=".activities.ActionOnPending" />
         <activity android:name=".activities.PendingRequests" />
         <activity android:name=".activities.SelectPhoto" />
         <activity android:name=".activities.Settings" />

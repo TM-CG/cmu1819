@@ -8,6 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.util.Log;
 
+import java.sql.Timestamp;
 import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
@@ -81,11 +82,14 @@ public class ActionOnPending extends AppCompatActivity {
         Cache.getInstance().notifyAdapters();
         Intent intent = getIntent();
         setResult(RESULT_OK,intent);
+        Cache.getInstance().clientLog.add(Main.username + " accepted invitation from " + ownerNametv.getText().toString() +  "to participade in album " + name + " at "  + new Timestamp(System.currentTimeMillis()));
+
         finish();
     }
 
     public void rejectInvitation(View view) {
         new RejectPendingInvitation().execute(id);
+        Cache.getInstance().clientLog.add(Main.username + " rejected invitation to participade in album with id " + id  +  " at " + new Timestamp(System.currentTimeMillis()));
         Intent intent = getIntent();
         setResult(RESULT_OK,intent);
         finish();

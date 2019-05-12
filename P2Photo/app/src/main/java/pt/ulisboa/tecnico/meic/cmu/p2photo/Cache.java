@@ -31,6 +31,11 @@ public class Cache {
 
     public static ProgressBar progressBar;
 
+    /*client LOG*/
+    public static ArrayList<String> clientLog;
+    public static ArrayAdapter<String> clientLogAdapter;
+
+
     private Cache(){
         albums = new ArrayList<String>();
         ownedAlbums = new ArrayList<String>();
@@ -39,6 +44,7 @@ public class Cache {
         ownedAlbumsIDs = new ArrayList<Integer>();
         ownedAndPartAlbumsIDs = new ArrayList<Integer>();
         ownedAlbumWithIDs = new ArrayList<String>();
+        clientLog = new ArrayList<String>();
 
     }
 

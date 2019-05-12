@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import java.sql.Timestamp;
 import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
@@ -150,8 +151,10 @@ public class Main extends AppCompatActivity {
 
                         String loginResult = logIn.execute(user.getText().toString(), pass.getText().toString()).get();
 
-                        if (loginResult.equals("OK"))
+                        if (loginResult.equals("OK")) {
+                            Cache.getInstance().clientLog.add(user.getText().toString() + " logged in at " + new Timestamp(System.currentTimeMillis()));
                             startActivity(intent);
+                        }
                         else {
                             processErrors(loginResult);
                         }
@@ -202,8 +205,10 @@ public class Main extends AppCompatActivity {
 
                         String signUpResult = signUp.execute(user.getText().toString(), pass.getText().toString()).get();
 
-                        if (signUpResult.equals("OK"))
+                        if (signUpResult.equals("OK")) {
+                            Cache.getInstance().clientLog.add(user.getText().toString() + " registered at " + new Timestamp(System.currentTimeMillis()));
                             startActivity(intent);
+                        }
                         else {
                             processErrors(signUpResult);
                         }

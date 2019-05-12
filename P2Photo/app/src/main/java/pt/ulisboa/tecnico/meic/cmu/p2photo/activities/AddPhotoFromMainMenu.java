@@ -17,6 +17,7 @@ import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.sharing.SharedLinkMetadata;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
@@ -104,7 +105,7 @@ public class AddPhotoFromMainMenu extends DropboxActivity {
             @Override
             public void onUploadComplete(FileMetadata result) {
                 dialog.dismiss();
-
+                Cache.getInstance().clientLog.add(Main.username + " added a photo at " + new Timestamp(System.currentTimeMillis()));
                 String message = "Successfully uploaded " + result.getName() + ": size " + result.getSize();
                 Toast.makeText(AddPhotoFromMainMenu.this, message, Toast.LENGTH_SHORT)
                         .show();

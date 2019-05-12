@@ -62,6 +62,8 @@
     <string name="authCloud">Auth</string>
     <string name="ip">IP</string>
     <string name="port">Port</string>
+    <string name="clientLog">Check client log</string>
+    <string name="serverLog">Check server log</string>
 
 
 </resources>

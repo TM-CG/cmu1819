@@ -5,7 +5,11 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+import android.util.Log;
 
+import java.sql.Timestamp;
+
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
 public class ActionsMenu extends DropboxActivity {
@@ -36,6 +40,7 @@ public class ActionsMenu extends DropboxActivity {
     }
 
     public void showAlbums(View view){
+        Cache.getInstance().clientLog.add(Main.username + " started watching albuns list at " + new Timestamp(System.currentTimeMillis()));
         Intent intent = new Intent(this, YourAlbums.class);
         startActivityForResult(intent, 7);
     }
@@ -53,6 +58,11 @@ public class ActionsMenu extends DropboxActivity {
     public void watchPending(View view){
         Intent intent = new Intent(this, PendingRequests.class);
         startActivityForResult(intent, 10);
+    }
+    public void checkClientLog(View view) {
+        //Log.i("ClientLog", ""+Cache.getInstance().clientLog.toString());
+        Intent intent = new Intent(this, clientLog.class);
+        startActivityForResult(intent, 11);
     }
 
     @Override

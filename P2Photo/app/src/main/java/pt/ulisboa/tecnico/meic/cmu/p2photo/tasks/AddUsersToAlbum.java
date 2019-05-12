@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ProgressBar;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
@@ -26,6 +27,9 @@ public class AddUsersToAlbum extends AsyncTask<Object,Void,Object[]> {
                     try {
                         Log.d("inviteAlbum", item);
                         Main.getSv().updateAlbum(albumId, item);
+                        Cache.getInstance().clientLog.add(Main.username + " added user " + item + "to an album with id " + albumId +
+                                " at"  + new Timestamp(System.currentTimeMillis()));
+
                     } catch (P2PhotoException e) {
                         e.printStackTrace();
                     }

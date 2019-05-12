@@ -10,7 +10,7 @@
         android:id="@+id/createAlbum"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="80dp"
         android:drawableStart="@drawable/baseline_add_to_photos_black_48"
         android:onClick="createAlbum"
         android:text="@string/menu1"
@@ -68,6 +68,18 @@
         app:layout_constraintTop_toTopOf="@id/addUsers" />
 
     <Button
+        android:id="@+id/clientLog"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_marginTop="75dp"
+        android:drawableStart="@drawable/ic_event_black_48dp"
+        android:onClick="checkClientLog"
+        android:text="@string/clientLog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/invitations" />
+
+    <Button
         android:id="@+id/settingsButton"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
@@ -80,7 +92,7 @@
         android:text="@string/settingsButtonString"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/invitations" />
+        app:layout_constraintTop_toBottomOf="@+id/clientLog" />
 
     <Button
         android:id="@+id/logoutButton"
@@ -95,6 +107,6 @@
         android:text="@string/logOutButtonString"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/invitations" />
+        app:layout_constraintTop_toBottomOf="@+id/clientLog" />
 
 </android.support.constraint.ConstraintLayout>

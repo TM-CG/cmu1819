@@ -38,13 +38,11 @@ public class CreateFolder extends AsyncTask<Object,Object,Object[]> {
         String albumName = (String) result[2];
         if (res == "OK") {
             Cache.getInstance().notifyAdapters();
-            Cache.getInstance().clientLog.add(Main.username + " created album " + albumName + " at"  + new Timestamp(System.currentTimeMillis()));
 
             Toast.makeText((Context) result[0], "Album created in your dropbox",
                     Toast.LENGTH_LONG).show();
         } else {
-            Cache.getInstance().clientLog.add(Main.username + " tried to create album " + albumName + " at"  + new Timestamp(System.currentTimeMillis()));
-            Toast.makeText((Context) result[0], "Album NOT created in your dropbox",
+           Toast.makeText((Context) result[0], "Album NOT created in your dropbox",
                     Toast.LENGTH_LONG).show();
         }
         Cache.getInstance().loadingSpinner(false);

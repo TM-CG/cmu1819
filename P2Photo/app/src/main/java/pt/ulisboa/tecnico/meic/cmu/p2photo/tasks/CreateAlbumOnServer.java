@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import java.sql.Timestamp;
+
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
@@ -30,16 +32,19 @@ public class CreateAlbumOnServer extends AsyncTask<Object,Object,Object[]> {
     @Override
     protected void onPostExecute(Object[] o) {
 
+        if (o != null) {
+            Cache.getInstance().clientLog.add(Main.username + " created album " + albumTitle + " at" + new Timestamp(System.currentTimeMillis()));
 
-        //create album catalog for new album
-        AlbumCatalog catalog = new AlbumCatalog(albumId, albumTitle);
+            //create album catalog for new album
+            AlbumCatalog catalog = new AlbumCatalog(albumId, albumTitle);
 
-        if (Main.STORAGE_TYPE == Main.StorageType.CLOUD) {
-            Thread t1 = new Thread(new CloudStorage(context, catalog, StorageProvider.Operation.WRITE, o), "WritingThread");
-            t1.start();
-        } else if (Main.STORAGE_TYPE == Main.StorageType.LOCAL) {
-            Thread t1 = new Thread(new LocalStorage(context, catalog, StorageProvider.Operation.WRITE, o), "WritingThread");
-            t1.start();
+            if (Main.STORAGE_TYPE == Main.StorageType.CLOUD) {
+                Thread t1 = new Thread(new CloudStorage(context, catalog, StorageProvider.Operation.WRITE, o), "WritingThread");
+                t1.start();
+            } else if (Main.STORAGE_TYPE == Main.StorageType.LOCAL) {
+                Thread t1 = new Thread(new LocalStorage(context, catalog, StorageProvider.Operation.WRITE, o), "WritingThread");
+                t1.start();
+            }
         }
     }
 

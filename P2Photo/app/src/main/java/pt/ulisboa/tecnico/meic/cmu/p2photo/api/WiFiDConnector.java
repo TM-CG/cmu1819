@@ -70,8 +70,8 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
     public enum WiFiDP2PhotoOperation {GET_CATALOG, GET_PICTURE, WELCOME}
 
     /** API messages **/
-    public static final String API_GET_CATALOG = "P2PHOTO GET-CATALOG %s";
-    public static final String API_GET_PICTURE = "P2PHOTO GET-PICTURE %s";
+    public static final String API_GET_CATALOG = "P2PHOTO GET-CATALOG %s %s";
+    public static final String API_GET_PICTURE = "P2PHOTO GET-PICTURE %s %s";
     public static final String API_WELCOME = "P2PHOTO WELCOME %s %s";
     public static final String API_POST_CATALOG = "P2PHOTO POST-CATALOG %s %s";
     public static final String API_POST_PICTURE = "P2PHOTO POST-PICTURE %s %s";
@@ -305,8 +305,8 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         switch (operation) {
 
             //inform other peer that i need a catalog
-            case GET_CATALOG: sendMessage(String.format(API_GET_CATALOG, args[0]), MsgType.TEXT, ip); break;
-            case GET_PICTURE: sendMessage(String.format(API_GET_PICTURE, args[0]), MsgType.TEXT, ip); break;
+            case GET_CATALOG: sendMessage(String.format(API_GET_CATALOG, args[0], args[1]), MsgType.TEXT, ip); break;
+            case GET_PICTURE: sendMessage(String.format(API_GET_PICTURE, args[0], args[1]), MsgType.TEXT, ip); break;
             case WELCOME: sendMessage(String.format(API_WELCOME, args[0], args[1]), MsgType.TEXT, ip); break;
         }
     }

@@ -66,24 +66,26 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                         String command = commandArgs[0];
                         if (command.equals("P2PHOTO")) {
                             String subCommand = commandArgs[1];
-                            String arg = commandArgs[2];
+                            String username = commandArgs[2];
+                            String arg = commandArgs[3];
                             if (subCommand.equals("GET-CATALOG")) {
                                 //Sends catalog of that album to another user
                                 String path2File = Main.DATA_FOLDER + "/" + Main.username + "/" +
                                         arg + "_catalog.txt";
                                 Log.d(TAG, "P2PHOTO GET-CATALOG path: " + path2File);
-                                String ownerUsername = Main.sv.getAlbumOwner(Integer.parseInt(arg));
 
-                                String ip = wifiConnector.getArpCache().resolve(ownerUsername);
+                                String ip = wifiConnector.getArpCache().resolve(username);
 
                                 wifiConnector.sendFile(path2File, ip);
+
+                            } else if (subCommand.equals("GET-PICTURE")) {
+
+
                             } else if (subCommand.equals("WELCOME")) {
 
                                 //Store the data on P2Photo ARP cache
-                                wifiConnector.getArpCache().addEntry(arg, commandArgs[3]);
-
+                                wifiConnector.getArpCache().addEntry(username, commandArgs[3]);
                             }
-
                         }
 
                     } else if (prefix.equals("B64F")) {
@@ -116,8 +118,6 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
 
                 } catch (IOException e) {
                     Log.d("Error reading socket:", e.getMessage());
-                } catch (P2PhotoException e) {
-                    e.printStackTrace();
                 } finally {
                     sock.close();
                 }

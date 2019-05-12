@@ -72,9 +72,12 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                                         arg + "_catalog.txt";
                                 Log.d(TAG, "P2PHOTO GET-CATALOG path: " + path2File);
                                 wifiConnector.sendFile(path2File);
+                            } else if (subCommand.equals("WELCOME")) {
+
+                                //Store the data on P2Photo ARP cache
+                                wifiConnector.getArpCache().addEntry(arg, commandArgs[3]);
 
                             }
-
 
                         }
 

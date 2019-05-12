@@ -31,6 +31,7 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.bcastreceivers.P2PhotoWiFiDBroadcastReceiver;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.PeerListListener;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.GroupInfoListener;
@@ -64,17 +65,21 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
     /** Connector to P2PhotoServer **/
     private ServerConnector serverConnector;
 
-    public enum WiFiDP2PhotoOperation {GET_CATALOG, GET_PICTURE}
+    private WiFiDARP arpCache;
+
+    public enum WiFiDP2PhotoOperation {GET_CATALOG, GET_PICTURE, WELCOME}
 
     /** API messages **/
     public static final String API_GET_CATALOG = "P2PHOTO GET-CATALOG %s";
     public static final String API_GET_PICTURE = "P2PHOTO GET-PICTURE %s";
+    public static final String API_WELCOME = "P2PHOTO WELCOME %s %s";
     public static final String API_POST_CATALOG = "P2PHOTO POST-CATALOG %s %s";
     public static final String API_POST_PICTURE = "P2PHOTO POST-PICTURE %s %s";
 
     public WiFiDConnector(AppCompatActivity activity, ServerConnector serverConnector) {
         this.activity = activity;
         this.serverConnector = serverConnector;
+        this.arpCache = new WiFiDARP();
 
         //Init the WDSim API
         SimWifiP2pSocketManager.Init(activity.getApplicationContext());
@@ -86,6 +91,10 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public WiFiDARP getArpCache() {
+        return arpCache;
     }
 
     public void initBCastReceiver() {
@@ -102,13 +111,18 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
     @Override
     public void onGroupInfoAvailable(SimWifiP2pDeviceList devices, SimWifiP2pInfo groupInfo) {
+
         // compile list of network members
         StringBuilder peersStr = new StringBuilder();
+
         for (String deviceName : groupInfo.getDevicesInNetwork()) {
             SimWifiP2pDevice device = devices.getByName(deviceName);
             String devstr = "" + deviceName + " (" +
                     ((device == null)?"??":device.getVirtIp()) + ")\n";
             peersStr.append(devstr);
+
+
+
         }
 
         // display list of network members
@@ -125,11 +139,16 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
     @Override
     public void onPeersAvailable(SimWifiP2pDeviceList peers) {
         StringBuilder peersStr = new StringBuilder();
-
         // compile list of devices in range
         for (SimWifiP2pDevice device : peers.getDeviceList()) {
             String devstr = "" + device.deviceName + " (" + device.getVirtIp() + ")\n";
             peersStr.append(devstr);
+
+            String[] args = new String[2];
+            args[0] = Main.username;
+            args[1] = device.getVirtIp();
+            //Send welcome to everybody
+            this.requestP2PhotoOperation(WiFiDConnector.WiFiDP2PhotoOperation.WELCOME, args);
         }
 
         // display list of devices in range
@@ -186,6 +205,21 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
 
         new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "192.168.0.1", prefix + message);
+    }
+
+    public void sendMessage(String message, MsgType type, String ip) {
+        Log.i(TAG, "Sending message through Wi-FiD: " + message);
+        EditText debugIP = activity.findViewById(R.id.debugIP);
+        String prefix;
+
+        if (type == MsgType.TEXT)
+            prefix = "MSG ";
+        else if (type == MsgType.B64FILE)
+            prefix = "B64F ";
+        else prefix = "";
+
+
+        new WiFiDSendMsg().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, ip, prefix + message);
     }
 
     public void sendMessage(String message, String folderPath, String fileName, MsgType type) {
@@ -288,6 +322,7 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
             //inform other peer that i need a catalog
             case GET_CATALOG: sendMessage(String.format(API_GET_CATALOG, args[0]), MsgType.TEXT); break;
             case GET_PICTURE: sendMessage(String.format(API_GET_PICTURE, args[0]), MsgType.TEXT); break;
+            case WELCOME: sendMessage(String.format(API_WELCOME, args[0], args[1]), MsgType.TEXT); break;
         }
     }
 }

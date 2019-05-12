@@ -14,6 +14,8 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LocalCacheInit;
 
+import static pt.ulisboa.tecnico.meic.cmu.p2photo.activities.ChooseCloudOrLocal.wifiConnector;
+
 public class P2PhotoWiFiDBroadcastReceiver extends BroadcastReceiver {
 
     private AppCompatActivity activity;
@@ -45,7 +47,7 @@ public class P2PhotoWiFiDBroadcastReceiver extends BroadcastReceiver {
             // Request available peers from the wifi p2p manager. This is an
             // asynchronous call and the calling activity is notified with a
             // callback on PeerListListener.onPeersAvailable()
-
+            wifiConnector.requestPeersInRange();
             Toast.makeText(activity, "Peer list changed",
                     Toast.LENGTH_SHORT).show();
 

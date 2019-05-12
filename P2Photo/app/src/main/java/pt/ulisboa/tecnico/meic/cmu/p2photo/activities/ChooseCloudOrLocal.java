@@ -27,10 +27,8 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.api.WiFiDConnector;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AllAlbums;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFile;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ListFolder;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LocalCacheInit;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.OwningAlbums;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetCurrentAccount;
-import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDOutgoingMsg;
 
 
 public class ChooseCloudOrLocal extends DropboxActivity {

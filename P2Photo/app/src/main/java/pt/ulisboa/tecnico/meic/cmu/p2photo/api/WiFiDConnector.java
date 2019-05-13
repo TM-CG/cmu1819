@@ -67,12 +67,13 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
     private WiFiDARP arpCache;
 
-    public enum WiFiDP2PhotoOperation {GET_CATALOG, GET_PICTURE, WELCOME}
+    public enum WiFiDP2PhotoOperation {GET_CATALOG, GET_PICTURE, WELCOME, INIT}
 
     /** API messages **/
     public static final String API_GET_CATALOG = "P2PHOTO GET-CATALOG %s %s";
     public static final String API_GET_PICTURE = "P2PHOTO GET-PICTURE %s %s";
     public static final String API_WELCOME = "P2PHOTO WELCOME %s %s";
+    public static final String API_INIT = "P2PHOTO INIT %s";
     public static final String API_POST_CATALOG = "P2PHOTO POST-CATALOG %s %s";
     public static final String API_POST_PICTURE = "P2PHOTO POST-PICTURE %s %s";
 
@@ -111,7 +112,6 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
     @Override
     public void onGroupInfoAvailable(SimWifiP2pDeviceList devices, SimWifiP2pInfo groupInfo) {
-
         // compile list of network members
         StringBuilder peersStr = new StringBuilder();
 
@@ -121,8 +121,17 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
                     ((device == null)?"??":device.getVirtIp()) + ")\n";
             peersStr.append(devstr);
 
-
-
+            if (groupInfo.askIsGO()) {
+                String[] args = new String[1];
+                args[0] = device.getVirtIp();
+                //Send init to everybody to tell its current IP
+                this.requestP2PhotoOperation(WiFiDConnector.WiFiDP2PhotoOperation.INIT, device.getVirtIp(), args);
+            }
+            String[] args = new String[2];
+            args[0] = Main.username;
+            args[1] = arpCache.resolve(Main.username);
+            //Send welcome to everybody
+            this.requestP2PhotoOperation(WiFiDConnector.WiFiDP2PhotoOperation.WELCOME, device.getVirtIp(), args);
         }
 
         // display list of network members
@@ -143,12 +152,6 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         for (SimWifiP2pDevice device : peers.getDeviceList()) {
             String devstr = "" + device.deviceName + " (" + device.getVirtIp() + ")\n";
             peersStr.append(devstr);
-
-            String[] args = new String[2];
-            args[0] = Main.username;
-            args[1] = "192.168.0.1";
-            //Send welcome to everybody
-            this.requestP2PhotoOperation(WiFiDConnector.WiFiDP2PhotoOperation.WELCOME, device.getVirtIp(), args);
         }
 
         // display list of devices in range
@@ -308,6 +311,7 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
             case GET_CATALOG: sendMessage(String.format(API_GET_CATALOG, args[0], args[1]), MsgType.TEXT, ip); break;
             case GET_PICTURE: sendMessage(String.format(API_GET_PICTURE, args[0], args[1]), MsgType.TEXT, ip); break;
             case WELCOME: sendMessage(String.format(API_WELCOME, args[0], args[1]), MsgType.TEXT, ip); break;
+            case INIT: sendMessage(String.format(API_INIT, args[0]), MsgType.TEXT, ip); break;
         }
     }
 }

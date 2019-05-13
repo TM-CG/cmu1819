@@ -47,7 +47,7 @@ public class P2PhotoWiFiDBroadcastReceiver extends BroadcastReceiver {
             // Request available peers from the wifi p2p manager. This is an
             // asynchronous call and the calling activity is notified with a
             // callback on PeerListListener.onPeersAvailable()
-            wifiConnector.requestPeersInRange();
+            //wifiConnector.requestPeersInRange();
             Toast.makeText(activity, "Peer list changed",
                     Toast.LENGTH_SHORT).show();
 
@@ -65,8 +65,14 @@ public class P2PhotoWiFiDBroadcastReceiver extends BroadcastReceiver {
                     SimWifiP2pBroadcast.EXTRA_GROUP_INFO);
             ginfo.print();
             Cache.getInstance().cleanArrays();
+
+            //clears ARP cache
+            wifiConnector.getArpCache().removeAllEntries();
+
             File userFolder = new File(context.getFilesDir(), Main.username);
             new LocalCacheInit().execute(userFolder, Cache.getInstance());
+
+            wifiConnector.requestGroupInfo();
             Toast.makeText(activity, "Group ownership changed",
                     Toast.LENGTH_SHORT).show();
         }

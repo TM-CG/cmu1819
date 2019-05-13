@@ -68,23 +68,38 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                             String subCommand = commandArgs[1];
                             String username = commandArgs[2];
                             String arg = commandArgs[3];
-                            if (subCommand.equals("GET-CATALOG")) {
-                                //Sends catalog of that album to another user
-                                String path2File = Main.DATA_FOLDER + "/" + Main.username + "/" +
-                                        arg + "_catalog.txt";
-                                Log.d(TAG, "P2PHOTO GET-CATALOG path: " + path2File);
 
-                                String ip = wifiConnector.getArpCache().resolve(username);
+                            switch (subCommand) {
+                                case "GET-CATALOG":
 
-                                wifiConnector.sendFile(path2File, ip);
+                                    //Sends catalog of that album to another user
+                                    String path2File = Main.DATA_FOLDER + "/" + Main.username + "/" +
+                                            arg + "_catalog.txt";
+                                    Log.d(TAG, "P2PHOTO GET-CATALOG path: " + path2File);
 
-                            } else if (subCommand.equals("GET-PICTURE")) {
+                                    String ip = wifiConnector.getArpCache().resolve(username);
+
+                                    wifiConnector.sendFile(path2File, ip);
+
+                                    break;
+
+                                case "GET-PICTURE":
 
 
-                            } else if (subCommand.equals("WELCOME")) {
+                                    break;
 
-                                //Store the data on P2Photo ARP cache
-                                wifiConnector.getArpCache().addEntry(username, commandArgs[3]);
+                                case "WELCOME":
+                                    //Store the data on P2Photo ARP cache
+                                    wifiConnector.getArpCache().addEntry(username, commandArgs[3]);
+
+                                    break;
+
+                                case "INIT":
+                                    //Special case of welcome where I save my own entry
+                                    wifiConnector.getArpCache().addEntry(Main.username, commandArgs[2]);
+
+                                    break;
+
                             }
                         }
 

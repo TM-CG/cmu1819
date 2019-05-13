@@ -121,17 +121,23 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
                     ((device == null)?"??":device.getVirtIp()) + ")\n";
             peersStr.append(devstr);
 
-            if (groupInfo.askIsGO()) {
+
+            if (!arpCache.alreadySentInit(deviceName)) {
+                arpCache.addSentInit(deviceName);
                 String[] args = new String[1];
                 args[0] = device.getVirtIp();
                 //Send init to everybody to tell its current IP
                 this.requestP2PhotoOperation(WiFiDConnector.WiFiDP2PhotoOperation.INIT, device.getVirtIp(), args);
             }
-            String[] args = new String[2];
-            args[0] = Main.username;
-            args[1] = arpCache.resolve(Main.username);
-            //Send welcome to everybody
-            this.requestP2PhotoOperation(WiFiDConnector.WiFiDP2PhotoOperation.WELCOME, device.getVirtIp(), args);
+
+            //If INIT phase is over
+            if (arpCache.resolve(Main.username) != null) {
+                String[] args = new String[2];
+                args[0] = Main.username;
+                args[1] = arpCache.resolve(Main.username);
+                //Send welcome to everybody
+                this.requestP2PhotoOperation(WiFiDConnector.WiFiDP2PhotoOperation.WELCOME, device.getVirtIp(), args);
+            }
         }
 
         // display list of network members

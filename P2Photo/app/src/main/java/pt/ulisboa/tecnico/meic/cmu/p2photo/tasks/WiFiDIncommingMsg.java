@@ -97,6 +97,7 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                                 case "INIT":
                                     //Special case of welcome where I save my own entry
                                     wifiConnector.getArpCache().addEntry(Main.username, commandArgs[2]);
+                                    wifiConnector.requestGroupInfo();
 
                                     break;
 

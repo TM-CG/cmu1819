@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.api;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -11,8 +12,11 @@ public class WiFiDARP {
     private static final String TAG = WiFiDARP.class.getName();
     private HashMap<String, String> mapping;
 
+    private ArrayList<String> alreadySentInit;
+
     public WiFiDARP() {
         this.mapping = new HashMap<>();
+        this.alreadySentInit = new ArrayList<>();
     }
 
     public void addEntry(String username, String ip) {
@@ -40,6 +44,25 @@ public class WiFiDARP {
             Log.d(TAG, "WiFi Direct P2Photo ARP Cache was reset!");
             this.mapping.clear();
         }
+        synchronized (this.alreadySentInit) {
+            this.alreadySentInit.clear();
+        }
+    }
+
+    public void addSentInit(String deviceName) {
+        synchronized (this.alreadySentInit) {
+            this.alreadySentInit.add(deviceName);
+        }
+    }
+
+    public boolean alreadySentInit(String deviceName) {
+        synchronized (this.alreadySentInit) {
+            for (String device : this.alreadySentInit) {
+                if (device.equals(deviceName))
+                    return true;
+            }
+        }
+        return false;
     }
 
 }

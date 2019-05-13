@@ -46,7 +46,7 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
     private static final String TAG = WiFiDConnector.class.getName();
 
-    private static final String CLI_API_VERSION = "0.1";
+    private static final String CLI_API_VERSION = "0.2";
 
     public enum MsgType {TEXT, B64FILE}
 

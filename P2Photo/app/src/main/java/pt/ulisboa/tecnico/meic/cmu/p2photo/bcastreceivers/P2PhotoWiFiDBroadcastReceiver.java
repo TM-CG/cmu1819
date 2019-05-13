@@ -69,6 +69,9 @@ public class P2PhotoWiFiDBroadcastReceiver extends BroadcastReceiver {
             //clears ARP cache
             wifiConnector.getArpCache().removeAllEntries();
 
+            //vitor: DEBUG TO USE WITH ONLY ONE EMU!
+            //wifiConnector.getArpCache().addEntry(Main.username, "192.168.0.1");
+
             File userFolder = new File(context.getFilesDir(), Main.username);
             new LocalCacheInit().execute(userFolder, Cache.getInstance());
 

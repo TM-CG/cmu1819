@@ -84,7 +84,16 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                                     break;
 
                                 case "GET-PICTURE":
+                                    String path = content.split("\"")[1];
+                                    String folder = path.split("/")[0];
+                                    //Sends catalog of that album to another user
+                                    String path2Pic = Main.DATA_FOLDER + "/" + Main.username + "/" +
+                                            path;
+                                    Log.d(TAG, "P2PHOTO GET-PICTURE path: " + path2Pic);
+                                    Log.d(TAG, "P2PHOTO GET-PICTURE folder: " + folder);
+                                    ip = wifiConnector.getArpCache().resolve(username);
 
+                                    wifiConnector.sendFile(folder, path2Pic, ip);
 
                                     break;
 

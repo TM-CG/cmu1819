@@ -141,14 +141,14 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         }
 
         // display list of network members
-        new AlertDialog.Builder(activity)
+        /*new AlertDialog.Builder(activity)
                 .setTitle("Devices in WiFi Network")
                 .setMessage(peersStr.toString())
                 .setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                     }
                 })
-                .show();
+                .show();*/
     }
 
     @Override

@@ -72,8 +72,12 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                             switch (subCommand) {
                                 case "GET-CATALOG":
 
+                                    //TODO vitor: remove this after debug
+                                    String userFolder = Main.sv.getAlbumOwner(Integer.parseInt(arg));
+                                    //String userFolder = Main.username;
+
                                     //Sends catalog of that album to another user
-                                    String path2File = Main.DATA_FOLDER + "/" + Main.username + "/" +
+                                    String path2File = Main.DATA_FOLDER + "/" + userFolder + "/" +
                                             arg + "_catalog.txt";
                                     Log.d(TAG, "P2PHOTO GET-CATALOG path: " + path2File);
 
@@ -84,10 +88,14 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                                     break;
 
                                 case "GET-PICTURE":
+                                    //TODO vitor: remove this after debug
+                                    userFolder = Main.sv.getAlbumOwner(Integer.parseInt(arg));
+                                    //String userFolder = Main.username;
+
                                     String path = content.split("\"")[1];
                                     String folder = path.split("/")[0];
                                     //Sends catalog of that album to another user
-                                    String path2Pic = Main.DATA_FOLDER + "/" + Main.username + "/" +
+                                    String path2Pic = Main.DATA_FOLDER + "/" + userFolder + "/" +
                                             path;
                                     Log.d(TAG, "P2PHOTO GET-PICTURE path: " + path2Pic);
                                     Log.d(TAG, "P2PHOTO GET-PICTURE folder: " + folder);
@@ -114,15 +122,20 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                         }
 
                     } else if (prefix.equals("B64F")) {
-                        Log.d(TAG, "Received a file with name: " + fileName + " with content: " + content);
+                        String fileContent = content.substring(content.lastIndexOf(' ') + 1);
+                        Log.d(TAG, "Received a file with name: " + fileName + " with content: " + fileContent);
 
                         //Write received bytes to a file
-                        byte[] receivedBytes = Base64.decode(content, Base64.NO_WRAP);
+                        byte[] receivedBytes = Base64.decode(fileContent, Base64.NO_WRAP);
 
+                        /*
+                         path = Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER + "/" + Main.username + "/" + folderPath);
+                        else path = Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER + "/" + Main.username);
+                         */
                         File path;
                         if (folderPath != null && !folderPath.equals(""))
-                            path = Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER + "/" + Main.username + "/" + folderPath);
-                        else path = Environment.getExternalStoragePublicDirectory(Main.CACHE_FOLDER + "/" + Main.username);
+                            path = new File(Main.CACHE_FOLDER + "/" + Main.username + "/" + folderPath);
+                        else path = new File(Main.CACHE_FOLDER + "/" + Main.username);
 
                         Log.d(TAG,path.getAbsolutePath());
 
@@ -130,6 +143,7 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                         path.mkdir();
 
                         File file = new File(path, fileName);
+                        file.createNewFile();
 
                         FileOutputStream fos = new FileOutputStream(file);
 
@@ -143,6 +157,8 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
 
                 } catch (IOException e) {
                     Log.d("Error reading socket:", e.getMessage());
+                } catch (P2PhotoException e) {
+                    e.printStackTrace();
                 } finally {
                     sock.close();
                 }

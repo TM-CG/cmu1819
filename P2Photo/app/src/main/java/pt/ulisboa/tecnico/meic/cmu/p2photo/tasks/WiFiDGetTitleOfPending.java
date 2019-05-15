@@ -18,7 +18,7 @@ public class WiFiDGetTitleOfPending extends AsyncTask<Object, String, String> {
         String id = (String) params[0];
         TextView albumNametv = (TextView) params[1];
 
-        String path2File = Main.DATA_FOLDER + "/" + Main.username + "/" +
+        String path2File = Main.CACHE_FOLDER + "/" + Main.username + "/" +
                 id + "_catalog.txt";
         //Read Catalog file
         File catalog = new File(path2File);

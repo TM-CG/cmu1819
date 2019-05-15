@@ -28,7 +28,7 @@ public class WiFiDARP {
 
     public String resolve(String username) {
         String ip = this.mapping.get(username);
-        Log.d(TAG, String.format("Where is %d? Is at %s", username, ip));
+        Log.d(TAG, String.format("Where is %s? Is at %s", username, ip));
         return ip;
     }
 

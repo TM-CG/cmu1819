@@ -71,6 +71,10 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
 
                             switch (subCommand) {
                                 case "GET-CATALOG":
+                                    String mode = "N";
+                                    if (commandArgs.length > 4) {
+                                        mode = commandArgs[4];
+                                    }
 
                                     //TODO vitor: remove this after debug
                                     String userFolder = Main.sv.getAlbumOwner(Integer.parseInt(arg));
@@ -82,12 +86,16 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                                     Log.d(TAG, "P2PHOTO GET-CATALOG path: " + path2File);
 
                                     String ip = wifiConnector.getArpCache().resolve(username);
-
-                                    wifiConnector.sendFile(path2File, ip);
+                                    if (mode.equals("T"))
+                                        wifiConnector.sendFile("tmp", path2File, ip, "T");
+                                    else wifiConnector.sendFile(path2File, ip);
 
                                     break;
 
                                 case "GET-PICTURE":
+                                    //just to get album id without the first quote that encloses the path
+                                    arg = arg.replace("\"", "");
+
                                     //TODO vitor: remove this after debug
                                     userFolder = Main.sv.getAlbumOwner(Integer.parseInt(arg));
                                     //String userFolder = Main.username;
@@ -101,7 +109,8 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                                     Log.d(TAG, "P2PHOTO GET-PICTURE folder: " + folder);
                                     ip = wifiConnector.getArpCache().resolve(username);
 
-                                    wifiConnector.sendFile(folder, path2Pic, ip);
+
+                                    wifiConnector.sendFile(folder, path2Pic, ip, "N");
 
                                     break;
 

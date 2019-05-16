@@ -37,6 +37,8 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileFromLink;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.FetchAllCatalogs;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LocalFileCopy;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDGetPicturesOfOthers;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDGetTempCatalogs;
 
 public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClickListener {
     private static final String TAG = ListPhoto.class.getName();
@@ -71,6 +73,9 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
 
         catalogFile = getIntent().getStringExtra("catalog");
 
+        String tmpFolderPath = albumId + " "
+                + albumTitle;
+
         try {
             List<String> catalogsURL = new FetchAllCatalogs().execute(albumId).get();
 
@@ -79,8 +84,7 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
             //Already fetch all catalogs from server now lets download it
             Log.i(TAG, "Downloaded catalogs path from server " + catalogsURL.size());
 
-            String tmpFolderPath = albumId + " "
-                    + albumTitle;
+
 
             if (Main.STORAGE_TYPE == Main.StorageType.CLOUD) {
 
@@ -98,8 +102,6 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
                     downloadFile(pictureURL, "Loading pictures", tmpFolderPath, null, 0);
                 }
                 Log.i(TAG, "Finished downloading pictures!");
-            } else if (Main.STORAGE_TYPE == Main.StorageType.LOCAL) {
-                localCopyCache(Main.username + "/" + tmpFolderPath);
             }
 
             GridView gridView = (GridView) findViewById(R.id.grid_thumbnails);
@@ -132,6 +134,27 @@ public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClic
                 startActivity(intent);
             }
         });
+
+        if (Main.STORAGE_TYPE == Main.StorageType.LOCAL) {
+            //Copy local slice to album
+            localCopyCache(Main.username + "/" + tmpFolderPath);
+
+            new WiFiDGetTempCatalogs(){
+                @Override
+                protected void onPostExecute(String s) {
+                    super.onPostExecute(s);
+                    new WiFiDGetPicturesOfOthers(){
+                        @Override
+                        protected void onPostExecute(String s) {
+                            super.onPostExecute(s);
+                            Log.d(TAG, "Finishes download photos! Notifying adapter");
+                            adapter.notifyDataSetChanged();
+                        }
+                    }.execute(albumId, albumTitle, ChooseCloudOrLocal.wifiConnector);
+                }
+            }.execute(albumId, ChooseCloudOrLocal.wifiConnector);
+
+        }
 
     }
 

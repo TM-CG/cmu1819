@@ -17,9 +17,6 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UpdateAlbumCatalog;
  */
 public class LocalStorage extends StorageProvider {
 
-    /** Define the URL of the catalog to be sent to the server **/
-    private static final String LOCAL_URL = "lan://local";
-
     public LocalStorage(Context context, AlbumCatalog catalog, Operation operation) {
         super(context, catalog, operation);
     }
@@ -37,7 +34,8 @@ public class LocalStorage extends StorageProvider {
 
         try {
             //just to accept my own invitation in order to be considered as the owner of my album
-            new AddAlbumSliceCatalogURL().execute(getCatalog().getAlbumId(), LOCAL_URL).get();
+            //instead of a URL to a cloud file send my username
+            new AddAlbumSliceCatalogURL().execute(getCatalog().getAlbumId(), Main.username).get();
 
             //just to refresh the cache
             File userFolder = new File(getContext().getFilesDir(), Main.username);

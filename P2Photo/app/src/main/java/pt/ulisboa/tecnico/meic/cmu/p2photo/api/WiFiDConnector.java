@@ -70,8 +70,8 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
     public enum WiFiDP2PhotoOperation {GET_CATALOG, GET_PICTURE, WELCOME, INIT}
 
     /** API messages **/
-    public static final String API_GET_CATALOG = "P2PHOTO GET-CATALOG %s %s";
-    public static final String API_GET_PICTURE = "P2PHOTO GET-PICTURE %s %s";
+    public static final String API_GET_CATALOG = "P2PHOTO GET-CATALOG %s %s %s";
+    public static final String API_GET_PICTURE = "P2PHOTO GET-PICTURE %s \"%s\"";
     public static final String API_WELCOME = "P2PHOTO WELCOME %s %s";
     public static final String API_INIT = "P2PHOTO INIT %s";
     public static final String API_POST_CATALOG = "P2PHOTO POST-CATALOG %s %s";
@@ -247,13 +247,22 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
     }
 
     public void sendFile(String path2File, String ip) {
-        sendFile("", path2File, ip);
+        sendFile("", path2File, ip, "N");
     }
 
-    public void sendFile(String folderPath, String path2File, String ip) {
+    public void sendFile(String folderPath, String path2File, String ip, String mode) {
         try {
             File file = new File(path2File);
-            String fileName = file.getName();
+            String fileName;
+
+            if (mode.equals("T")) {
+                //TODO vitor: remove this after debug
+                fileName = "vitor.txt";
+                //fileName = Main.username + ".txt";
+            } else {
+                fileName = file.getName();
+            }
+
             FileInputStream fis = new FileInputStream(file);
 
             byte[] bytes = new byte[(int) file.length()];
@@ -314,7 +323,7 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         switch (operation) {
 
             //inform other peer that i need a catalog
-            case GET_CATALOG: sendMessage(String.format(API_GET_CATALOG, args[0], args[1]), MsgType.TEXT, ip); break;
+            case GET_CATALOG: sendMessage(String.format(API_GET_CATALOG, args[0], args[1], args[2]), MsgType.TEXT, ip); break;
             case GET_PICTURE: sendMessage(String.format(API_GET_PICTURE, args[0], args[1]), MsgType.TEXT, ip); break;
             case WELCOME: sendMessage(String.format(API_WELCOME, args[0], args[1]), MsgType.TEXT, ip); break;
             case INIT: sendMessage(String.format(API_INIT, args[0]), MsgType.TEXT, ip); break;

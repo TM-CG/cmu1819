@@ -51,7 +51,7 @@ public class Main extends AppCompatActivity {
 
     public static String DATA_FOLDER;
 
-    public enum StorageType {LOCAL, CLOUD}
+    public enum StorageType {NA, LOCAL, CLOUD}
 
     public static StorageType STORAGE_TYPE;
 

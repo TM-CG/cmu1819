@@ -12,15 +12,16 @@ import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
 import pt.inesc.termite.wifidirect.SimWifiP2pInfo;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.P2PhotoActivity;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LocalCacheInit;
 
 import static pt.ulisboa.tecnico.meic.cmu.p2photo.activities.ChooseCloudOrLocal.wifiConnector;
 
 public class P2PhotoWiFiDBroadcastReceiver extends BroadcastReceiver {
 
-    private AppCompatActivity activity;
+    private P2PhotoActivity activity;
 
-    public P2PhotoWiFiDBroadcastReceiver(AppCompatActivity activity) {
+    public P2PhotoWiFiDBroadcastReceiver(P2PhotoActivity activity) {
         this.activity = activity;
     }
 

@@ -40,6 +40,14 @@ public class ChooseCloudOrLocal extends P2PhotoActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Just to clean old broadcast receiver of WiFi Direct
+        if (wifiConnector != null) {
+            wifiConnector.unRegisterReceiver();
+            wifiConnector = null;
+        }
+        //Storage is not available at this moment!
+        Main.STORAGE_TYPE = Main.StorageType.NA;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_cloud_local);
     }
@@ -69,7 +77,6 @@ public class ChooseCloudOrLocal extends P2PhotoActivity {
         Main.STORAGE_TYPE = Main.StorageType.LOCAL;
         //wifiConnector = new WiFiDConnector(this, Main.sv);
         Log.i(TAG, "Already constructed Wi-Fi direct object!");
-
 
         //loadLocalCache();
 

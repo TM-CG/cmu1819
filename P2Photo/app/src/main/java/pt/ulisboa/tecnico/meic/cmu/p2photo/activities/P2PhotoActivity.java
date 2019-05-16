@@ -12,8 +12,11 @@ public abstract class P2PhotoActivity extends DropboxActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Main.STORAGE_TYPE == Main.StorageType.LOCAL) {
+        initWiFiDConnector();
+    }
 
+    public void initWiFiDConnector() {
+        if (Main.STORAGE_TYPE == Main.StorageType.LOCAL) {
             if (wifiConnector == null) {
                 wifiConnector = new WiFiDConnector(this, Main.sv);
                 wifiConnector.startBackgroundTask();

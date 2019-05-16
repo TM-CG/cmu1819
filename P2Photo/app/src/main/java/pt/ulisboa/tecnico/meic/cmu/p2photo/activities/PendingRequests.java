@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.activities;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -50,13 +49,16 @@ public class PendingRequests extends P2PhotoActivity {
             }
         });
 
+
         new pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.PendingRequests() {
             @Override
             protected void onPostExecute(Object[] result) {
                 super.onPostExecute(result);
-                //request and receive all catalogs from near by devices
 
-                new WiFiDFetchAllPendingCatalogs().execute(result[1]);
+                if (Main.STORAGE_TYPE == Main.StorageType.LOCAL) {
+                    //request and receive all catalogs from near by devices in case of Wi-Fi Direct mode
+                    new WiFiDFetchAllPendingCatalogs().execute(result[1]);
+                }
             }
         }.execute(itemsAdapter);
 

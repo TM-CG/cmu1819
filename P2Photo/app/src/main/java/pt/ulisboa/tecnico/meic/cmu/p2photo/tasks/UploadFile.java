@@ -74,6 +74,7 @@ public class UploadFile extends AsyncTask<String, Void, FileMetadata> {
             String remoteFileName = localFile.getName();
             Log.i("CloudStorage", "UploadFile remoteFolderPath: " + remoteFolderPath);
             Log.i("CloudStorage", "UploadFile remoteFileName: " + remoteFileName);
+
             try (InputStream inputStream = new FileInputStream(localFile)) {
                 String path;
 

@@ -117,7 +117,8 @@ public abstract class StorageProvider extends DropboxActivity implements Runnabl
                 }
 
                 // === 2. Perform action after writing ===
-                String filePath = context.getFileStreamPath(catalog.getAlbumId() + CATALOG_TMP_FILE).getAbsolutePath();
+                //String filePath = context.getFileStreamPath(catalog.getAlbumId() + CATALOG_TMP_FILE).getAbsolutePath();
+                String filePath = Main.DATA_FOLDER + "/" + Main.username + "/" + catalog.getAlbumId() + CATALOG_TMP_FILE;
                 Log.i("StorageProvider", filePath);
                 writeFile(filePath);
                 break;

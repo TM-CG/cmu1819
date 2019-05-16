@@ -7,7 +7,7 @@ import android.view.View;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
-public class Log extends AppCompatActivity {
+public class Log extends P2PhotoActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

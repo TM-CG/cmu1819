@@ -8,7 +8,7 @@ import android.widget.GridView;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
-public class SelectPhoto extends AppCompatActivity {
+public class SelectPhoto extends P2PhotoActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

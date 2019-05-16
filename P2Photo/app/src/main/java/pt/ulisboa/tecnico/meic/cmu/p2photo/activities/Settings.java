@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
-public class Settings extends AppCompatActivity {
+public class Settings extends P2PhotoActivity {
 
     private SeekBar seekBarStorage;
     private SeekBar seekBarCache;

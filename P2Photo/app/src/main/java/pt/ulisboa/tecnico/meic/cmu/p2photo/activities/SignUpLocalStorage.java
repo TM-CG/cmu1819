@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
-public class SignUpLocalStorage extends AppCompatActivity {
+public class SignUpLocalStorage extends P2PhotoActivity {
 
     private SeekBar seekBarStorage;
     private SeekBar seekBarCache;

@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
-public class ActionsMenu extends DropboxActivity {
+public class ActionsMenu extends P2PhotoActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

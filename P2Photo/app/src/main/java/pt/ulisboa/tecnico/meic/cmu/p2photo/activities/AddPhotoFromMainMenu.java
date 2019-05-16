@@ -32,7 +32,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.ShareLink;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UploadFile;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.UpdateAlbumCatalog;
 
-public class AddPhotoFromMainMenu extends DropboxActivity {
+public class AddPhotoFromMainMenu extends P2PhotoActivity {
     private static final String TAG = AddPhotoFromMainMenu.class.getName();
 
     private static final int PICKFILE_REQUEST_CODE = 1;

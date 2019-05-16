@@ -26,7 +26,7 @@ public class WiFiDFetchAllPendingCatalogs extends AsyncTask<Object, Object, Stri
                 String ownerIP = wifiConnector.getArpCache().resolve(owner);
 
                 if (ownerIP != null) {
-                    wifiConnector.requestP2PhotoOperation(GET_CATALOG, ownerIP, Main.username, String.valueOf(id));
+                    wifiConnector.requestP2PhotoOperation(GET_CATALOG, ownerIP, Main.username, String.valueOf(id), "N");
                 }
             } catch (P2PhotoException e) {
                 e.printStackTrace();

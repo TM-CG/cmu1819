@@ -22,7 +22,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.CreateAlbumOnServer;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.CreateFolder;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.FindUsers;
 
-public class CreateAlbum extends AppCompatActivity {
+public class CreateAlbum extends P2PhotoActivity {
     EditText album;
     private ArrayList<String> items;
     private ArrayAdapter<String> itemsAdapter;

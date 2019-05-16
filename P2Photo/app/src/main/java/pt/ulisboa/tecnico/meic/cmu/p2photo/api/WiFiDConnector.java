@@ -32,6 +32,7 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.P2PhotoActivity;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.bcastreceivers.P2PhotoWiFiDBroadcastReceiver;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.PeerListListener;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.GroupInfoListener;
@@ -56,11 +57,13 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
     private P2PhotoWiFiDBroadcastReceiver p2PhotoWiFiDBroadcastReceiver;
 
-    private AppCompatActivity activity;
+    private P2PhotoActivity activity;
 
     private Channel channelService;
     private Messenger messengerService;
     private boolean mBound = false;
+
+    private IntentFilter filter;
 
     /** Connector to P2PhotoServer **/
     private ServerConnector serverConnector;
@@ -77,7 +80,7 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
     public static final String API_POST_CATALOG = "P2PHOTO POST-CATALOG %s %s";
     public static final String API_POST_PICTURE = "P2PHOTO POST-PICTURE %s %s";
 
-    public WiFiDConnector(AppCompatActivity activity, ServerConnector serverConnector) {
+    public WiFiDConnector(P2PhotoActivity activity, ServerConnector serverConnector) {
         this.activity = activity;
         this.serverConnector = serverConnector;
         this.arpCache = new WiFiDARP();
@@ -100,14 +103,14 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
     public void initBCastReceiver() {
         //Init the Broadcast receiver
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_STATE_CHANGED_ACTION);
-        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
-        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION);
-        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION);
+        this.filter = new IntentFilter();
+        this.filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_STATE_CHANGED_ACTION);
+        this.filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
+        this.filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION);
+        this.filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION);
 
         p2PhotoWiFiDBroadcastReceiver = new P2PhotoWiFiDBroadcastReceiver(this.activity);
-        this.activity.registerReceiver(p2PhotoWiFiDBroadcastReceiver, filter);
+        registerBR(this.activity);
     }
 
     @Override
@@ -286,11 +289,24 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
 
     }
 
+    public void registerBR(P2PhotoActivity activity) {
+        this.activity = activity;
+        this.activity.registerReceiver(p2PhotoWiFiDBroadcastReceiver, this.filter);
+    }
+
     public void stopBackgroundTask() {
         if (mBound) {
             activity.unbindService(mConnection);
             mBound = false;
             activity.unregisterReceiver(p2PhotoWiFiDBroadcastReceiver);
+        }
+    }
+
+    public void unRegisterReceiver() {
+        try {
+            this.activity.unregisterReceiver(p2PhotoWiFiDBroadcastReceiver);
+        } catch (IllegalArgumentException e) {
+            Log.d(TAG, "P2Photo broadcast is not registered here!");
         }
     }
 
@@ -328,5 +344,13 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
             case WELCOME: sendMessage(String.format(API_WELCOME, args[0], args[1]), MsgType.TEXT, ip); break;
             case INIT: sendMessage(String.format(API_INIT, args[0]), MsgType.TEXT, ip); break;
         }
+    }
+
+    public P2PhotoActivity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(P2PhotoActivity activity) {
+        this.activity = activity;
     }
 }

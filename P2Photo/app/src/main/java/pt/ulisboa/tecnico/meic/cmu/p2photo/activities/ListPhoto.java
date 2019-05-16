@@ -40,7 +40,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LocalFileCopy;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDGetPicturesOfOthers;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDGetTempCatalogs;
 
-public class ListPhoto extends DropboxActivity implements Toolbar.OnMenuItemClickListener {
+public class ListPhoto extends P2PhotoActivity implements Toolbar.OnMenuItemClickListener {
     private static final String TAG = ListPhoto.class.getName();
 
     private String catalogFile;

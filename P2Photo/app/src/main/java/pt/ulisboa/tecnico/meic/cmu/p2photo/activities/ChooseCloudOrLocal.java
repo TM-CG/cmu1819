@@ -31,12 +31,12 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.OwningAlbums;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetCurrentAccount;
 
 
-public class ChooseCloudOrLocal extends DropboxActivity {
+public class ChooseCloudOrLocal extends P2PhotoActivity {
     private static final String TAG = ChooseCloudOrLocal.class.getName();
 
     private Cache cacheInstance = Cache.getInstance();
 
-    public static WiFiDConnector wifiConnector;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +67,10 @@ public class ChooseCloudOrLocal extends DropboxActivity {
 
     public void selectLocalWiFi(View view) {
         Main.STORAGE_TYPE = Main.StorageType.LOCAL;
-        wifiConnector = new WiFiDConnector(this, Main.sv);
+        //wifiConnector = new WiFiDConnector(this, Main.sv);
         Log.i(TAG, "Already constructed Wi-Fi direct object!");
 
-        wifiConnector.startBackgroundTask();
+
         //loadLocalCache();
 
         Intent intent = new Intent(this, ActionsMenu.class);

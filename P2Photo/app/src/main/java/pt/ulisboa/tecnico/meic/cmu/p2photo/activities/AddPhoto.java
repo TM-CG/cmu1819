@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
-public class AddPhoto extends AppCompatActivity {
+public class AddPhoto extends P2PhotoActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

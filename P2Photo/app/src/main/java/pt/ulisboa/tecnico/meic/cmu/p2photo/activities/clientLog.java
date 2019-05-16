@@ -8,7 +8,7 @@ import android.widget.ListView;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
-public class clientLog extends AppCompatActivity {
+public class clientLog extends P2PhotoActivity {
     private Cache cacheInstance;
     private ListView lvOperations;
 

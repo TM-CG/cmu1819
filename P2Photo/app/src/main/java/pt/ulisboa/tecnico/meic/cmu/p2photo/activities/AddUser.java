@@ -14,7 +14,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.FindUsers;
 
 
-public class AddUser extends AppCompatActivity {
+public class AddUser extends P2PhotoActivity {
     private ArrayList<String> items;
     private ArrayAdapter<String> itemsAdapter;
     private ListView lvItems;

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 
-public class P2PhotoAlert extends Activity {
+public class P2PhotoAlert extends P2PhotoActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

@@ -20,7 +20,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.FilesAdapter;
 import static pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Files.EXTRA_PATH;
 
 
-public class YourAlbums extends DropboxActivity implements Toolbar.OnMenuItemClickListener {
+public class YourAlbums extends P2PhotoActivity implements Toolbar.OnMenuItemClickListener {
     private FilesAdapter mFilesAdapter;
     private String mPath;
     private Cache cacheInstance;

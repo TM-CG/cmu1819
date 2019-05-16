@@ -17,7 +17,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDFetchAllPendingCatalogs;
 
-public class PendingRequests extends AppCompatActivity {
+public class PendingRequests extends P2PhotoActivity {
     private ArrayList<String> items;
     private ArrayAdapter<String> itemsAdapter;
     private ListView lvItems;

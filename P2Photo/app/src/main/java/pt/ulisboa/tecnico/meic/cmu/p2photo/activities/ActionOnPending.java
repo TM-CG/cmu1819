@@ -23,10 +23,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.GetAlbumURL;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.RejectPendingInvitation;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDGetTitleOfPending;
 
-import static pt.ulisboa.tecnico.meic.cmu.p2photo.activities.ChooseCloudOrLocal.wifiConnector;
-import static pt.ulisboa.tecnico.meic.cmu.p2photo.api.WiFiDConnector.WiFiDP2PhotoOperation.GET_CATALOG;
-
-public class ActionOnPending extends AppCompatActivity {
+public class ActionOnPending extends P2PhotoActivity {
     private TextView albumIDtv;
     private TextView ownerNametv;
     private TextView albumNametv;

@@ -2,7 +2,7 @@ package pt.ulisboa.tecnico.meic.cmu.p2photo.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Environment;
+import android.util.Log;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
@@ -11,6 +11,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 
@@ -18,6 +22,8 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
  * Task to download a file from Dropbox and put it in a local folder
  */
 public class DownloadFileFromLink extends AsyncTask<String, Void, File> {
+
+    private static final String TAG = DownloadFileFromLink.class.getName();
 
     private final Context mContext;
     private final DbxClientV2 mDbxClient;
@@ -72,14 +78,22 @@ public class DownloadFileFromLink extends AsyncTask<String, Void, File> {
             }
 
             // Download the file.
-            try (OutputStream outputStream = new FileOutputStream(file)) {
+
+            Log.d(TAG, "I'm about to download file at: " + url + "&raw=1");
+            URL fileUrl = new URL(url + "&raw=1");
+
+            ReadableByteChannel readableByteChannel = Channels.newChannel(fileUrl.openStream());
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            FileChannel fileChannel = fileOutputStream.getChannel();
+
+            fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+
+            /*try (OutputStream outputStream = new FileOutputStream(file)) {
                 mDbxClient.sharing().getSharedLinkFile(url).download(outputStream);
-
-
-            }
+            }*/
 
             return file;
-        } catch (DbxException | IOException e) {
+        } catch (IOException e) {
             mException = e;
         }
 

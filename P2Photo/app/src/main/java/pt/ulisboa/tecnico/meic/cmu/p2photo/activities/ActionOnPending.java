@@ -81,12 +81,14 @@ public class ActionOnPending extends P2PhotoActivity {
         }
         String albumDescription = id + " " + name;
         new CreateFolder().execute(albumDescription, getApplicationContext());
-        Cache.getInstance().albumsIDs.add(Integer.parseInt(id));
-        Cache.getInstance().albums.add(name);
-        Cache.getInstance().ownedAndPartAlbumsIDs.add(Integer.parseInt(id));
-        Cache.getInstance().ownedAndPartAlbums.add(name);
-        Cache.getInstance().ownedAlbumWithIDs.add(albumDescription);
-        Cache.getInstance().notifyAdapters();
+        if (Main.STORAGE_TYPE == Main.StorageType.CLOUD) {
+            Cache.getInstance().albumsIDs.add(Integer.parseInt(id));
+            Cache.getInstance().albums.add(name);
+            Cache.getInstance().ownedAndPartAlbumsIDs.add(Integer.parseInt(id));
+            Cache.getInstance().ownedAndPartAlbums.add(name);
+            Cache.getInstance().ownedAlbumWithIDs.add(albumDescription);
+            Cache.getInstance().notifyAdapters();
+        }
         Intent intent = getIntent();
         setResult(RESULT_OK,intent);
         Cache.getInstance().clientLog.add(Main.username + " accepted invitation from " + ownerNametv.getText().toString() +  "to participade in album " + name + " at "  + new Timestamp(System.currentTimeMillis()));

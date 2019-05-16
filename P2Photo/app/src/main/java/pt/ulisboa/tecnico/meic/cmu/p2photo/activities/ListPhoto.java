@@ -186,10 +186,11 @@ public class ListPhoto extends P2PhotoActivity implements Toolbar.OnMenuItemClic
         Log.d(TAG, "localCopyCache -> Local Data Folder path: " + Main.DATA_FOLDER + "/" + folderName);
         Log.d(TAG, "localCopyCache -> Cache Data Folder path: " + Main.CACHE_FOLDER + "/" + folderName);
 
-        for (File file: files) {
-            new LocalFileCopy(getApplicationContext()).execute(file.getAbsolutePath(), Main.CACHE_FOLDER + "/" + folderName, "path");
+        if (files != null) {
+            for (File file : files) {
+                new LocalFileCopy(getApplicationContext()).execute(file.getAbsolutePath(), Main.CACHE_FOLDER + "/" + folderName, "path");
+            }
         }
-
     }
 
     @Override

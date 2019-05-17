@@ -35,7 +35,7 @@
         <activity android:name=".activities.Log" />
         <activity
             android:name=".activities.P2PhotoAlert"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity android:name=".activities.Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

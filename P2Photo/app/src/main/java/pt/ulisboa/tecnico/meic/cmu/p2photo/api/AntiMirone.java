@@ -204,7 +204,7 @@ public class AntiMirone {
 
         String st, content = "";
         while ((st = bufferedReader.readLine()) != null) {
-            content += st;
+            content += st + "\n";
         }
 
         byte[] ciphered = cipher.doFinal(content.getBytes());

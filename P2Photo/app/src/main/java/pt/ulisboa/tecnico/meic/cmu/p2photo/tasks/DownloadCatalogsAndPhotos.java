@@ -18,9 +18,16 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.DropboxActivity;
@@ -61,13 +68,13 @@ public class DownloadCatalogsAndPhotos extends AsyncTask<Object, String, String>
         //Download album catalogs from server's link
             Log.i(TAG, "Started downloading all catalogs from link");
         for (String url : catalogsURL) {
-            picsURLs.addAll(downloadFile(url, "Loading catalogs", "", "tmp" + i++ + "_catalog.txt", 1));
+            picsURLs.addAll(downloadFile(url, "Loading catalogs", "", "tmp" + i++ + "_catalog.txt", 1, albumId));
         }
         Log.i(TAG, "Finished downloading and parsing catalogs! I've " + picsURLs.size() + " picture(s)!");
 
         //Download all pics from all album catalogs that were previously downloaded
         for (String pictureURL : picsURLs) {
-            downloadFile(pictureURL, "Loading pictures", tmpFolderPath, null, 0);
+            downloadFile(pictureURL, "Loading pictures", tmpFolderPath, null, 0, albumId);
         }
         Log.i(TAG, "Finished downloading pictures!");
 
@@ -91,7 +98,7 @@ public class DownloadCatalogsAndPhotos extends AsyncTask<Object, String, String>
     }
 
 
-    private List<String> downloadFile(String url, String description, String folderPath, String fileName, int option) {
+    private List<String> downloadFile(String url, String description, String folderPath, String fileName, int option, int albumId) {
 
         if (fileName == null) //get name from url
         {
@@ -132,18 +139,45 @@ public class DownloadCatalogsAndPhotos extends AsyncTask<Object, String, String>
             //DOWNLOAD CATALOGS
 
             if (option == 1) {
-                FileReader fr = new FileReader(result);
-                BufferedReader br = new BufferedReader(fr);
 
-                String line, catalog = "";
 
-                while ((line = br.readLine()) != null) {
-                    catalog += line + "\n";
+                try {
+                    String fileNameCatalog = result.getName();
+                    String keyFileName = albumId + "_key.txt";
+                    Log.d(TAG, "KeyFileName: " + keyFileName);
+
+                    String albumKey = Main.antiMirone.readKeyFromFile(Main.DATA_FOLDER + "/" + Main.username + "/" + keyFileName);
+                    SecretKeySpec albumKeySpec = Main.antiMirone.readKey2Bytes(albumKey);
+                    Main.antiMirone.decryptAlbumCatalog(result.getAbsolutePath(), albumKeySpec, Main.DATA_FOLDER + "/" + Main.username, fileName);
+
+
+                    File rootFolder = new File(Main.DATA_FOLDER, Main.username);
+                    File decryptedFile = new File(rootFolder, fileNameCatalog);
+                    BufferedReader br = new BufferedReader(new FileReader(decryptedFile));
+
+                    String line, catalog = "";
+
+                    while ((line = br.readLine()) != null) {
+                        catalog += line + "\n";
+                    }
+
+                    Log.i(TAG, "Catalog content: " + catalog);
+
+                    AlbumCatalog albumCatalog = AlbumCatalog.parseToAlbumCatalog(catalog);
+                    return albumCatalog.getPaths2Pics();
+
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (InvalidKeyException e) {
+                    e.printStackTrace();
+                } catch (NoSuchPaddingException e) {
+                    e.printStackTrace();
+                } catch (BadPaddingException e) {
+                    e.printStackTrace();
+                } catch (IllegalBlockSizeException e) {
+                    e.printStackTrace();
                 }
-                Log.i(TAG, "Catalog content: " + catalog);
 
-                AlbumCatalog albumCatalog = AlbumCatalog.parseToAlbumCatalog(catalog);
-                return albumCatalog.getPaths2Pics();
             }
 
         } catch (FileNotFoundException e) {

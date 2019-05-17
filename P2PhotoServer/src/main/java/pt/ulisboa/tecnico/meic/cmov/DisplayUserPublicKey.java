@@ -20,12 +20,17 @@ public class DisplayUserPublicKey extends Instruction {
             String username = server.getUserNameBySessionID(sessionId);
             User user = server.getUserByUsername(userToSearch);
 
-            if (username == null)
+            if (username == null) {
+                displayDebug(VERBOSE_NOK4);
                 return NOK_4;
+            }
 
-            if (user == null)
+            if (user == null) {
+                displayDebug(VERBOSE_NOK1);
                 return NOK_1;
+            }
 
+            displayDebug("User %s requested to know the public key of user %d ", username, user.getUsername());
             return user.getPublicKey();
 
         } catch (NullPointerException | IndexOutOfBoundsException e) {

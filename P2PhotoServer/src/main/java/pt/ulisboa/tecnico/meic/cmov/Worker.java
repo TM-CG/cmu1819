@@ -123,6 +123,7 @@ public class Worker extends Thread {
             case "USR-IRQ": return new IncomingRequests    (args, server);
             case "USR-URQ": return new UpdateRequests      (args, server);
             case "USR-PUB": return new DisplayUserPublicKey(args, server);
+            case "USR-APK": return new AddUserPublicKey    (args, server);
             case "ALB-CR8": return new CreateAlbum         (args, server);
             case "ALB-LST": return new ListAlbum           (args, server);
             case "ALB-AUP": return new UpdateAlbum         (args, server);

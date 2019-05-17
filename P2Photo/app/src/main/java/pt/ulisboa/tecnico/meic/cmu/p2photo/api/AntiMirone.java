@@ -167,7 +167,7 @@ public class AntiMirone {
         return keySpec;
     }
 
-    public String encryptAlbumCatalog(String catalogFilePath, SecretKeySpec albumKey)
+    public String encryptAlbumCatalog(String catalogFilePath, SecretKeySpec albumKey, String fileName)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException,
             BadPaddingException, IllegalBlockSizeException {
         Cipher cipher = Cipher.getInstance("AES");
@@ -186,12 +186,15 @@ public class AntiMirone {
         byte[] ciphered = cipher.doFinal(content.getBytes());
         String base64Ciphered = Base64.encodeToString(ciphered, Base64.NO_WRAP);
 
-        File file = new File(Main.CACHE_FOLDER + "/tmp/encrypted.txt");
+        File folder = new File(Main.CACHE_FOLDER + "/tmp");
+        folder.mkdir();
+        File file = new File(folder, fileName);
+        file.createNewFile();
         FileWriter fileWriter = new FileWriter(file);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         bufferedWriter.write(base64Ciphered);
         bufferedWriter.close();
-        return Main.CACHE_FOLDER + "/tmp/encrypted.txt";
+        return Main.CACHE_FOLDER + "/tmp/" + fileName;
     }
 
 }

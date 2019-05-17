@@ -16,7 +16,8 @@ public class AntiMironeInitKeys extends AsyncTask<String, String, String> {
         try {
             String path2PrivKey = Main.DATA_FOLDER + "/" + Main.username + "/privatekey.txt";
             String path2PubKey = Main.DATA_FOLDER + "/" + Main.username + "/publickey.txt";
-            File privateKey = new File(path2PrivKey);
+            File folder = new File(Main.DATA_FOLDER + "/" + Main.username);
+            File privateKey = new File(folder, path2PrivKey);
 
             Main.antiMirone = new AntiMirone();
 

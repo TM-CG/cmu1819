@@ -76,9 +76,9 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                                         mode = commandArgs[4];
                                     }
 
-                                    //TODO vitor: remove this after debug
-                                    String userFolder = Main.sv.getAlbumOwner(Integer.parseInt(arg));
-                                    //String userFolder = Main.username;
+                                    //DEBUG
+                                    //String userFolder = Main.sv.getAlbumOwner(Integer.parseInt(arg));
+                                    String userFolder = Main.username;
 
                                     //Sends catalog of that album to another user
                                     String path2File = Main.DATA_FOLDER + "/" + userFolder + "/" +
@@ -96,9 +96,9 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                                     //just to get album id without the first quote that encloses the path
                                     arg = arg.replace("\"", "");
 
-                                    //TODO vitor: remove this after debug
-                                    userFolder = Main.sv.getAlbumOwner(Integer.parseInt(arg));
-                                    //String userFolder = Main.username;
+                                    //DEBUG
+                                    //userFolder = Main.sv.getAlbumOwner(Integer.parseInt(arg));
+                                    userFolder = Main.username;
 
                                     String path = content.split("\"")[1];
                                     String folder = path.split("/")[0];
@@ -166,8 +166,6 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
 
                 } catch (IOException e) {
                     Log.d("Error reading socket:", e.getMessage());
-                } catch (P2PhotoException e) {
-                    e.printStackTrace();
                 } finally {
                     sock.close();
                 }

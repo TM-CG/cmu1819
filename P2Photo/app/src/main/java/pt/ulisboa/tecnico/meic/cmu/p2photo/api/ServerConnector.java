@@ -35,8 +35,10 @@ public class ServerConnector implements Connector{
     private static final String API_ALB_DAK = "ALB-DAK %s %s";
     private static final String API_USR_FND = "USR-FND %s %s";
     private static final String API_USR_IRQ = "USR-IRQ %s";
+    private static final String API_USR_PUB = "USR-PUB %s %s";
     private static final String API_USR_URQ_ACCEPT = "USR-URQ %s A %s %s";
     private static final String API_USR_URQ_REJECT = "USR-URQ %s R %s";
+    private static final String API_USR_APK = "USR-APK %s %s";
     private static final String API_SHUT = "SHUT";
     private static final String API_DBG_STA = "DBG-STA";
     private static final String API_DBG_RST = "DBG-RST";
@@ -305,6 +307,53 @@ public class ServerConnector implements Connector{
     public String getAlbumOwner(int albumId) throws P2PhotoException {
         try {
             String request = String.format(API_ALB_OWN, sessionId, albumId);
+
+            this.out.println(request);
+
+            String response = this.in.readLine();
+
+            if (showDebug) {
+                System.out.println("Request: " + request);
+                System.out.println("Response: " + response);
+            }
+
+            processErrors(response);
+
+            //return username as response
+            return response.split(" ")[1];
+
+        } catch (IOException e) {
+            throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new P2PhotoException(WRONG_ARGS + e.getMessage());
+        }
+    }
+
+    public void addUserPublicKey(String publicKey) throws P2PhotoException {
+        try {
+            String request = String.format(API_USR_APK, sessionId, publicKey);
+
+            this.out.println(request);
+
+            String response = this.in.readLine();
+
+            if (showDebug) {
+                System.out.println("Request: " + request);
+                System.out.println("Response: " + response);
+            }
+
+            processErrors(response);
+
+        } catch (IOException e) {
+            throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new P2PhotoException(WRONG_ARGS + e.getMessage());
+        }
+    }
+
+    public String getUserPublicKey(String username) throws P2PhotoException {
+        try {
+            String request = String.format(API_USR_PUB, sessionId, username);
 
             this.out.println(request);
 

@@ -186,7 +186,7 @@ public class AntiMirone {
     }
 
     public SecretKeySpec readKey2Bytes(String key) throws NoSuchAlgorithmException {
-        byte[] byteKey = Base64.decode(key.getBytes(), Base64.NO_WRAP);
+        byte[] byteKey = Base64.decode(key, Base64.NO_WRAP);
         SecretKeySpec keySpec = new SecretKeySpec(byteKey, "AES");
         return keySpec;
     }

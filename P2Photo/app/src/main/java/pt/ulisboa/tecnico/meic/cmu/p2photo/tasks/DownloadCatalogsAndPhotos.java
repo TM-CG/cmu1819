@@ -67,17 +67,20 @@ public class DownloadCatalogsAndPhotos extends AsyncTask<Object, String, String>
         List<String> picsURLs = new ArrayList<>();
         //Download album catalogs from server's link
             Log.i(TAG, "Started downloading all catalogs from link");
-        for (String url : catalogsURL) {
-            picsURLs.addAll(downloadFile(url, "Loading catalogs", "", "tmp" + i++ + "_catalog.txt", 1, albumId));
-        }
-        Log.i(TAG, "Finished downloading and parsing catalogs! I've " + picsURLs.size() + " picture(s)!");
+            if (catalogsURL != null) {
+                for (String url : catalogsURL) {
+                    picsURLs.addAll(downloadFile(url, "Loading catalogs", "", "tmp" + i++ + "_catalog.txt", 1, albumId));
+                }
+                Log.i(TAG, "Finished downloading and parsing catalogs! I've " + picsURLs.size() + " picture(s)!");
 
-        //Download all pics from all album catalogs that were previously downloaded
-        for (String pictureURL : picsURLs) {
-            downloadFile(pictureURL, "Loading pictures", tmpFolderPath, null, 0, albumId);
-        }
-        Log.i(TAG, "Finished downloading pictures!");
-
+                if (picsURLs != null) {
+                    //Download all pics from all album catalogs that were previously downloaded
+                    for (String pictureURL : picsURLs) {
+                        downloadFile(pictureURL, "Loading pictures", tmpFolderPath, null, 0, albumId);
+                    }
+                }
+                Log.i(TAG, "Finished downloading pictures!");
+            }
         } catch (P2PhotoException e) {
             e.printStackTrace();
         }

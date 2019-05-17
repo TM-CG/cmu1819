@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AntiMirone;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 
 public class AntiMironeInitKeys extends AsyncTask<String, String, String> {
 
@@ -17,6 +18,7 @@ public class AntiMironeInitKeys extends AsyncTask<String, String, String> {
             String path2PrivKey = Main.DATA_FOLDER + "/" + Main.username + "/privatekey.txt";
             String path2PubKey = Main.DATA_FOLDER + "/" + Main.username + "/publickey.txt";
             File folder = new File(Main.DATA_FOLDER + "/" + Main.username);
+            folder.mkdir();
             File privateKey = new File(folder, "privatekey.txt");
 
             Main.antiMirone = new AntiMirone();
@@ -34,9 +36,14 @@ public class AntiMironeInitKeys extends AsyncTask<String, String, String> {
                 Main.antiMirone.setPublicKey(pubK);
             }
 
+            String publicKey = Main.antiMirone.readKeyFromFile(path2PubKey);
+            Main.sv.addUserPublicKey(publicKey);
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (P2PhotoException e) {
             e.printStackTrace();
         }
         return null;

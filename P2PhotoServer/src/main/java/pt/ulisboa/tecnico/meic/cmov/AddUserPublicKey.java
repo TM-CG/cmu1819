@@ -32,6 +32,7 @@ public class AddUserPublicKey extends Instruction{
             User user = server.getUserByUsername(username);
             user.setPublicKey(publicKey);
 
+            displayDebug("User %s added its own public key", username);
             return OK;
         }
         catch (NullPointerException | IndexOutOfBoundsException e) {

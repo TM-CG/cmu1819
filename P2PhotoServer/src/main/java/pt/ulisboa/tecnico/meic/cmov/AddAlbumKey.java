@@ -37,7 +37,7 @@ public class AddAlbumKey extends Instruction {
             }
 
             album.addAlbumKey(username, cipheredKey);
-
+            displayDebug("User %s added a ciphered album key to album %s to allow %s to access", loggedInUser, username);
             return OK_PLUS + albumId;
 
         } catch (NullPointerException | IndexOutOfBoundsException e) {

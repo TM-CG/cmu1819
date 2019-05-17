@@ -129,6 +129,8 @@ public class Worker extends Thread {
             case "ALB-AUP": return new UpdateAlbum         (args, server);
             case "ALB-UAS": return new ListAlbumSlices     (args, server);
             case "ALB-OWN": return new DisplayAlbumOwner   (args, server);
+            case "ALB-AUK": return new AddAlbumKey         (args, server);
+            case "ALB-DAK": return new DisplayAlbumKey     (args, server);
             case "SHUT"   : return new ShutConnection      ();
             case "VER"    : return new Version             ();
 

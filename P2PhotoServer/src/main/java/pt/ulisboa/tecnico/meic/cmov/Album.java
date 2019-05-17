@@ -4,10 +4,8 @@ import javafx.util.Pair;
 
 import java.awt.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
-import java.util.ListIterator;
 
 public class Album implements Serializable {
 
@@ -17,11 +15,14 @@ public class Album implements Serializable {
 
     private List<Pair<String, String>> indexes;
 
+    private HashMap<String, String> albumKeys;
+
     public Album(int ID, User owner) {
         synchronized(this) {
             this.ID = ID;
             this.indexes = new ArrayList<>();
             this.indexes.add(new Pair(owner.getUsername(), null));
+            this.albumKeys = new HashMap<>();
         }
     }
 
@@ -30,6 +31,7 @@ public class Album implements Serializable {
             this.ID = ID;
             this.indexes = new ArrayList<>();
             this.indexes.add(new Pair(owner.getUsername(), ownerURL));
+            this.albumKeys = new HashMap<>();
         }
     }
 
@@ -157,5 +159,23 @@ public class Album implements Serializable {
      */
     public int getNumberOfParticipants() {
         return this.indexes.size() - getNumberOfPendingParticipants();
+    }
+
+    /**
+     * Adds an album key encrypted with username public key
+     * @param username to encrypt the album's key
+     * @param key the album's key encrypted with username public key
+     */
+    public void addAlbumKey(String username, String key) {
+        this.albumKeys.put(username, key);
+    }
+
+    /**
+     * Returns the albumKey encrypted with username public key
+     * @param username the username of the requester
+     * @return key album key encrypted with requester public key
+     */
+    public String getAlbumKeyOfUser(String username) {
+        return this.albumKeys.get(username);
     }
 }

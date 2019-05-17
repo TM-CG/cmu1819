@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class ServerConnector implements Connector{
 
-    private static final String CLI_API_VERSION = "0.8";
+    private static final String CLI_API_VERSION = "0.9";
 
     //API Instructions
     private static final String API_LOGIN = "LOGIN %s %s";
@@ -31,6 +31,8 @@ public class ServerConnector implements Connector{
     private static final String API_ALB_LST_WITH_OPTION = "ALB-LST %s %s";
     private static final String API_ALB_UAS = "ALB-UAS %s %s";
     private static final String API_ALB_OWN = "ALB-OWN %s %s";
+    private static final String API_ALB_AUK = "ALB-AUK %s %s %s %s";
+    private static final String API_ALB_DAK = "ALB-DAK %s %s";
     private static final String API_USR_FND = "USR-FND %s %s";
     private static final String API_USR_IRQ = "USR-IRQ %s";
     private static final String API_USR_URQ_ACCEPT = "USR-URQ %s A %s %s";
@@ -687,6 +689,52 @@ public class ServerConnector implements Connector{
             processErrors(response);
             //Return the version
             return response.split(" ")[1];
+
+        } catch (IOException e) {
+            throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new P2PhotoException(WRONG_ARGS + e.getMessage());
+        }
+    }
+
+    public String displayAlbumKey(int albumId) throws P2PhotoException {
+        try {
+            String request = String.format(API_ALB_DAK, sessionId, albumId);
+
+            this.out.println(request);
+
+            String response = this.in.readLine();
+
+            if (showDebug) {
+                System.out.println("Request: " + request);
+                System.out.println("Response: " + response);
+            }
+
+            processErrors(response);
+
+            return response.split(" ")[1];
+
+        } catch (IOException e) {
+            throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new P2PhotoException(WRONG_ARGS + e.getMessage());
+        }
+    }
+
+    public void addAlbumKey(int albumId, String username, String cipheredKey) throws P2PhotoException {
+        try {
+            String request = String.format(API_ALB_AUK, sessionId, albumId, username, cipheredKey);
+
+            this.out.println(request);
+
+            String response = this.in.readLine();
+
+            if (showDebug) {
+                System.out.println("Request: " + request);
+                System.out.println("Response: " + response);
+            }
+
+            processErrors(response);
 
         } catch (IOException e) {
             throw new P2PhotoException(CFREQUEST_PROBLEM + e.getMessage());

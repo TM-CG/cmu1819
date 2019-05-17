@@ -10,9 +10,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
 
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.WiFiDConnector;
@@ -67,7 +69,9 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                         if (command.equals("P2PHOTO")) {
                             String subCommand = commandArgs[1];
                             String username = commandArgs[2];
-                            String arg = commandArgs[3];
+                            String arg = null;
+                            if (commandArgs.length > 3)
+                                arg = commandArgs[3];
 
                             switch (subCommand) {
                                 case "GET-CATALOG":
@@ -75,7 +79,7 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                                     if (commandArgs.length > 4) {
                                         mode = commandArgs[4];
                                     }
-
+                                    Cache.getInstance().clientLog.add("WiFiD RECEIVED GET-CATALOG of album ID " + arg + " " + new Timestamp(System.currentTimeMillis()));
                                     //DEBUG
                                     //String userFolder = Main.sv.getAlbumOwner(Integer.parseInt(arg));
                                     String userFolder = Main.username;
@@ -96,6 +100,7 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                                     //just to get album id without the first quote that encloses the path
                                     arg = arg.replace("\"", "");
 
+                                    Cache.getInstance().clientLog.add("WiFiD RECEIVED GET-PICTURE referenced by " + arg + " " + new Timestamp(System.currentTimeMillis()));
                                     //DEBUG
                                     //userFolder = Main.sv.getAlbumOwner(Integer.parseInt(arg));
                                     userFolder = Main.username;
@@ -115,12 +120,14 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                                     break;
 
                                 case "WELCOME":
+                                    Cache.getInstance().clientLog.add("WiFiD RECEIVED WELCOME from " + username + " at " + commandArgs[3] + " " + new Timestamp(System.currentTimeMillis()));
                                     //Store the data on P2Photo ARP cache
                                     wifiConnector.getArpCache().addEntry(username, commandArgs[3]);
 
                                     break;
 
                                 case "INIT":
+                                    Cache.getInstance().clientLog.add("WiFiD RECEIVED INIT " + new Timestamp(System.currentTimeMillis()));
                                     //Special case of welcome where I save my own entry
                                     wifiConnector.getArpCache().addEntry(Main.username, commandArgs[2]);
                                     wifiConnector.requestGroupInfo();
@@ -131,6 +138,7 @@ public class WiFiDIncommingMsg extends AsyncTask<Object, String, Void> {
                         }
 
                     } else if (prefix.equals("B64F")) {
+                        Cache.getInstance().clientLog.add("WiFiD RECEIVED FILE with filename: " + fileName + " " + new Timestamp(System.currentTimeMillis()));
                         String fileContent = content.substring(content.lastIndexOf(' ') + 1);
                         Log.d(TAG, "Received a file with name: " + fileName + " with content: " + fileContent);
 

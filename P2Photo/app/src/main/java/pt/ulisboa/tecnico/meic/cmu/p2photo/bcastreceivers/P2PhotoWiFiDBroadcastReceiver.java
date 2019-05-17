@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import java.io.File;
+import java.sql.Timestamp;
 
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
 import pt.inesc.termite.wifidirect.SimWifiP2pInfo;
@@ -75,6 +76,7 @@ public class P2PhotoWiFiDBroadcastReceiver extends BroadcastReceiver {
             wifiConnector.getArpCache().addEntry("alfredo", "192.168.0.1");
             wifiConnector.getArpCache().addEntry("aristides", "192.168.0.1");*/
 
+            Cache.getInstance().clientLog.add("WiFiD Group Change detected " + new Timestamp(System.currentTimeMillis()));
             File userFolder = new File(context.getFilesDir(), Main.username);
             new LocalCacheInit().execute(userFolder, Cache.getInstance());
 

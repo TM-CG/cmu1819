@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Timestamp;
 
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast;
 import pt.inesc.termite.wifidirect.SimWifiP2pDevice;
@@ -30,6 +31,7 @@ import pt.inesc.termite.wifidirect.service.SimWifiP2pService;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.P2PhotoActivity;
@@ -37,6 +39,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.bcastreceivers.P2PhotoWiFiDBroadcastR
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.PeerListListener;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.GroupInfoListener;
 import pt.inesc.termite.wifidirect.SimWifiP2pManager.Channel;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LocalCacheInit;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDIncommingMsg;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.WiFiDSendMsg;
 
@@ -141,6 +144,8 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
                 //Send welcome to everybody
                 this.requestP2PhotoOperation(WiFiDConnector.WiFiDP2PhotoOperation.WELCOME, device.getVirtIp(), args);
             }
+            File userFolder = new File(activity.getFilesDir(), Main.username);
+            new LocalCacheInit().execute(userFolder, Cache.getInstance());
         }
 
         // display list of network members
@@ -266,6 +271,8 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
                 fileName = file.getName();
             }
 
+            Cache.getInstance().clientLog.add("WiFID SEND FILE " + fileName + " to " + ip + " " + new Timestamp(System.currentTimeMillis()));
+
             FileInputStream fis = new FileInputStream(file);
 
             byte[] bytes = new byte[(int) file.length()];
@@ -339,10 +346,18 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
         switch (operation) {
 
             //inform other peer that i need a catalog
-            case GET_CATALOG: sendMessage(String.format(API_GET_CATALOG, args[0], args[1], args[2]), MsgType.TEXT, ip); break;
-            case GET_PICTURE: sendMessage(String.format(API_GET_PICTURE, args[0], args[1]), MsgType.TEXT, ip); break;
-            case WELCOME: sendMessage(String.format(API_WELCOME, args[0], args[1]), MsgType.TEXT, ip); break;
-            case INIT: sendMessage(String.format(API_INIT, args[0]), MsgType.TEXT, ip); break;
+            case GET_CATALOG:
+                Cache.getInstance().clientLog.add("WiFiD SEND GET-CATALOG of album "+ args[1] + " to " + ip + " " + new Timestamp(System.currentTimeMillis()));
+                sendMessage(String.format(API_GET_CATALOG, args[0], args[1], args[2]), MsgType.TEXT, ip); break;
+            case GET_PICTURE:
+                Cache.getInstance().clientLog.add("WiFiD SEND GET-PICTURE of album "+ args[1] + " to " + ip + " " + new Timestamp(System.currentTimeMillis()));
+                sendMessage(String.format(API_GET_PICTURE, args[0], args[1]), MsgType.TEXT, ip); break;
+            case WELCOME:
+                Cache.getInstance().clientLog.add("WiFiD SEND WELCOME to " + ip + " " + new Timestamp(System.currentTimeMillis()));
+                sendMessage(String.format(API_WELCOME, args[0], args[1]), MsgType.TEXT, ip); break;
+            case INIT:
+                Cache.getInstance().clientLog.add("WiFiD SEND INIT to " + ip + " " + new Timestamp(System.currentTimeMillis()));
+                sendMessage(String.format(API_INIT, args[0]), MsgType.TEXT, ip); break;
         }
     }
 

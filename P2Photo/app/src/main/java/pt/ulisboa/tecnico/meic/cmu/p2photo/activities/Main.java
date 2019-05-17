@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AntiMirone;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.P2PhotoException;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.ServerConnector;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LogOut;
@@ -54,6 +55,8 @@ public class Main extends AppCompatActivity {
     public enum StorageType {NA, LOCAL, CLOUD}
 
     public static StorageType STORAGE_TYPE;
+
+    public static AntiMirone antiMirone;
 
     public static String getUser() {
         return username;

@@ -12,13 +12,21 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
+
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.ListPhoto;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AddAlbumSliceCatalogURL;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AddUsersToAlbum;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.CreateFolder;
@@ -64,6 +72,26 @@ public class CloudStorage extends StorageProvider {
         dialog.setMessage("Writing catalog file");
         dialog.show();*/
 
+        //ENCRYPT FILE BEFORE SEND IT TO CLOUD
+        //Generate Album Key
+        String encryptedFileURL = null;
+        try {
+            SecretKeySpec keyAlbum = Main.antiMirone.generateAlbumKey();
+            encryptedFileURL = Main.antiMirone.encryptAlbumCatalog(fileURL, keyAlbum);
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        }
 
         FileMetadata result = null;
         try {
@@ -95,7 +123,7 @@ public class CloudStorage extends StorageProvider {
                 }
 
                 //wait until the execution finishes
-            }).execute(fileURL, "").get();
+            }).execute(encryptedFileURL, "").get();
         } catch (ExecutionException e) {
             e.printStackTrace();
             return;

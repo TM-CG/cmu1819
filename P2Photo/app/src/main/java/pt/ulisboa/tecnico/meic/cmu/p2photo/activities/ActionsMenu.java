@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.AntiMironeInitKeys;
 
 public class ActionsMenu extends P2PhotoActivity {
 
@@ -19,7 +20,9 @@ public class ActionsMenu extends P2PhotoActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actions_menu);
 
-
+        if (Main.STORAGE_TYPE == Main.StorageType.CLOUD) {
+            new AntiMironeInitKeys().execute();
+        }
         //
     }
 

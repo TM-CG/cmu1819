@@ -34,6 +34,7 @@ import pt.ulisboa.tecnico.meic.cmu.p2photo.R;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.FilesAdapter;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.adapters.ListPhotoAdapter;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.api.AlbumCatalog;
+import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadCatalogsAndPhotos;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.DownloadFileFromLink;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.FetchAllCatalogs;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.tasks.LocalFileCopy;
@@ -76,33 +77,13 @@ public class ListPhoto extends P2PhotoActivity implements Toolbar.OnMenuItemClic
         String tmpFolderPath = albumId + " "
                 + albumTitle;
 
-        try {
-            List<String> catalogsURL = new FetchAllCatalogs().execute(albumId).get();
+
+            //List<String> catalogsURL = new FetchAllCatalogs().execute(albumId).get();
 
 
 
             //Already fetch all catalogs from server now lets download it
-            Log.i(TAG, "Downloaded catalogs path from server " + catalogsURL.size());
-
-
-
-            if (Main.STORAGE_TYPE == Main.StorageType.CLOUD) {
-
-                int i = 1;
-
-                List<String> picsURLs = new ArrayList<>();
-                //Download album catalogs from server's link
-                for (String url : catalogsURL) {
-                    picsURLs.addAll(downloadFile(url, "Loading catalogs", "", "tmp" + i++ + "_catalog.txt", 1));
-                }
-                Log.i(TAG, "Finished downloading and parsing catalogs! I've " + picsURLs.size() + " picture(s)!");
-
-                //Download all pics from all album catalogs that were previously downloaded
-                for (String pictureURL : picsURLs) {
-                    downloadFile(pictureURL, "Loading pictures", tmpFolderPath, null, 0);
-                }
-                Log.i(TAG, "Finished downloading pictures!");
-            }
+            //Log.i(TAG, "Downloaded catalogs path from server " + catalogsURL.size());
 
             GridView gridView = (GridView) findViewById(R.id.grid_thumbnails);
 
@@ -116,14 +97,14 @@ public class ListPhoto extends P2PhotoActivity implements Toolbar.OnMenuItemClic
             adapter = new ListPhotoAdapter(this, folder);
             gridView.setAdapter(adapter);
             Cache.getInstance().loadingSpinner(false);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+            if (Main.STORAGE_TYPE == Main.StorageType.CLOUD) {
+                new DownloadCatalogsAndPhotos(this, adapter).execute(albumId, albumTitle);
+            }
+
 
         //Define onclick to preview the photo using external app
-        GridView gridView = findViewById(R.id.grid_thumbnails);
+        //GridView gridView = findViewById(R.id.grid_thumbnails);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

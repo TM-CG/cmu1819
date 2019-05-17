@@ -86,11 +86,7 @@ public class DownloadFileFromLink extends AsyncTask<String, Void, File> {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             FileChannel fileChannel = fileOutputStream.getChannel();
 
-            fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-
-            /*try (OutputStream outputStream = new FileOutputStream(file)) {
-                mDbxClient.sharing().getSharedLinkFile(url).download(outputStream);
-            }*/
+            fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
 
             return file;
         } catch (IOException e) {

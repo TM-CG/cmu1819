@@ -259,9 +259,9 @@ public class WiFiDConnector implements PeerListListener, GroupInfoListener {
             String fileName;
 
             if (mode.equals("T")) {
-                //TODO vitor: remove this after debug
-                fileName = "vitor.txt";
-                //fileName = Main.username + ".txt";
+                //DEBUG
+                //fileName = "vitor.txt";
+                fileName = Main.username + ".txt";
             } else {
                 fileName = file.getName();
             }

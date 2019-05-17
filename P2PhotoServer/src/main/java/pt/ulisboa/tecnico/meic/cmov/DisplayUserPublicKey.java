@@ -30,8 +30,8 @@ public class DisplayUserPublicKey extends Instruction {
                 return NOK_1;
             }
 
-            displayDebug("User %s requested to know the public key of user %d ", username, user.getUsername());
-            return user.getPublicKey();
+            displayDebug("User %s requested to know the public key of user %s ", username, user.getUsername());
+            return OK_PLUS + user.getPublicKey();
 
         } catch (NullPointerException | IndexOutOfBoundsException e) {
             return ERR;

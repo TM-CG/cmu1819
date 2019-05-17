@@ -78,6 +78,7 @@ public class CloudStorage extends StorageProvider {
         try {
             String fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1);
             SecretKeySpec keyAlbum = Main.antiMirone.generateAlbumKey();
+            Main.antiMirone.writeKey2File(Main.DATA_FOLDER + "/" + Main.username + "/" + albumId + "_key.txt",keyAlbum.getEncoded());
             encryptedFileURL = Main.antiMirone.encryptAlbumCatalog(fileURL, keyAlbum, fileName);
 
         } catch (NoSuchAlgorithmException e) {

@@ -19,6 +19,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.Cache;
 import pt.ulisboa.tecnico.meic.cmu.p2photo.DropboxClientFactory;
@@ -194,7 +201,7 @@ public class ChooseCloudOrLocal extends P2PhotoActivity {
 
     }
 
-    private void downloadFile(FileMetadata file) {
+    private void downloadFile(final FileMetadata file) {
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCancelable(false);
@@ -208,9 +215,23 @@ public class ChooseCloudOrLocal extends P2PhotoActivity {
                 if(result != null) {
                     try {
                         Log.i("chooseCloudLocalActivit", "Im on download!");
-                        BufferedReader br = new BufferedReader(new FileReader(result));
+                        /*BufferedReader br = new BufferedReader(new FileReader(result));
                         String st;
-                        while ((st = br.readLine()) != null) {
+                        while ((st = br.readLine()) != null) {*/
+                            String fileName = result.getName();
+                            String keyFileName = fileName.substring(0, fileName.indexOf("_")) + "_key.txt";
+                            Log.d(TAG, "KeyFileName: " + keyFileName);
+
+                            String albumKey = Main.antiMirone.readKeyFromFile(Main.DATA_FOLDER + "/" + Main.username + "/" + keyFileName);
+                            SecretKeySpec albumKeySpec = Main.antiMirone.readKey2Bytes(albumKey);
+                            Main.antiMirone.decryptAlbumCatalog(result.getAbsolutePath(), albumKeySpec, Main.DATA_FOLDER + "/" + Main.username, fileName);
+
+                            File rootFolder = new File(Main.DATA_FOLDER, Main.username);
+                            File decryptedFile = new File(rootFolder, fileName);
+                            BufferedReader br = new BufferedReader(new FileReader(decryptedFile));
+                            String st = br.readLine();
+                            Log.d(TAG, "DecryptedFile 1st line: " + decryptedFile);
+
                             synchronized (cacheInstance) {
                                 String[] splited = st.split(" ");
                                 if (!cacheInstance.albums.contains(splited[1])) {
@@ -234,12 +255,22 @@ public class ChooseCloudOrLocal extends P2PhotoActivity {
                                 }
                                 cacheInstance.notifyAdapters();
                             }
-                            break;
-                        }
+                            //break;
+                        //}
 
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    } catch (BadPaddingException e) {
+                        e.printStackTrace();
+                    } catch (IllegalBlockSizeException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchPaddingException e) {
+                        e.printStackTrace();
+                    } catch (InvalidKeyException e) {
                         e.printStackTrace();
                     }
                 }

@@ -5,10 +5,13 @@ import android.util.Base64;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -26,6 +29,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import pt.ulisboa.tecnico.meic.cmu.p2photo.activities.Main;
@@ -87,7 +91,7 @@ public class AntiMirone {
         cipher.init(Cipher.ENCRYPT_MODE, stringToPublicKey(publicKey));
         byte[] encryptedBytes = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
 
-        return Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
+        return Base64.encodeToString(encryptedBytes, Base64.NO_WRAP);
     }
 
     public String decryptAlbumKey(String data, String privateKey) throws NoSuchPaddingException,
@@ -95,7 +99,7 @@ public class AntiMirone {
             IllegalBlockSizeException, InvalidKeyException {
         Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA1AndMGF1Padding");
         cipher.init(Cipher.DECRYPT_MODE, stringToPrivateKey(privateKey));
-        byte[] decryptedBytes = cipher.doFinal(Base64.decode(data, Base64.DEFAULT));
+        byte[] decryptedBytes = cipher.doFinal(Base64.decode(data, Base64.NO_WRAP));
         return new String(decryptedBytes);
     }
 
@@ -103,7 +107,7 @@ public class AntiMirone {
             throws InvalidKeySpecException,
             NoSuchAlgorithmException {
 
-        byte[] keyBytes = Base64.decode(publicKeyString, Base64.DEFAULT);
+        byte[] keyBytes = Base64.decode(publicKeyString, Base64.NO_WRAP);
         X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
         return keyFactory.generatePublic(spec);
@@ -139,6 +143,26 @@ public class AntiMirone {
         bufferedWriter.close();
     }
 
+    public void writeKey2File(String filePath, String key) throws IOException {
+        File file = new File(filePath);
+        FileWriter fileWriter = new FileWriter(file);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+        bufferedWriter.write(key);
+
+        bufferedWriter.close();
+    }
+
+    public void writeKey2File(String filePath, byte[] keyArray) throws IOException {
+        File file = new File(filePath);
+        FileWriter fileWriter = new FileWriter(file);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+        bufferedWriter.write(Base64.encodeToString(keyArray, Base64.NO_WRAP));
+
+        bufferedWriter.close();
+    }
+
     public String readKeyFromFile(String filePath) throws IOException {
         File file = new File(filePath);
         FileReader fileReader = new FileReader(file);
@@ -162,7 +186,7 @@ public class AntiMirone {
     }
 
     public SecretKeySpec readKey2Bytes(String key) throws NoSuchAlgorithmException {
-        byte[] byteKey = Base64.encode(key.getBytes(), Base64.NO_WRAP);
+        byte[] byteKey = Base64.decode(key.getBytes(), Base64.NO_WRAP);
         SecretKeySpec keySpec = new SecretKeySpec(byteKey, "AES");
         return keySpec;
     }
@@ -170,8 +194,9 @@ public class AntiMirone {
     public String encryptAlbumCatalog(String catalogFilePath, SecretKeySpec albumKey, String fileName)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException,
             BadPaddingException, IllegalBlockSizeException {
-        Cipher cipher = Cipher.getInstance("AES");
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
         cipher.init(Cipher.ENCRYPT_MODE, albumKey);
+        byte[] iv = cipher.getIV();
 
         File catalog = new File(catalogFilePath);
         FileReader fileReader = new FileReader(catalog);
@@ -181,20 +206,73 @@ public class AntiMirone {
         while ((st = bufferedReader.readLine()) != null) {
             content += st;
         }
-        bufferedReader.close();
 
         byte[] ciphered = cipher.doFinal(content.getBytes());
         String base64Ciphered = Base64.encodeToString(ciphered, Base64.NO_WRAP);
+        String base64iv = Base64.encodeToString(iv, Base64.NO_WRAP);
 
         File folder = new File(Main.CACHE_FOLDER + "/tmp");
         folder.mkdir();
         File file = new File(folder, fileName);
         file.createNewFile();
+
+
+
+        /*FileOutputStream outputStream = new FileOutputStream(file);
+        outputStream.write(iv);
+        outputStream.write(base64Ciphered.getBytes());
+        outputStream.close();*/
         FileWriter fileWriter = new FileWriter(file);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        bufferedWriter.write(base64iv + "\n");
         bufferedWriter.write(base64Ciphered);
         bufferedWriter.close();
         return Main.CACHE_FOLDER + "/tmp/" + fileName;
+    }
+
+    public void decryptAlbumCatalog(String catalogFilePath, SecretKeySpec albumKey, String pathToFile, String fileName)
+            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException,
+            BadPaddingException, IllegalBlockSizeException {
+
+
+
+        File catalog = new File(catalogFilePath);
+        FileReader fileReader = new FileReader(catalog);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+        /*while ((st = bufferedReader.readLine()) != null) {
+            content += st;
+        }*/
+
+        String iv = bufferedReader.readLine();
+        String content = bufferedReader.readLine();
+
+        byte[] ivBytes = Base64.decode(iv, Base64.NO_WRAP);
+        byte[] contentBytes = Base64.decode(content, Base64.NO_WRAP);
+
+        try {
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+
+
+            final GCMParameterSpec spec = new GCMParameterSpec(128, ivBytes, 0, 12);
+            cipher.init(Cipher.DECRYPT_MODE, albumKey, spec);
+
+
+            byte[] deciphered = cipher.doFinal(contentBytes);
+            String fileContent = new String(deciphered);
+
+            File folder = new File(pathToFile);
+            folder.mkdir();
+            File file = new File(folder, fileName);
+            file.createNewFile();
+            FileWriter fileWriter = new FileWriter(file);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(fileContent);
+            bufferedWriter.close();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

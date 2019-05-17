@@ -36,7 +36,7 @@ public class AddUsersToAlbum extends AsyncTask<Object,Void,Object[]> {
                 }
             }
         }
-        Cache.getInstance().loadingSpinner(false);
+        //Cache.getInstance().loadingSpinner(false);
         //TODO
         return null;
     }

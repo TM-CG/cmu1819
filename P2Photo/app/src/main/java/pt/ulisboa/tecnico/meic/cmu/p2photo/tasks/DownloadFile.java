@@ -54,7 +54,7 @@ public class DownloadFile extends AsyncTask<FileMetadata, Void, File> {
         FileMetadata metadata = params[0];
         try {
             Log.i("DownloadFile", Main.CACHE_FOLDER + "/" + Main.username);
-            File path = Environment.getExternalStoragePublicDirectory(
+            File path = new File(
                     Main.CACHE_FOLDER + "/" + Main.username);
             File file = new File(path, metadata.getName());
 

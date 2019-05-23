@@ -41,7 +41,7 @@ public class GetAlbumURL extends AsyncTask<Object, Object, Object[]> {
 
                     try {
                         File path;
-                        path = Environment.getExternalStoragePublicDirectory(
+                        path = new File(
                                 Main.CACHE_FOLDER + "/" + Main.username);
 
                         //Create tmp folder if not exists
